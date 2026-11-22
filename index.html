@@ -25,7 +25,8 @@
 [hidden]{display:none!important}
 body.locked .wrap{display:none}
 #lock{max-width:440px;margin:0 auto;padding:max(48px,env(safe-area-inset-top)) 18px 40px}
-html,body{margin:0}
+html,body{margin:0;overflow-x:hidden}
+html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
 .wrap{max-width:1100px;margin:0 auto;padding:0 max(4vw,16px)}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:max(18px,env(safe-area-inset-top))}
@@ -38,7 +39,7 @@ nav{display:flex;gap:6px;margin-top:14px;border-bottom:2px solid var(--ink)}
 nav a{display:flex;align-items:center;gap:6px;padding:10px 14px;min-height:44px;color:var(--ink);text-decoration:none;font-weight:700;border-radius:10px 10px 0 0}
 nav a[aria-current=page]{background:var(--ink);color:var(--bg)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--amb);outline-offset:2px}
-main{padding:20px 0 48px}
+main.wrap{padding-top:20px;padding-bottom:48px}
 section{display:none}
 section.on{display:block}
 h1{font-size:clamp(28px,4vw,40px);line-height:1.08;letter-spacing:-.02em;margin:0 0 6px;font-weight:800;text-wrap:balance}
@@ -107,7 +108,7 @@ details[open]{padding-bottom:14px}
 details p+p{margin-top:8px}
 .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:20;align-items:flex-end;justify-content:center}
 .sheet-bg.on{display:flex}
-.sheet{background:var(--pan);width:min(560px,100%);border-radius:20px 20px 0 0;padding:20px 18px max(18px,env(safe-area-inset-bottom));display:grid;gap:14px;max-height:90vh;overflow:auto}
+.sheet{background:var(--pan);width:min(560px,100%);border-radius:20px 20px 0 0;padding:20px 18px max(18px,env(safe-area-inset-bottom));display:grid;gap:14px;max-height:88vh;max-height:88dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 @media(min-width:700px){.sheet-bg{align-items:center}.sheet{border-radius:20px}}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;z-index:30;display:none;max-width:calc(100% - 32px);gap:12px;align-items:center}
 .toast.on{display:flex}
@@ -125,13 +126,44 @@ details p+p{margin-top:8px}
 .seg button{flex:none;font:inherit;font-weight:700;font-size:15px;white-space:nowrap;border:1px solid var(--line);background:var(--pan);color:var(--ink);border-radius:999px;padding:9px 14px;min-height:44px;cursor:pointer}
 .seg button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 [data-subv]{display:none}[data-subv].on{display:block}
+.status{display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;border:1px solid var(--line)}
+.status.ok{background:var(--grnbg)}.status.warn{background:var(--ambbg)}.status.bad{background:var(--redbg)}
+.status b{display:block;font-size:20px;line-height:1.2}.status span:not(.ico){font-size:14px;color:var(--mut)}
+.ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--soft);color:var(--ink)}
+.ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ico.bad{background:var(--red);color:#fff}.ico.warn{background:var(--amb);color:#fff}.ico.ok{background:var(--grn);color:#fff}.ico.info{background:var(--soft);color:var(--ink)}
+.status .ico{width:52px;height:52px;border-radius:16px}.status .ico svg{width:28px;height:28px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{display:grid;gap:2px;text-align:left;background:var(--pan);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font:inherit;color:inherit;cursor:pointer}
+.kpi:hover{border-color:var(--ink)}.kl{font-size:13px;color:var(--mut)}.kv{font-size:26px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}.ks{font-size:12.5px;color:var(--mut)}
+.alerts{display:grid;gap:8px}
+.al{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;background:var(--pan);border:1px solid var(--line);border-left-width:5px;border-radius:14px;padding:12px;cursor:pointer}
+.al.bad{border-left-color:var(--red)}.al.warn{border-left-color:var(--amb)}.al.ok{border-left-color:var(--grn)}.al.info{border-left-color:var(--line)}
+.al .t{display:grid}.al .t span{font-size:14px;color:var(--mut)}.chev{font-size:22px;color:var(--mut)}
+.dbadge{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--soft);font-size:11px;text-transform:uppercase;line-height:1}
+.dbadge b{font-size:18px}.dbadge.bad{background:var(--redbg);color:var(--red)}
+.bar.thin{height:8px;display:block}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.quick button{display:grid;justify-items:center;gap:6px;padding:12px 6px;border-radius:14px;border:1px solid var(--line);background:var(--pan);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center}
+.gauge{display:grid;gap:6px;background:var(--soft);border-radius:12px;padding:10px 12px}
+.gauge .row2{justify-content:space-between;font-size:14px}
+#report{display:none}
+@media print{body *{visibility:hidden}#report,#report *{visibility:visible}#report{display:block;position:absolute;left:0;top:0;width:100%;color:#000;background:#fff;font:11pt/1.4 system-ui,sans-serif}
+ #report h2{font-size:14pt;margin:18px 0 6px;break-after:avoid}#report table{width:100%;border-collapse:collapse;font-size:10pt;margin-bottom:6px}
+ #report th,#report td{border-bottom:1px solid #ccc;padding:4px 6px;text-align:left;vertical-align:top}#report tr{break-inside:avoid}
+ .rhead{display:flex;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:6px}.rhead b{font-size:16pt}
+ .rkpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.rkpis div{border:1px solid #ccc;border-radius:6px;padding:6px}.rkpis span,.rkpis small{display:block;font-size:9pt;color:#555}.rkpis b{font-size:14pt}
+ .rbar{display:block;width:120px;height:8px;background:#eee}.rbar i{display:block;height:100%;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .rlist li.bad b{color:#b8321b}.rlist li.warn b{color:#9a6400}.rnote{font-size:9pt;color:#555}.rcard{break-inside:avoid;border:1px solid #ccc;border-radius:6px;padding:6px 8px;margin:6px 0}.rcard ul{margin:4px 0;padding-left:18px}.m0{color:#b8321b}.m2{color:#9a6400}.m1{color:#2f6b4f}
+ @page{margin:14mm}}
 .stack2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media(max-width:760px){.stack2{grid-template-columns:1fr}}
 @media(max-width:600px){
 nav{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;border:0;border-top:1px solid var(--line);background:var(--pan);display:grid;grid-template-columns:repeat(6,1fr);padding:4px 2px max(6px,env(safe-area-inset-bottom))}
 nav a{flex-direction:column;gap:2px;font-size:10.5px;letter-spacing:-.01em;padding:6px 0;border-radius:12px;min-height:56px;justify-content:center}
 nav svg{width:24px;height:24px}
-main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
 .months{height:120px;gap:3px}.mlab{gap:3px;font-size:10px}
 }
@@ -157,27 +189,25 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
 <main class="wrap">
 <section id="v-start">
-<div id="start-fristen"></div>
-<div class="stack2">
-<div class="pan hero" id="hero"></div>
-<div>
-<h2 style="margin-top:0">Deine Töpfe</h2>
+<div id="st-status"></div>
+<div class="kpis" id="kpis"></div>
+<div class="quick"><button data-act="go:newct"><span class="ico" data-i="plus"></span><span>Vertrag hinzufügen</span></button><button data-act="go:einlesen"><span class="ico" data-i="bank"></span><span>Auszug einlesen</span></button><button data-act="go:report"><span class="ico" data-i="print"></span><span>Bericht als PDF</span></button></div>
+<h2>Hinweise und Empfehlungen</h2>
+<div class="alerts" id="alerts"></div>
+<h2>Die nächsten 90 Tage</h2>
+<div class="list" id="strip"></div>
+<h2>Deine Töpfe</h2>
 <div class="tiles" id="start-tiles"></div>
-</div>
-</div>
-<h2>Bald fällig</h2>
-<div class="list" id="soon"></div>
-<h2>Wohin dein Gehalt am Zahltag geht</h2>
-<div class="pan">
-<div class="split" id="split" aria-label="Aufteilung des Gehalts"></div>
-<div class="res" id="split-list"></div>
-</div>
+<div id="hero" hidden></div><div id="start-fristen" hidden></div>
 </section>
 
 <section id="v-toepfe">
 <h1>Deine Töpfe</h1>
-<p class="mut">Jeder Topf ist ein eigenes Konto. Die Linie zeigt, wie viel in den nächsten zwölf Monaten drin ist, wenn alle Rechnungen kommen. Tipp auf „Bearbeiten“, um etwas zu ändern.</p>
-<div class="cards" id="pot-cards" style="margin-top:16px"></div>
+<p class="mut">Rücklagen für große Rechnungen, mit Empfehlung, wie viel du zurücklegen solltest.</p>
+<h2>Wohin dein Gehalt geht</h2>
+<div class="pan"><div class="split" id="split" aria-label="Aufteilung des Gehalts"></div><div class="res" id="split-list"></div></div>
+<h2>Rücklagen-Töpfe</h2>
+<div class="cards" id="pot-cards"></div>
 <h2>Feste Daueraufträge</h2>
 <div class="list" id="fixed-list"></div>
 <h2>Jeden Monat vom Girokonto</h2>
@@ -189,7 +219,7 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
 <section id="v-rechnungen">
 <h1 id="bill-title">Große Rechnungen im Jahr</h1>
-<p class="mut">Alles, was seltener als monatlich kommt. Tipp auf einen Monat, um nur ihn zu sehen.</p>
+<p class="mut">Alles, was seltener als monatlich kommt. Tipp auf einen Monat.</p>
 <div class="pan" style="margin-top:14px"><div class="months" id="months"></div><div class="mlab" id="mlab"></div></div>
 <div class="filters" id="bill-filters"></div>
 <div class="list" id="bill-list"></div>
@@ -198,10 +228,11 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
 <section id="v-vertraege">
 <h1>Deine Verträge</h1>
-<p class="mut">Alles, was regelmäßig Geld kostet, an einem Ort. Mit Kündigungsfrist, damit dich kein Termin überrascht.</p>
+
 <div class="seg" role="tablist" id="ct-seg"><button role="tab" data-sub="uebersicht">Übersicht</button><button role="tab" data-sub="alle">Alle Verträge</button><button role="tab" data-sub="termine">Termine</button><button role="tab" data-sub="versicherungen">Versicherungen</button></div>
 <div data-subv="uebersicht">
 <div class="pan hero" id="ct-hero" style="margin-top:14px"></div>
+<div class="row2" style="margin-top:10px"><button class="btn ghost" data-act="go:newct">+ Vertrag hinzufügen</button><button class="btn ghost" data-act="go:report">Bericht als PDF</button></div>
 <div id="ct-soon-wrap"><h2>Fristen in den nächsten drei Monaten</h2><div class="list" id="ct-soon"></div></div>
 <h2>Wofür das Geld geht</h2>
 <div class="pan"><div class="split" id="ct-split" aria-label="Kosten nach Bereich"></div><div class="res" id="ct-cats"></div></div>
@@ -230,7 +261,7 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
 <section id="v-ziele">
 <h1>Wofür du sparst</h1>
-<p class="mut">Das Geld kommt aus dem Topf Haus-Projekte. Die Ziele werden nacheinander voll gemacht.</p>
+<p class="mut">Gespart wird im Topf Haus-Projekte, ein Ziel nach dem anderen.</p>
 <div class="pan" style="margin-top:16px;display:grid;gap:8px">
 <label for="proj">So viel geht jeden Monat in Haus-Projekte: <b id="proj-v" style="color:var(--ink)"></b></label>
 <input id="proj" type="range" min="0" max="800" step="25">
@@ -243,7 +274,7 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
 <section id="v-konten">
 <h1>Deine Konten</h1>
-<p class="mut">Hier siehst du, was auf welchem Konto liegt. Einmal im Monat liest du die Kontoauszüge ein, dann aktualisiert sich alles von selbst.</p>
+<p class="mut">Einmal im Monat Kontoauszüge einlesen, der Rest geht von selbst.</p>
 <h2>Kontostände</h2>
 <div class="list" id="acct-list"></div>
 <h2 id="einlesen">Kontoauszüge einlesen</h2>
@@ -282,6 +313,7 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 </main>
 
 <div class="sheet-bg" id="sheet-bg"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" id="sheet"></div></div>
+<div id="report"></div>
 <div class="toast" id="toast" role="status"><span id="toast-msg"></span><button id="toast-btn" hidden></button></div>
 
 <script>
@@ -300,44 +332,106 @@ const pots=()=>S.toepfe.filter(p=>p.art==='topf');
 const sum=(a,k='b')=>a.reduce((s,x)=>s+(+x[k]||0),0);
 const need=id=>sum(S.rechnungen.filter(r=>r.t===id))/12;
 const inc=()=>sum(S.einnahmen),da=()=>sum(S.toepfe,'da'),fix=()=>sum(S.giro);
-function sim(p){let bal=+p.stand||0,min=bal,minM=0,pts=[bal];for(let i=1;i<=12;i++){const m=(cm-1+i)%12+1;bal+=+p.da||0;bal-=sum(S.rechnungen.filter(r=>r.t===p.id&&+r.m===m));pts.push(bal);if(bal<min){min=bal;minM=m}}return{pts,min,minM}}
-function status(p){if(p.id==='proj')return{c:'ok',t:'Spart für deine Ziele'};if(p.ziel){const r=p.ziel-(+p.stand||0);return r<=0?{c:'ok',t:'Ziel erreicht'}:{c:'warn',t:`Noch ${fmt(r)} bis zum Ziel`}}const s=sim(p),n=need(p.id);if(s.min<0)return{c:'bad',t:`Im ${MONL[s.minM-1]} fehlen ${fmt(-s.min)}`};if(p.da+0.5<n)return{c:'warn',t:'Dauerauftrag ist zu klein'};return{c:'ok',t:'Reicht das ganze Jahr'}}
+function sim(p){let bal=+p.stand||0,min=bal,minM=0,pts=[bal];for(let i=1;i<=12;i++){const m=(cm-1+i)%12+1;bal+=+p.da||0;bal-=sum(S.rechnungen.filter(r=>r.t===p.id&&+r.m===m))*(1+teu(p)/100);pts.push(bal);if(bal<min){min=bal;minM=m}}return{pts,min,minM}}
+function status(p){if(p.id==='proj')return{c:'ok',t:'Spart für deine Ziele'};if(p.ziel){const r=p.ziel-(+p.stand||0);return r<=0?{c:'ok',t:'Ziel erreicht'}:{c:'warn',t:`Noch ${fmt(r)} bis zum Ziel`}}const s=sim(p),n=need(p.id);if(s.min<0)return{c:'bad',t:`Im ${MONL[s.minM-1]} fehlen ${fmt(-s.min)}`};if(p.da+0.5<rec(p))return{c:'warn',t:`Besser ${fmt(rec(p))} im Monat`};return{c:'ok',t:'Reicht das ganze Jahr'}}
 function nextBill(id){for(let i=1;i<=12;i++){const m=(cm-1+i)%12+1;const L=S.rechnungen.filter(r=>(!id||r.t===id)&&+r.m===m);if(L.length)return{m,L,s:sum(L)}}return null}
 function toast(msg,btn,fn){$('toast-msg').textContent=msg;const b=$('toast-btn');b.hidden=!btn;if(btn){b.textContent=btn;b.onclick=fn}$('toast').classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('on'),btn?8000:3500)}
 
-/* ---------- Start ---------- */
+/* ---------- Monitoring: Empfehlungen und Warnungen ---------- */
+const TEU_DEF={haus:6,auto:5};const PUF=10;
+const teu=p=>p.teu!=null&&p.teu!==''?+p.teu:(TEU_DEF[p.id]??4);
+const billsOf=id=>S.rechnungen.filter(r=>r.t===id);
+function recBase(p){const yr=sum(billsOf(p.id))*(1+teu(p)/100);return Math.ceil(yr/12*(1+PUF/100)/10)*10}
+function recTime(p){let cum=0,need=0;for(let i=1;i<=12;i++){const m=(cm-1+i)%12+1;cum+=sum(S.rechnungen.filter(r=>r.t===p.id&&+r.m===m))*(1+teu(p)/100);need=Math.max(need,(cum-(+p.stand||0))/i)}return Math.ceil(need/10)*10}
+function rec(p){return recBase(p)}
+const pdDE=s=>{const m=String(s||'').match(/(\d{2})\.(\d{2})\.(\d{4})/);return m?new Date(+m[3],+m[2]-1,+m[1]):null};
+const IC={
+ alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+ check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+ wallet:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2M3 9h18"/>',
+ cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+ doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>',
+ bank:'<path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ print:'<path d="M6 9V3h12v6M6 17H4v-6h16v6h-2M7 14h10v7H7z"/>',
+ upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>'};
+const icon=(k,c)=>`<span class="ico ${c||''}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]||IC.check}</svg></span>`;
+function alerts(){const A=[],T=today0();
+  ctAll().forEach((v,i)=>{const f=frist(v);if(f.d&&!v.pf&&!v.ein&&f.lvl>=2)A.push({l:f.lvl===3?'bad':'warn',ic:'clock',t:`${v.n}: kündigen bis ${fd(f.d)}`,s:`Noch ${f.days} Tage. ${v.st==='ok'?'Verlängert sich sonst automatisch.':'Vorher Angebot prüfen.'}`,a:'ct:'+i})});
+  pots().forEach(p=>{if(p.id==='proj')return;
+    if(p.ziel){const r=p.ziel-(+p.stand||0);if(r>0)A.push({l:(+p.stand||0)<p.ziel/3?'warn':'info',ic:'shield',t:`${p.n}: noch ${fmt(r)} bis zum Ziel`,s:`Ziel ${fmt(p.ziel)} für Unerwartetes. Bei ${fmt(p.da)} im Monat in ${p.da>0?Math.ceil(r/p.da):'∞'} Monaten erreicht.`,a:'pot:'+p.id});return}
+    if(!billsOf(p.id).length)return;const s=sim(p),r=rec(p);
+    if(s.min<0)A.push({l:'bad',ic:'alert',t:`Topf ${p.n}: im ${MONL[s.minM-1]} fehlen ${fmt(-s.min)}`,s:`Einmalig ${fmt(Math.ceil(-s.min/10)*10)} in den Topf legen.${p.da<r?` Danach ${fmt(r)} statt ${fmt(p.da)} im Monat.`:''}`,a:'pot:'+p.id});
+    else if(p.da<r-5)A.push({l:'warn',ic:'trend',t:`Topf ${p.n}: besser ${fmt(r)} im Monat`,s:`Du legst ${fmt(p.da)} zurück. Gerechnet mit ${teu(p)} % Teuerung und ${PUF} % Puffer.`,a:'pot:'+p.id});
+    else A.push({l:'ok',ic:'check',t:`Topf ${p.n} reicht`,s:`${fmt(p.da)} im Monat, empfohlen ${fmt(r)}.`,a:'pot:'+p.id})});
+  for(let k=0;k<2;k++){const m=(cm+k)%12+1;const y=cm+k+1>12?cy+1:cy;S.rechnungen.filter(r=>+r.m===m&&+r.b>=300).forEach(r=>{const p=pot(r.t);const s=p?sim(p):null;const ok=s&&s.pts[k+1]>=0;A.push({l:ok?'info':'bad',ic:'wallet',t:`${r.n}: ${fmt(r.b)} im ${MONL[m-1]}`,s:ok?`Der Topf ${p.n} deckt das.`:`Der Topf ${p?p.n:''} reicht dafür nicht.`,a:'bill:'+m})})}
+  S.rechnungen.forEach(r=>{if(r.alt&&+r.b>r.alt*1.08)A.push({l:'warn',ic:'trend',t:`${r.n} ist um ${Math.round((r.b/r.alt-1)*100)} % gestiegen`,s:`Vorher ${fmt(r.alt)}, jetzt ${fmt(r.b)}. Prüf den Topf.`,a:'bill:'+r.m})});
+  const leben=inc()-da()-fix();if(leben/4.35<120)A.push({l:'warn',ic:'wallet',t:`Nur ${fmt(leben/4.35)} pro Woche frei`,s:'Nach allen Daueraufträgen und Abbuchungen.',a:'go:toepfe'});
+  ctAll().forEach((v,i)=>{(v.termine||[]).concat(v.foerderende?[{d:v.foerderende,t:'Förderung endet'}]:[]).forEach(x=>{const d=pd(x.d),days=Math.round((d-T)/864e5);if(days>=0&&days<=400)A.push({l:days<=90?'warn':'info',ic:'cal',t:`${v.n}: ${x.t}`,s:`Am ${fd(d)}, in ${days} Tagen.`,a:'ct:'+i})})});
+  const miss=ctAll().filter(v=>!v.pf&&!v.ein&&!v.ende&&!(v.k==='abo'&&v.rh==='monat'&&!v.frist)&&!v.ohneEnde).length;
+  if(miss)A.push({l:'info',ic:'doc',t:`Bei ${miss} Verträgen fehlt die Laufzeit`,s:'Ohne Laufzeit kann das Cockpit nicht warnen.',a:'sub:termine'});
+  const gd=pdDE(S.girokonto&&S.girokonto.datum);if(!gd||(T-gd)/864e5>35)A.push({l:'info',ic:'bank',t:'Kontoauszüge einlesen',s:gd?`Letzter Stand vom ${fd(gd)}.`:'Noch nichts eingelesen.',a:'go:konten'});
+  const ord={bad:0,warn:1,info:2,ok:3};return A.sort((a,b)=>ord[a.l]-ord[b.l])}
+function alertRow(x){return`<button class="al ${x.l}" data-act="${esc(x.a)}">${icon(x.ic,x.l)}<span class="t"><b>${esc(x.t)}</b><span>${esc(x.s)}</span></span><span class="chev">›</span></button>`}
+function doAct(a){const[k,v]=a.split(/:(.*)/s);
+  if(k==='ct'){go('vertraege');setTimeout(()=>openContract(+v),60)}
+  else if(k==='pot'){go('toepfe');setTimeout(()=>{const el=$('card-'+v);if(el)el.scrollIntoView({block:'center'})},60)}
+  else if(k==='bill'){selMonth=+v;go('rechnungen');renderBills()}
+  else if(k==='sub'){go('vertraege');showSub(v)}
+  else if(k==='go')go(v)}
+let alAll=false;
 function renderStart(){
-  const plan=inc()-da(),leben=plan-fix(),M=S.monat;
-  let h='';
-  if(M&&M.zurueck!==undefined){const dim=new Date(M.jahr,M.mon,0).getDate(),left=Math.max(dim-M.tage,0),offen=fixOffen(M),netto=M.ausgaben-M.zurueck,frei=plan-netto-offen,pct=Math.min(Math.max(netto/plan,0),1)*100,soll=plan*M.tage/dim,cls=frei<0?'r':netto>soll?'a':'',hol=Math.max(M.gross-M.zurueck,0);
-    h=`<p class="lab">Noch frei bis Ende ${MONL[M.mon-1]}</p><div class="big" style="${frei<0?'color:var(--red)':''}">${fmt(frei)}</div>
-    <p>${frei>0&&left>0?`Das sind <b>${fmt(frei/left)} pro Tag</b> für die restlichen ${left} Tage.`:frei<0?'<b>Diesen Monat ist mehr rausgegangen als geplant.</b>':''}</p>
-    <div class="bar" title="${fmt(netto)} von ${fmt(plan)}"><i class="${cls}" style="width:${pct}%"></i></div>
-    <div class="list" style="font-size:15px">
-    <div class="li" style="cursor:default;min-height:44px"><span></span><span>Vom Girokonto ausgegeben</span><span class="num">${fmt(M.ausgaben)}</span></div>
-    <div class="li" style="cursor:default;min-height:44px"><span></span><span>Aus deinen Töpfen zurückgeholt</span><span class="num" style="color:var(--grn)">+ ${fmt(M.zurueck)}</span></div>
-    ${offen?`<div class="li" style="cursor:default;min-height:44px"><span></span><span>Feste Abbuchungen, die noch kommen</span><span class="num">- ${fmt(offen)}</span></div>`:''}
-    <div class="li" style="cursor:default;min-height:44px"><span></span><span>Geplant für den Monat</span><span class="num">${fmt(plan)}</span></div></div>
-    ${hol>=20?`<p class="chip warn">Darin stecken ${fmt(M.gross)} große Rechnungen. Hol dir noch bis zu ${fmt(hol)} aus dem passenden Topf zurück.</p>`:''}
-    <p class="small mut">Stand ${M.bis}. Überweisungen an deine eigenen Konten zählen nicht als Ausgabe.</p>
-    <details style="margin:4px 0 0;background:var(--soft)"><summary>Wofür ging das Geld?</summary>${M.top.map(t=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span>${esc(t.n)}</span><span class="num">${fmt(t.b)}</span></div>`).join('')}</details>
-    <div class="row2"><button class="btn ghost" data-go="konten" data-anchor="einlesen">Neuen Auszug einlesen</button></div>`}
-  else{h=`<p class="lab">Dein Wochengeld zum Leben</p><div class="big" style="${leben<0?'color:var(--red)':''}">${fmt(leben/4.35)}</div>
-    <p>Das bleibt nach allen Daueraufträgen und festen Abbuchungen. Bisher hast du für den Alltag etwa <b>${fmt(S.alltag/4.35)} pro Woche</b> ausgegeben.</p>
-    <p class="small mut">Lies deinen Kontoauszug ein, dann siehst du hier jeden Tag, was im Monat noch frei ist.</p>
-    <div class="row2"><button class="btn pri" data-go="konten" data-anchor="einlesen">Kontoauszug einlesen</button></div>`}
-  $('hero').innerHTML=h;
-  $('start-tiles').innerHTML=pots().map(p=>{const st=status(p);return`<button class="tile" data-pot="${p.id}"><span class="nm"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</span><span class="amt">${fmt(p.stand)}</span><span class="chip ${st.c}">${esc(st.t)}</span></button>`}).join('');
-  const soon=[];for(let i=1;i<=3;i++){const m=(cm-1+i)%12+1;S.rechnungen.filter(r=>+r.m===m&&+r.b>=100).forEach(r=>soon.push({...r,i}))}
-  $('soon').innerHTML=soon.length?soon.slice(0,5).map(r=>{const p=pot(r.t)||{};return`<button class="li" data-go="rechnungen" data-month="${r.m}"><span class="sw" style="background:${p.f}"></span><span class="t">${esc(r.n)}<span>${MONL[r.m-1]}, zahlt der Topf ${esc(p.n)}</span></span><span class="num">${fmt(r.b)}</span></button>`}).join(''):`<p class="li mut">In den nächsten drei Monaten kommt keine große Rechnung.</p>`;
-  const segs=S.toepfe.map(p=>({id:p.id,n:p.n,v:+p.da||0,f:p.f,b:p.bank})).concat([{id:'giro',n:'Feste Abbuchungen',v:fix(),f:'#94a3a8',b:'ING Girokonto'}]);
-  $('split').innerHTML=segs.map(s=>`<button style="flex:${Math.max(s.v,0)} 1 0;background:${s.f}" aria-label="${esc(s.n)} ${fmt(s.v)}" data-pot="${s.id}"></button>`).join('')+(leben>0?`<div class="rest" style="flex:${leben} 1 0"></div>`:'');
-  $('split-list').innerHTML=segs.map(s=>`<button class="li" data-pot="${s.id}"><span class="sw" style="background:${s.f}"></span><span class="t">${esc(s.n)}<span>${esc(s.b)}</span></span><span class="num">${fmt(s.v)}</span></button>`).join('')+`<div class="li" style="cursor:default"><span class="sw" style="background:repeating-linear-gradient(135deg,var(--soft) 0 3px,var(--line) 3px 5px)"></span><span class="t"><b>Bleibt zum Leben</b><span>Lebensmittel, Tanken extra, Einkäufe</span></span><span class="num" style="${leben<0?'color:var(--red)':''}">${fmt(leben)}</span></div>`;
+  const A=alerts(),nb=A.filter(x=>x.l==='bad').length,nw=A.filter(x=>x.l==='warn').length;
+  const lvl=nb?'bad':nw?'warn':'ok';
+  $('st-status').innerHTML=`<div class="status ${lvl}">${icon(nb?'alert':nw?'trend':'check',lvl)}<div><b>${nb?`${nb} ${nb===1?'Warnung':'Warnungen'}`:nw?`${nw} ${nw===1?'Empfehlung':'Empfehlungen'}`:'Alles im grünen Bereich'}</b><span>${nb||nw?'Tipp unten auf einen Hinweis.':'Keine Frist und keine Lücke in Sicht.'}</span></div></div>`;
+  const plan=inc()-da(),leben=plan-fix(),M=S.monat;let frei=leben/4.35,lab='Frei pro Woche',sub='nach allen festen Kosten';
+  if(M&&M.zurueck!==undefined){const dim=new Date(M.jahr,M.mon,0).getDate(),left=Math.max(dim-M.tage,1),f=plan-(M.ausgaben-M.zurueck)-fixOffen(M);frei=f;lab=`Noch frei im ${MONL[M.mon-1]}`;sub=`${fmt(f/left)} pro Tag, Stand ${M.bis}`}
+  const rl=sum(pots().filter(p=>p.id!=='proj'),'stand'),nbill=nextBill(),ct=sum(ctCost())/12;
+  const k=(lbl,val,s,go,c)=>`<button class="kpi" data-act="${go}"><span class="kl">${lbl}</span><span class="kv" style="${c?'color:var(--'+c+')':''}">${val}</span><span class="ks">${s}</span></button>`;
+  $('kpis').innerHTML=k(lab,fmt(frei),sub,'go:konten',frei<0?'red':'')+k('Feste Kosten',fmt(da()+fix()),'pro Monat, alles zusammen','go:toepfe')+k('Rücklagen',fmt(rl),'in deinen Töpfen','go:toepfe')+k('Verträge',fmt(ct),'pro Monat · '+ctCost().length+' Stück','sub:uebersicht');
+  const show=alAll?A:A.filter(x=>x.l!=='ok').slice(0,6);
+  $('alerts').innerHTML=(show.length?show.map(alertRow).join(''):'<p class="mut">Gerade gibt es nichts zu tun.</p>')+(A.length>show.length||alAll?`<button class="btn ghost" id="al-more" style="margin-top:8px">${alAll?'Weniger anzeigen':'Alle '+A.length+' anzeigen'}</button>`:'');
+  if($('al-more'))$('al-more').onclick=()=>{alAll=!alAll;renderStart()};
+  const T=today0(),D=allDates().filter(x=>x.k!=='ende'&&(x.d-T)/864e5<=90).slice(0,6);
+  $('strip').innerHTML=D.length?D.map(x=>{const amt=x.v?x.v.b:+(x.s.match(/[\d.]+/)||[0])[0];return`<button class="li" ${x.i!=null?`data-act="ct:${x.i}"`:`data-act="bill:${x.d.getMonth()+1}"`}><span class="dbadge ${x.k==='kuend'?'bad':''}"><b>${x.d.getDate()}</b>${MON[x.d.getMonth()]}</span><span class="t">${esc(x.t)}<span>${esc(x.s)}</span></span><span class="chev">›</span></button>`}).join(''):'<p class="li mut">In den nächsten 90 Tagen steht nichts an.</p>';
+  $('start-tiles').innerHTML=pots().map(p=>{const st=status(p),r=rec(p),pct=p.ziel?Math.min((+p.stand||0)/p.ziel*100,100):(r?Math.min(p.da/r*100,100):100);return`<button class="tile" data-act="pot:${p.id}"><span class="nm"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</span><span class="amt">${fmt(p.stand)}</span><span class="bar thin"><i class="${st.c==='bad'?'r':st.c==='warn'?'a':''}" style="width:${pct}%"></i></span><span class="chip ${st.c}">${esc(st.t)}</span></button>`}).join('');
+  if($('hero'))$('hero').innerHTML='';
 }
 
+/* ---------- Berichte als PDF ---------- */
+const RTYPES=[['jahr','Jahresbericht','Alles auf einen Blick: Kosten, Töpfe, Rechnungen, Verträge, Fristen'],['vertraege','Vertragsübersicht','Alle Verträge mit Kosten und Kündigungsfristen'],['fristen','Fristen und Termine','Die nächsten 24 Monate, zum Ausdrucken oder Abheften'],['versicherungen','Versicherungen','Was abgedeckt ist und was fehlt']];
+function openReports(){$('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px">Bericht als PDF</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div><p class="small mut">Wähle einen Bericht. Im Druckfenster tippst du auf „Als PDF sichern“ oder teilst ihn.</p><div class="list">${RTYPES.map(([id,n,s])=>`<button class="li" data-rep="${id}">${icon('print')}<span class="t"><b>${n}</b><span>${s}</span></span><span class="chev">›</span></button>`).join('')}</div>`;$('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('sheet').querySelectorAll('[data-rep]').forEach(b=>b.onclick=()=>{closeSheet();printReport(b.dataset.rep)})}
+function printReport(type){
+  const now=new Date(),C=ctCost(),tot=sum(C),T=today0();
+  const h=t=>`<h2>${t}</h2>`,tb=(head,rows)=>`<table><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  const barr=(v,mx,c)=>`<span class="rbar"><i style="width:${mx?Math.max(v/mx*100,1):0}%;background:${c||'#555'}"></i></span>`;
+  let out=`<div class="rhead"><b>Geld-Cockpit</b><span>${RTYPES.find(x=>x[0]===type)[1]} · erstellt am ${fd(now)}</span></div>`;
+  const plan=inc()-da(),leben=plan-fix();
+  if(type==='jahr'){
+    out+=`<div class="rkpis"><div><span>Einnahmen</span><b>${fmt(inc())}</b><small>pro Monat</small></div><div><span>Daueraufträge</span><b>${fmt(da())}</b><small>pro Monat</small></div><div><span>Abbuchungen</span><b>${fmt(fix())}</b><small>pro Monat</small></div><div><span>Bleibt</span><b>${fmt(leben)}</b><small>pro Monat</small></div></div>`;
+    const A=alerts().filter(x=>x.l!=='ok');if(A.length)out+=h('Hinweise und Empfehlungen')+'<ul class="rlist">'+A.map(x=>`<li class="${x.l}"><b>${esc(x.t)}</b> ${esc(x.s)}</li>`).join('')+'</ul>';
+    out+=h('Töpfe und Rücklagen')+tb(['Topf','Stand','Dauerauftrag','Empfehlung','Status'],pots().map(p=>[esc(p.n),fmt(p.stand),fmt(p.da),billsOf(p.id).length?fmt(rec(p)):'-',esc(status(p).t)]));
+    const tots=Array.from({length:12},(_,i)=>sum(S.rechnungen.filter(r=>+r.m===i+1))),mx=Math.max(...tots,1);
+    out+=h('Große Rechnungen im Jahr')+tb(['Monat','Rechnungen','Summe',''],tots.map((t,i)=>[MONL[i],esc(S.rechnungen.filter(r=>+r.m===i+1).map(r=>r.n).join(', ')),fmt(t),barr(t,mx)]))+`<p class="rnote">Zusammen ${fmt(sum(S.rechnungen))} im Jahr, also ${fmt(sum(S.rechnungen)/12)} pro Monat.</p>`;
+    const cats=Object.keys(KAT).filter(k=>k!=='ein').map(k=>({n:KAT[k][0],f:KAT[k][1],v:sum(C.filter(x=>x.k===k))})).filter(c=>c.v).sort((a,b)=>b.v-a.v),cm2=Math.max(...cats.map(c=>c.v),1);
+    out+=h('Verträge nach Bereich')+tb(['Bereich','im Jahr','im Monat',''],cats.map(c=>[c.n,fmt(c.v),fmt(c.v/12),barr(c.v,cm2,c.f)]))+`<p class="rnote">Alle Verträge zusammen: ${fmt(tot)} im Jahr, ${fmt(tot/12)} im Monat.</p>`;
+  }
+  if(type==='jahr'||type==='vertraege'){const L=ctAll().slice().sort((a,b)=>(a.k>b.k?1:-1)||b.b-a.b);out+=h('Alle Verträge')+tb(['Vertrag','Anbieter','Bereich','im Jahr','Kündigen bis','Status'],L.map(v=>{const f=frist(v);return[esc(v.n),esc(v.a||''),(KAT[v.k]||[''])[0],(v.ein?'+ ':'')+fmt(v.b),f.d?fd(f.d):esc(f.t),v.pf?'Pflicht':(STX[v.st]||STX.ok)[1]]}))}
+  if(type==='jahr'||type==='fristen'){const lim=new Date(T);lim.setMonth(lim.getMonth()+24);const D=allDates().filter(x=>x.d<=lim);out+=h('Fristen und Termine')+tb(['Datum','Was','Hinweis'],D.map(x=>[fd(x.d),esc(x.t),esc(x.s)]))}
+  if(type==='jahr'||type==='versicherungen'){const L=ctAll().filter(v=>v.cov&&v.cov.length);out+=h('Versicherungen und Leistungen')+L.map(v=>`<div class="rcard"><b>${esc(v.n)}</b> · ${esc(v.a||'')} · ${fmt(v.b)} im Jahr<ul>${v.cov.map(c=>`<li><span class="m${c[1]}">${c[1]===1?'✓':c[1]===2?'!':'✗'}</span> ${esc(c[0])}${c[2]?` <small>(${esc(c[2])})</small>`:''}</li>`).join('')}</ul></div>`).join('')}
+  if(type==='jahr'&&S.ziele.length)out+=h('Ziele')+tb(['Ziel','Kosten','Wunschtermin'],S.ziele.map(g=>[esc(g.n),g.b?fmt(g.b):'-',g.wunsch||'-']));
+  out+=`<p class="rnote">Erstellt mit dem Geld-Cockpit. Alle Angaben ohne Gewähr.</p>`;
+  $('report').innerHTML=out;setTimeout(()=>window.print(),100)}
+
 /* ---------- Töpfe ---------- */
-function spark(el,pts){const draw=()=>{const W=el.clientWidth,H=el.clientHeight;if(!W)return;const mx=Math.max(...pts,0),mn=Math.min(...pts,0),pl=6,pb=18,pt=8,rng=(mx-mn)||1;const x=i=>pl+i*(W-2*pl)/(pts.length-1),y=v=>pt+(mx-v)*(H-pt-pb)/rng;const d=pts.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');const neg=pts.some(v=>v<0);let lab='';for(let i=0;i<pts.length;i+=W<380?3:2)lab+=`<text x="${x(i)}" y="${H-3}" font-size="11" text-anchor="${i===0?'start':i===pts.length-1?'end':'middle'}" fill="currentColor" opacity=".6">${MON[(cm-1+i)%12]}</text>`;el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><line x1="${pl}" x2="${W-pl}" y1="${y(0)}" y2="${y(0)}" stroke="currentColor" opacity=".25" stroke-dasharray="4 4"/><path d="${d}" fill="none" stroke="${neg?'var(--red)':'currentColor'}" stroke-width="2.5" stroke-linejoin="round"/>${pts.map((v,i)=>v<0?`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="var(--red)"/>`:'').join('')}${lab}</svg>`};const ro=new ResizeObserver(draw);ro.observe(el);draw()}
+function spark(el,pts){const draw=()=>{const W=el.clientWidth,H=el.clientHeight;if(!W)return;const mx=Math.max(...pts,0),mn=Math.min(...pts,0),pl=6,pb=18,pt=8,rng=(mx-mn)||1;const x=i=>pl+i*(W-2*pl)/(pts.length-1),y=v=>pt+(mx-v)*(H-pt-pb)/rng;const d=pts.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');const neg=pts.some(v=>v<0);let lab='';for(let i=0;i<pts.length;i+=W<380?3:2)lab+=`<text x="${x(i)}" y="${H-3}" font-size="11" text-anchor="${i===0?'start':i===pts.length-1?'end':'middle'}" fill="currentColor" opacity=".6">${MON[(cm-1+i)%12]}</text>`;el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><line x1="${pl}" x2="${W-pl}" y1="${y(0)}" y2="${y(0)}" stroke="currentColor" opacity=".25" stroke-dasharray="4 4"/><path d="${d}" fill="none" stroke="${neg?'var(--red)':'currentColor'}" stroke-width="2.5" stroke-linejoin="round"/>${pts.map((v,i)=>v<0?`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="var(--red)"/>`:'').join('')}${lab}</svg>`};let lw=0;const ro=new ResizeObserver(()=>{if(el.clientWidth!==lw){lw=el.clientWidth;requestAnimationFrame(draw)}});ro.observe(el);lw=el.clientWidth;draw()}
 function renderPots(){
+  const leben=inc()-da()-fix();const segs=S.toepfe.map(p=>({id:p.id,n:p.n,v:+p.da||0,f:p.f,b:p.bank})).concat([{id:'giro',n:'Feste Abbuchungen',v:fix(),f:'#94a3a8',b:'Girokonto'}]);
+  $('split').innerHTML=segs.map(s=>`<button style="flex:${Math.max(s.v,0)} 1 0;background:${s.f}" aria-label="${esc(s.n)} ${fmt(s.v)}" data-pot="${s.id}"></button>`).join('')+(leben>0?`<div class="rest" style="flex:${leben} 1 0"></div>`:'');
+  $('split-list').innerHTML=segs.map(s=>`<button class="li" data-pot="${s.id}"><span class="sw" style="background:${s.f}"></span><span class="t">${esc(s.n)}<span>${esc(s.b)}</span></span><span class="num">${fmt(s.v)}</span></button>`).join('')+`<div class="li" style="cursor:default"><span class="sw" style="background:repeating-linear-gradient(135deg,var(--soft) 0 3px,var(--line) 3px 5px)"></span><span class="t"><b>Bleibt zum Leben</b><span>Lebensmittel, Tanken, Einkäufe</span></span><span class="num" style="${leben<0?'color:var(--red)':''}">${fmt(leben)}</span></div>`;
   $('pot-cards').innerHTML=pots().map(p=>{const st=status(p),n=need(p.id),nb=nextBill(p.id),sug=Math.ceil(n/5)*5,diff=Math.round(p.da-n);
     return`<div class="card" id="card-${p.id}"><div class="row2" style="justify-content:space-between"><h3 class="row2" style="gap:8px"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</h3><span class="small mut">${esc(p.bank)}${p.datum?`, Stand ${p.datum}`:''}</span></div>
     <div class="row2" style="justify-content:space-between;align-items:end"><span class="amt" style="font-size:34px;font-weight:800;letter-spacing:-.02em">${fmt(p.stand)}</span><span class="small mut">+ ${fmt(p.da)} jeden Monat</span></div>
@@ -345,8 +439,8 @@ function renderPots(){
     ${n>0?`<div class="spark" data-sp="${p.id}" style="color:var(--ink)"></div>`:''}
     ${nb&&n>0?`<p class="small">Nächste Rechnung: <b>${MONL[nb.m-1]}, ${fmt(nb.s)}</b> (${esc(nb.L.map(r=>r.n).join(', '))})</p>`:''}
     ${p.ziel?`<div class="bar"><i style="width:${Math.min((+p.stand||0)/p.ziel*100,100)}%"></i></div><p class="small mut">Ziel ${fmt(p.ziel)} für Unerwartetes wie eine Nachzahlung.</p>`:''}
-    ${n>0&&Math.abs(diff)>=5?`<p class="small">${diff>0?`Du legst ${fmt(diff)} mehr zurück als die Rechnungen brauchen. Das ist dein Puffer.`:`Für die Rechnungen brauchst du ${fmt(sug)} im Monat.`}</p>`:''}
-    <div class="row2"><button class="btn ghost" data-edit-pot="${p.id}">Bearbeiten</button>${n>0&&Math.abs(diff)>=5?`<button class="btn ghost" data-take="${p.id}">Auf ${fmt(sug)} ändern</button>`:''}</div></div>`}).join('');
+    ${n>0?(()=>{const r=rec(p),mx=Math.max(r,p.da,1),d2=Math.round(p.da-r);return`<div class="gauge"><div class="row2"><span>Du legst zurück</span><b>${fmt(p.da)}</b></div><div class="bar thin"><i class="${p.da<r-5?'a':''}" style="width:${p.da/mx*100}%"></i></div><div class="row2"><span>Empfehlung</span><b>${fmt(r)}</b></div><div class="bar thin"><i style="width:${r/mx*100}%;background:var(--ink)"></i></div><span class="small mut">Rechnungen ${fmt(n*12)} im Jahr, plus ${teu(p)} % Teuerung und ${PUF} % Puffer.${sim(p).min<0?` Für ${MONL[sim(p).minM-1]} fehlen trotzdem ${fmt(-sim(p).min)}: einmalig nachlegen.`:''}${d2>=5?` Dein Puffer: ${fmt(d2)} im Monat.`:''}</span></div>`})():''}
+    <div class="row2"><button class="btn ghost" data-edit-pot="${p.id}">Bearbeiten</button>${n>0&&Math.abs(p.da-rec(p))>=5?`<button class="btn ${p.da<rec(p)?'pri':'ghost'}" data-take="${p.id}">Auf ${fmt(rec(p))} ändern</button>`:''}</div></div>`}).join('');
   pots().forEach(p=>{const el=document.querySelector(`[data-sp="${p.id}"]`);if(el)spark(el,sim(p).pts)});
   $('fixed-list').innerHTML=S.toepfe.filter(p=>p.art==='fest').map(p=>`<button class="li" data-edit-pot="${p.id}"><span class="sw" style="background:${p.f}"></span><span class="t">${esc(p.n)}<span>${esc(p.bank)}</span></span><span class="num">${fmt(p.da)}</span></button>`).join('');
   $('giro-list').innerHTML=S.giro.map((g,i)=>`<button class="li" data-edit-giro="${i}"><span class="sw" style="background:#94a3a8"></span><span class="t">${esc(g.n)}</span><span class="num">${fmt(g.b)}</span></button>`).join('')+`<div class="li" style="cursor:default"><span></span><b>Zusammen</b><span class="num">${fmt(fix())}</span></div>`;
@@ -371,7 +465,7 @@ function renderBills(){
 const KAT={haus:['Versicherungen Haus','#7a8f6a'],auto:['Auto','#b07a4f'],vors:['Vorsorge','#6b7fa8'],kredit:['Hauskredit','#8c6d8f'],energie:['Wohnen und Gebühren','#5f9a9a'],abo:['Telefon, Internet, Abos','#a89a5b'],verein:['Vereine','#9a6b6b'],hund:['Hund','#7d7a72'],ein:['Einnahmen','#2f6b4f']};
 const VERS=['haus','auto','vors'];
 const PORT={wohngebaeude:[['Check24','https://www.check24.de/wohngebaeudeversicherung/'],['Verivox','https://www.verivox.de/wohngebaeudeversicherung/']],hausrat:[['Check24','https://www.check24.de/hausratversicherung/'],['Verivox','https://www.verivox.de/hausratversicherung/']],haftpflicht:[['Check24','https://www.check24.de/haftpflichtversicherung/'],['Verivox','https://www.verivox.de/haftpflichtversicherung/']],kfz:[['Check24','https://www.check24.de/kfz-versicherung/'],['HUK24','https://www.huk24.de/']],strom:[['Check24','https://www.check24.de/strom/'],['Verivox','https://www.verivox.de/strom/']],dsl:[['Check24','https://www.check24.de/dsl/']],handy:[['Check24','https://www.check24.de/handytarife/']]};
-const PORTALS=[[/\bbgv\b/i,'Mein BGV','https://www.bgv.de/privatkunden/mein-bgv/'],[/huk24/i,'HUK24','https://www.huk24.de/'],[/huk/i,'Meine HUK','https://www.huk.de/login'],[/württembergische|wuerttembergische/i,'Kundenportal Württembergische','https://www.wuerttembergische.de/kundenportal'],[/eprimo/i,'mein eprimo','https://www.eprimo.de/mein-eprimo'],[/syna/i,'Syna Einspeiser','https://www.syna.de/digitale-einspeiseangebote'],[/amazon|prime/i,'Prime verwalten','https://www.amazon.de/gp/primecentral'],[/apple/i,'Apple-Account','https://account.apple.com'],[/lidl connect/i,'LIDL Connect','https://www.lidl-connect.de'],[/sparda/i,'SPARDA-Bank','https://www.sparda-bw.de'],[/\bing\b/i,'ING Banking','https://banking.ing.de'],[/rundfunk|ard zdf/i,'Rundfunkbeitrag','https://www.rundfunkbeitrag.de'],[/gemeinde lobbach/i,'Gemeinde Lobbach','https://www.lobbach.de'],[/avr/i,'AVR Kommunal','https://www.avr-kommunal.de'],[/bundeskasse|kfz-steuer/i,'Zoll (Kfz-Steuer)','https://www.zoll.de']];
+const PORTALS=[[/\bbgv\b/i,'Mein BGV','https://www.bgv.de/privatkunden/mein-bgv/'],[/huk24/i,'HUK24','https://www.huk24.de/'],[/huk/i,'Meine HUK','https://www.huk.de/login'],[/württembergische|wuerttembergische/i,'Kundenportal Württembergische','https://www.wuerttembergische.de/kundenportal'],[/eprimo/i,'mein eprimo','https://www.eprimo.de/mein-eprimo'],[/syna/i,'Syna Einspeiser','https://www.syna.de/digitale-einspeiseangebote'],[/amazon|prime/i,'Prime verwalten','https://www.amazon.de/gp/primecentral'],[/apple/i,'Apple-Account','https://account.apple.com'],[/lidl connect/i,'LIDL Connect','https://www.lidl-connect.de'],[/sparda/i,'SPARDA-Bank','https://www.sparda-bw.de'],[/\bing\b/i,'ING Banking','https://banking.ing.de'],[/rundfunk|ard zdf/i,'Rundfunkbeitrag','https://www.rundfunkbeitrag.de'],[/avr/i,'AVR Kommunal','https://www.avr-kommunal.de'],[/bundeskasse|kfz-steuer/i,'Zoll (Kfz-Steuer)','https://www.zoll.de']];
 function portal(v){if(v.url)return{n:'Kundenportal',u:v.url};const s=(v.a||'')+' '+(v.n||'');for(const[re,n,u]of PORTALS)if(re.test(s))return{n,u};return null}
 const portalBtn=(v,cls)=>{const p=portal(v);return p?`<a class="btn ${cls||'ghost'}" href="${esc(p.u)}" target="_blank" rel="noopener noreferrer">${esc(p.n)} öffnen ↗</a>`:''};
 const ICON={1:['✓','var(--grn)','Abgedeckt'],2:['!','var(--amb)','Eingeschränkt'],0:['✗','var(--red)','Fehlt oder Achtung']};
@@ -405,8 +499,12 @@ function openContract(i){
    <div class="row2"><button class="btn pri" id="of-save">Angebot merken</button></div>
    ${offers?`<div><p class="small mut">Gemerkte Angebote</p>${offers}</div>`:''}
    ${ports?`<div class="row2">${ports}</div>`:''}</div>`:''}
+  ${typeof docAdd==='function'?`<div><h3>Dokumente</h3><p class="small mut">Police, Rechnung oder Foto. Wird verschlüsselt gespeichert.</p>${(v.docs||[]).map((d,j)=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:8px 0;flex-wrap:nowrap"><button class="fchip" data-doc-open="${j}" style="text-align:left;overflow:hidden;text-overflow:ellipsis">${esc(d.n)}</button><span class="small mut" style="white-space:nowrap">${esc(d.d)}</span><button class="fchip" data-doc-del="${j}" aria-label="Dokument löschen">×</button></div>`).join('')}<label class="btn ghost" style="margin-top:8px">${icon('upload')} Dokument anhängen<input type="file" id="doc-in" accept="application/pdf,image/*" style="display:none"></label></div>`:''}
   <div class="row2">${portalBtn(v)}<button class="btn ghost" id="ct-edit">Bearbeiten</button></div>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ct-edit').onclick=()=>editContract(i);
+  if($('doc-in'))$('doc-in').onchange=async e=>{const f=e.target.files[0];if(f&&await docAdd(v,f))openContract(i)};
+  $('sheet').querySelectorAll('[data-doc-open]').forEach(b=>b.onclick=()=>docOpen(v.docs[+b.dataset.docOpen]));
+  $('sheet').querySelectorAll('[data-doc-del]').forEach(b=>b.onclick=()=>toast(`${v.docs[+b.dataset.docDel].n} löschen?`,'Löschen',()=>{docDel(v,+b.dataset.docDel);openContract(i)}));
   if(!$('of-res'))return;
   const price=()=>{if(isStrom){const ap=+String($('of-ap').value).replace(',','.'),gp=+String($('of-gp').value).replace(',','.'),kwh=+$('of-kwh').value||0;return ap?kwh*ap/100+gp*12:0}return +String($('of-p').value).replace(',','.')||0};
   const cur=()=>isStrom?(+$('of-kwh').value||0)*(+v.ap||0)/100+(+v.gp||0)*12:+v.b||0;
@@ -467,6 +565,18 @@ function renderContracts(){
   const nx=allDates().filter(x=>x.k!=='rech'&&x.k!=='ende').slice(0,3);
   $('start-fristen').innerHTML=sf.length?`<h2>Kündigungsfristen, bald handeln</h2><div class="list">${sf.map(x=>`<button class="li" data-go="vertraege" data-ct="${x.i}"><span class="sw" style="background:var(--red)"></span><span class="t">${esc(x.v.n)}<span>${esc(x.f.t)}</span></span><span class="num">${fmt(x.v.b)}</span></button>`).join('')}</div>`:(nx.length?`<h2>Nächste Termine</h2><div class="list">${nx.map(x=>`<button class="li" data-go="vertraege" data-ct="${x.i}"><span class="sw" style="background:var(--amb)"></span><span class="t">${esc(x.t)}<span>${esc(x.s)}</span></span><span class="num small">${fd(x.d)}</span></button>`).join('')}</div>`:'');
 }
+function ctAdd(){$('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px">Neuer Vertrag</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
+  <div class="list"><button class="li" id="ca-self">${icon('plus')}<span class="t"><b>Selbst eintragen</b><span>Name, Kosten und Laufzeit eingeben</span></span><span class="chev">›</span></button>
+  <button class="li" id="ca-code">${icon('doc')}<span class="t"><b>Code von Claude einfügen</b><span>Vertrag in Claude auswerten lassen, Code hier einfügen</span></span><span class="chev">›</span></button></div>
+  <details><summary>So geht es mit Claude</summary><p class="small">1. Öffne in Claude das Projekt „Geld-Cockpit“. 2. Lade den Vertrag als PDF oder Foto hoch und schreib „Bitte als Cockpit-Code“. 3. Kopiere den Code und füge ihn hier ein. Das Dokument selbst hängst du danach am Vertrag an, dann liegt es verschlüsselt bei dir.</p></details>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ca-self').onclick=()=>editContract(null);
+  $('ca-code').onclick=()=>{$('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Code von Claude einfügen</h3><textarea id="cc" rows="7" placeholder='{"n":"Hausrat","a":"…"}' aria-label="Code"></textarea><p class="small" id="cc-msg"></p><div class="row2"><button class="btn pri" id="cc-ok">Übernehmen</button><button class="btn ghost" id="s-x">Abbrechen</button></div>`;$('s-x').onclick=closeSheet;
+    $('cc-ok').onclick=()=>{try{let o=JSON.parse($('cc').value.trim().replace(/^```(json)?|```$/g,''));if(o.vertraege)o=o.vertraege;const L=(Array.isArray(o)?o:[o]).map(normCt);if(!L.length)throw 0;S.vertraege=S.vertraege||[];L.forEach(x=>S.vertraege.push(x));closeSheet();go('vertraege');showSub('alle');commit(L.length===1?`${L[0].n} hinzugefügt`:`${L.length} Verträge hinzugefügt`);setTimeout(()=>openContract(S.vertraege.length-1),300)}catch(e){$('cc-msg').textContent='Der Code ist nicht lesbar. Bitte vollständig kopieren.'}}}}
+function normCt(x){if(!x||!x.n)throw 0;const num=v=>+String(v??0).replace(',','.')||0;const o={n:String(x.n).slice(0,80),a:String(x.a||'').slice(0,60),k:KAT[x.k]?x.k:'haus',b:num(x.b),rh:RH[x.rh]?x.rh:'jahr',wo:x.wo&&(x.wo==='giro'||pot(x.wo))?x.wo:'giro',ende:/^\d{4}-\d{2}-\d{2}$/.test(x.ende||'')?x.ende:'',frist:[0,1,3].includes(+x.frist)?+x.frist:1,st:STX[x.st]?x.st:'pruefen',tipp:String(x.tipp||'').slice(0,600)};
+  if(Array.isArray(x.cov))o.cov=x.cov.slice(0,20).map(c=>[String(c[0]).slice(0,120),[0,1,2].includes(+c[1])?+c[1]:1,String(c[2]||'').slice(0,200)]);
+  if(Array.isArray(x.must))o.must=x.must.slice(0,12).map(m=>String(m).slice(0,120));
+  if(Array.isArray(x.termine))o.termine=x.termine.filter(z=>/^\d{4}-\d{2}-\d{2}$/.test(z.d||'')).slice(0,5).map(z=>({d:z.d,t:String(z.t||'Termin').slice(0,60)}));
+  if(/^https:\/\//.test(x.url||''))o.url=x.url;if(PORT[x.port])o.port=x.port;return o}
 function editContract(i){const v=i==null?{n:'',a:'',k:selKat&&KAT[selKat]?selKat:'haus',b:0,rh:'jahr',wo:'giro',ende:'',frist:1,st:'ok',tipp:''}:ctAll()[i];
   const f=i==null?null:frist(v);
   const woOpts=[['giro','Girokonto']].concat(S.toepfe.map(p=>[p.id,(p.art==='topf'?'Topf ':'Dauerauftrag ')+p.n]));
@@ -537,6 +647,11 @@ const HELP=[
  ['Wie vergleiche ich ein Angebot?','Bei Verträge auf „Ansehen und vergleichen“ tippen. Dort steht, was dein Vertrag abdeckt und was ein neues Angebot mindestens bieten muss. Angebot holen, zum Beispiel über Check24 oder Verivox, Preis eintragen und abhaken, was es bietet. Das Cockpit rechnet aus, was du sparst, und sagt dir, bis wann du kündigen musst. Mit „Angebot merken“ bleibt es gespeichert.'],
  ['Wie komme ich schnell zum Kundenportal eines Anbieters?','Bei Verträge einen Vertrag antippen. Oben steht ein Knopf, zum Beispiel „Mein BGV öffnen“. Er führt direkt zur Anmeldeseite. Fehlt der Knopf, trag den Link unter Bearbeiten bei „Link zum Kundenportal“ ein.'],
  ['Wo finde ich was?','Start: was noch frei ist und was bald fällig wird. Konten: Kontostände und Kontoauszüge einlesen. Töpfe: Daueraufträge und Rücklagen. Rechnungen: alles, was seltener als monatlich kommt. Verträge: Kosten, Fristen, Versicherungen und Termine. Ziele: wofür du sparst. Oben rechts: Suche, Hilfe und Einstellungen.'],
+ ['Was zeigt die Startseite?','Oben die Ampel: grün heißt alles im Plan, gelb gibt es Empfehlungen, rot musst du handeln. Darunter vier Kennzahlen und alle Hinweise. Jeder Hinweis führt mit einem Tipp genau dorthin, wo du etwas ändern kannst.'],
+ ['Wie berechnet das Cockpit die Empfehlung für einen Topf?','Alle Rechnungen des Topfs im Jahr, plus erwartete Teuerung (Haus 6 %, Auto 5 %, anpassbar unter Bearbeiten), plus 10 % Puffer, geteilt durch 12. Liegt dein Dauerauftrag darunter, bekommst du einen Hinweis. Mit „Auf … ändern“ übernimmst du den Vorschlag, den Dauerauftrag bei der Bank änderst du selbst.'],
+ ['Woran erkenne ich steigende Kosten?','Änderst du den Betrag einer Rechnung, merkt sich das Cockpit den alten Wert. Steigt eine Rechnung um mehr als 8 %, erscheint auf der Startseite ein Hinweis.'],
+ ['Wie lade ich einen neuen Vertrag hoch?','„Vertrag hinzufügen“ auf der Startseite oder bei Verträge. Entweder selbst eintragen oder den Vertrag in Claude auswerten lassen und den Code einfügen. Das PDF oder Foto hängst du danach am Vertrag unter „Dokument anhängen“ an. Es wird verschlüsselt gespeichert.'],
+ ['Wie erstelle ich einen Bericht als PDF?','„Bericht als PDF“ auf der Startseite. Zur Wahl stehen Jahresbericht, Vertragsübersicht, Fristen und Versicherungen. Im Druckfenster „Als PDF sichern“ wählen oder direkt teilen.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
  ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
  ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Einstellungen, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
@@ -564,11 +679,11 @@ $('sheet-bg').onclick=e=>{if(e.target.id==='sheet-bg')closeSheet()};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 const potOpts=()=>pots().map(p=>[p.id,p.n]);
 const monOpts=MONL.map((m,i)=>[String(i+1),m]);
-function editPot(id){const p=pot(id);if(!p)return;const f=[{l:'Name',v:p.n},{l:'Bank oder Konto',v:p.bank},{l:'Dauerauftrag pro Monat in €',v:p.da,type:'number'}];if(p.art==='topf')f.push({l:'Kontostand heute in €',v:p.stand,type:'number',hint:'Wird beim Einlesen automatisch aktualisiert.'});if(p.ziel!==undefined)f.push({l:'Ziel in €',v:p.ziel,type:'number'});
-  sheet(p.n,f,v=>{p.n=v[0];p.bank=v[1];p.da=v[2];if(p.art==='topf')p.stand=v[3];if(p.ziel!==undefined)p.ziel=v[4]})}
+function editPot(id){const p=pot(id);if(!p)return;const f=[{l:'Name',v:p.n},{l:'Bank oder Konto',v:p.bank},{l:'Dauerauftrag pro Monat in €',v:p.da,type:'number'}];if(p.art==='topf')f.push({l:'Kontostand heute in €',v:p.stand,type:'number',hint:'Wird beim Einlesen automatisch aktualisiert.'});if(p.ziel!==undefined)f.push({l:'Ziel in €',v:p.ziel,type:'number'});if(p.art==='topf'&&billsOf(p.id).length)f.push({l:'Erwartete Teuerung in % pro Jahr',v:teu(p),type:'number',hint:'Damit rechnet die Empfehlung. Bei Heizöl oder Versicherungen lieber etwas mehr ansetzen.'});
+  sheet(p.n,f,v=>{p.n=v[0];p.bank=v[1];p.da=v[2];let j=3;if(p.art==='topf')p.stand=v[j++];if(p.ziel!==undefined)p.ziel=v[j++];if(p.art==='topf'&&billsOf(p.id).length)p.teu=v[j]})}
 function editGiro(i){const g=i==null?{n:'',b:0}:S.giro[i];sheet(i==null?'Neue Abbuchung':g.n,[{l:'Was',v:g.n},{l:'Betrag pro Monat in €',v:g.b,type:'number'}],v=>{if(i==null)S.giro.push({n:v[0]||'Abbuchung',b:v[1]});else{g.n=v[0];g.b=v[1]}},i==null?null:()=>S.giro.splice(i,1))}
 function editInc(i){const g=S.einnahmen[i];sheet(g.n,[{l:'Was',v:g.n},{l:'Betrag pro Monat in €',v:g.b,type:'number'}],v=>{g.n=v[0];g.b=v[1]})}
-function editBill(i){const r=i==null?{n:'',m:selMonth||cm,b:0,t:selPot||'haus'}:S.rechnungen[i];sheet(i==null?'Neue Rechnung':r.n,[{l:'Rechnung',v:r.n},{l:'Betrag in €',v:r.b,type:'number'},{l:'Monat',v:String(r.m),type:'select',opts:monOpts},{l:'Welcher Topf zahlt?',v:r.t,type:'select',opts:potOpts()}],v=>{const o={n:v[0]||'Rechnung',b:v[1],m:+v[2],t:v[3]};if(i==null)S.rechnungen.push(o);else Object.assign(r,o)},i==null?null:()=>S.rechnungen.splice(i,1))}
+function editBill(i){const r=i==null?{n:'',m:selMonth||cm,b:0,t:selPot||'haus'}:S.rechnungen[i];sheet(i==null?'Neue Rechnung':r.n,[{l:'Rechnung',v:r.n},{l:'Betrag in €',v:r.b,type:'number'},{l:'Monat',v:String(r.m),type:'select',opts:monOpts},{l:'Welcher Topf zahlt?',v:r.t,type:'select',opts:potOpts()}],v=>{const o={n:v[0]||'Rechnung',b:v[1],m:+v[2],t:v[3]};if(i!=null&&+r.b>0&&+v[1]!==+r.b)o.alt=+r.b;if(i==null)S.rechnungen.push(o);else Object.assign(r,o)},i==null?null:()=>S.rechnungen.splice(i,1))}
 function editGoal(i){const g=i==null?{n:'',b:0,wunsch:''}:S.ziele[i];sheet(i==null?'Neues Ziel':g.n,[{l:'Ziel',v:g.n},{l:'Kostet in €',v:g.b,type:'number'},{l:'Wunschtermin (frei lassen, wenn egal)',v:g.wunsch,type:'month'}],v=>{const o={n:v[0]||'Ziel',b:v[1],wunsch:v[2]};if(i==null)S.ziele.push(o);else Object.assign(g,o)},i==null?null:()=>S.ziele.splice(i,1))}
 
 /* ---------- Suche ---------- */
@@ -773,11 +888,33 @@ async function boot(){
       m.textContent='Verschlüssele ...';SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await deriveKey($('su-p1').value,SALT);enterApp();commit('Eingerichtet. Lösch die Startdatei jetzt von deinem Gerät.')}}
 }
 
+/* ---------- Dokumente verschlüsselt bei GitHub ---------- */
+async function ghPath(method,path,body,raw){return fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}${method==='GET'?'?ref='+GH.branch+'&t='+Date.now():''}`,{method,cache:'no-store',headers:{'Authorization':'Bearer '+TOKEN,'Accept':raw?'application/vnd.github.raw+json':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},body:body?JSON.stringify(body):undefined})}
+async function docKey(){if(!S.dk)S.dk=b64(crypto.getRandomValues(new Uint8Array(32)));return crypto.subtle.importKey('raw',unb64(S.dk),'AES-GCM',false,['encrypt','decrypt'])}
+async function docAdd(v,file){
+  if(!TOKEN){toast('Für Dokumente zuerst in den Einstellungen das Speichern bei GitHub einrichten.');return false}
+  if(file.size>6e6){toast('Die Datei ist größer als 6 MB. Bitte kleiner speichern oder als Foto aufnehmen.');return false}
+  toast('Verschlüssele und lade hoch ...');
+  try{const k=await docKey(),iv=crypto.getRandomValues(new Uint8Array(12)),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,await file.arrayBuffer());
+    const id=Array.from(crypto.getRandomValues(new Uint8Array(8)),x=>x.toString(16).padStart(2,'0')).join('');
+    const r=await ghPath('PUT','data/docs/'+id+'.enc',{message:'Dokument',content:b64(te.encode(JSON.stringify({v:1,iv:b64(iv),ct:b64(ct)}))),branch:GH.branch});
+    if(!r.ok)throw new Error(r.status);
+    v.docs=v.docs||[];v.docs.push({id,n:file.name.slice(0,80),t:file.type||'application/octet-stream',s:file.size,d:fd(new Date())});await commit('Dokument verschlüsselt gespeichert');return true}
+  catch(e){toast('Hochladen hat nicht geklappt. Bitte noch einmal versuchen.');return false}}
+async function docOpen(d){const w=window.open('','_blank');
+  try{const r=await ghPath('GET','data/docs/'+d.id+'.enc',null,true);if(!r.ok)throw 0;const o=JSON.parse(await r.text());const k=await docKey();
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},k,unb64(o.ct));const url=URL.createObjectURL(new Blob([pt],{type:d.t}));
+    if(w)w.location=url;else location.href=url}
+  catch(e){if(w)w.close();toast('Das Dokument konnte nicht geöffnet werden.')}}
+async function docDel(v,j){const d=v.docs[j];try{const g=await ghPath('GET','data/docs/'+d.id+'.enc');if(g.ok){const sha=(await g.json()).sha;await ghPath('DELETE','data/docs/'+d.id+'.enc',{message:'Dokument entfernt',sha,branch:GH.branch})}}catch(e){}
+  v.docs.splice(j,1);commit('Dokument gelöscht')}
+
 /* ---------- Navigation ---------- */
-function renderAll(){renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
+function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
 function go(id,anchor){const ids=['start','konten','toepfe','rechnungen','vertraege','ziele','einstellungen','hilfe'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;const d=b.dataset;
+  if(d.act){const a=d.act;if(a==='go:newct')ctAdd();else if(a==='go:einlesen')go('konten','einlesen');else if(a==='go:report')openReports();else doAct(a);return}
   if(d.go){go(d.go,d.anchor);if(d.month){selMonth=+d.month;renderBills()}if(d.ct!==undefined)setTimeout(()=>openContract(+d.ct),60)}
   else if(d.openCt!==undefined)openContract(+d.openCt);
   else if(d.editCt!==undefined)editContract(+d.editCt);
@@ -789,10 +926,10 @@ document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b
   else if(d.editInc!==undefined)editInc(+d.editInc);
   else if(d.editBill!==undefined)editBill(+d.editBill);
   else if(d.editGoal!==undefined)editGoal(+d.editGoal);
-  else if(d.take){const p=pot(d.take),old=p.da;p.da=Math.ceil(need(p.id)/5)*5;commit(`${p.n}: Dauerauftrag auf ${fmt(p.da)} geändert. Denk dran, ihn auch bei der Bank zu ändern.`)}
+  else if(d.take){const p=pot(d.take),old=p.da;p.da=rec(p);commit(`${p.n}: Dauerauftrag auf ${fmt(p.da)} geändert. Denk dran, ihn auch bei der Bank zu ändern.`)}
   else if(d.month!==undefined){selMonth=selMonth===+d.month?0:+d.month;renderBills()}
   else if(d.fpot!==undefined){selPot=d.fpot;renderBills()}});
-$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>editContract(null);$('help-q').oninput=renderHelp;$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
+$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>ctAdd();$('help-q').oninput=renderHelp;$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
 $('proj').oninput=e=>{$('proj').dataset.v=e.target.value;renderGoals()};
 $('proj-ok').onclick=()=>{pot('proj').da=+$('proj').dataset.v;delete $('proj').dataset.v;commit('Betrag für Haus-Projekte gespeichert. Denk an den Dauerauftrag bei der Bank.')};
 $('proj-reset').onclick=()=>{delete $('proj').dataset.v;renderGoals()};
