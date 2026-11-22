@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Geld-Cockpit">
+<meta name="theme-color" content="#141414">
+<title>Geld-Cockpit</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style>
+/* VOICE everyday money app for one tired sole earner: calm, few words, one answer per screen
+   IDEA envelope budgeting: payday money goes into labelled envelopes; the start screen answers "what can I still spend"
+   PICTURE the big "noch frei" figure with its month bar, then traffic-light envelope tiles
+   COLOUR stone ground, black ink, white panels, green/amber/brick only for status, muted envelope colours
+   TYPE Schibsted Grotesk 800 for figures, 400/500 for text
+   LAYOUT phone first: one column, bottom tab bar; desktop: top tabs, tiles in a grid */
+:root{color-scheme:light dark;--bg:light-dark(#e7e4df,#171513);--ink:light-dark(#141414,#efece7);--mut:light-dark(#5d5952,#a9a49c);--pan:light-dark(#ffffff,#22201d);--line:light-dark(#d9d4cc,#3a3631);--soft:light-dark(#f4f2ee,#2a2724);--red:light-dark(#b8321b,#ff8a73);--amb:light-dark(#9a6400,#f0b54a);--grn:light-dark(#2f6b4f,#7fc4a0);--redbg:light-dark(#fbe6e2,#3a1f1a);--ambbg:light-dark(#fbf0d9,#3a2f1a);--grnbg:light-dark(#e3f1e8,#1c3027)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body.locked .wrap{display:none}
+#lock{max-width:440px;margin:0 auto;padding:max(48px,env(safe-area-inset-top)) 18px 40px}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+.wrap{max-width:1100px;margin:0 auto;padding:0 max(4vw,16px)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:max(18px,env(safe-area-inset-top))}
+.brand{font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:400;font-size:13px;color:var(--mut);letter-spacing:0}
+.icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--pan);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.icon svg,nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav{display:flex;gap:6px;margin-top:14px;border-bottom:2px solid var(--ink)}
+nav a{display:flex;align-items:center;gap:6px;padding:10px 14px;min-height:44px;color:var(--ink);text-decoration:none;font-weight:700;border-radius:10px 10px 0 0}
+nav a[aria-current=page]{background:var(--ink);color:var(--bg)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--amb);outline-offset:2px}
+main{padding:20px 0 48px}
+section{display:none}
+section.on{display:block}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.08;letter-spacing:-.02em;margin:0 0 6px;font-weight:800;text-wrap:balance}
+h2{font-size:20px;line-height:1.2;margin:28px 0 10px;font-weight:800}
+h3{font-size:17px;margin:0;font-weight:700}
+p{margin:0}
+.mut{color:var(--mut)}
+.small{font-size:14px}
+.pan{background:var(--pan);border:1px solid var(--line);border-radius:16px;padding:18px}
+.hero{display:grid;gap:10px}
+.hero .lab{font-size:15px;color:var(--mut)}
+.big{font-size:clamp(52px,12vw,84px);font-weight:800;line-height:.95;letter-spacing:-.035em;white-space:nowrap}
+.bar{height:16px;border-radius:8px;background:var(--soft);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--grn)}
+.bar i.a{background:var(--amb)}.bar i.r{background:var(--red)}
+.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--pan);color:var(--ink);border-radius:12px;padding:10px 16px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn.pri{background:var(--ink);color:var(--bg)}
+a.btn{text-decoration:none}
+.btn.ghost{border-color:var(--line)}
+.btn.full{width:100%}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.row2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile .chip{font-size:13px;white-space:normal}
+.tile{background:var(--pan);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:6px;text-align:left;font:inherit;color:inherit;cursor:pointer;align-content:start}
+.tile:hover{border-color:var(--ink)}
+.tile .amt{font-size:26px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.tile .nm{display:flex;align-items:center;gap:8px;font-weight:700}
+.sw{width:12px;height:12px;border-radius:4px;flex:none}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;border-radius:999px;padding:3px 10px;width:fit-content;max-width:100%;line-height:1.3}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.ok{background:var(--grnbg);color:var(--grn)}.warn{background:var(--ambbg);color:var(--amb)}.bad{background:var(--redbg);color:var(--red)}
+.list{display:grid;background:var(--pan);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;min-height:56px;width:100%}
+.li:last-child{border-bottom:0}
+.li:hover{background:var(--soft)}
+.li .t{display:grid}
+.li .t span{font-size:14px;color:var(--mut)}
+.num{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+.ghead{display:flex;justify-content:space-between;padding:10px 14px;background:var(--soft);font-weight:700;font-size:14px;border-bottom:1px solid var(--line)}
+.split{display:flex;height:40px;border-radius:10px;overflow:hidden;background:var(--soft)}
+.split button{border:0;padding:0;height:100%;cursor:pointer}
+.split .rest{background:repeating-linear-gradient(135deg,var(--soft) 0 6px,var(--line) 6px 8px)}
+.spark{position:relative;height:90px}
+.spark svg{position:absolute;inset:0;width:100%;height:100%}
+.card{background:var(--pan);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:14px}
+.months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;align-items:end;height:150px}
+.mcol{display:flex;flex-direction:column-reverse;height:100%;border:0;background:none;padding:0;cursor:pointer;gap:2px}
+.mcol span{display:block;border-radius:3px;width:100%}
+.mcol.sel{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
+.mlab{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;font-size:12px;color:var(--mut);text-align:center;margin-top:4px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.fchip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--pan);color:var(--ink);border-radius:999px;padding:8px 12px;min-height:40px;cursor:pointer}
+.fchip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:48px;width:100%}
+input[type=range]{padding:0;background:none;border:0;accent-color:var(--ink)}
+label{display:grid;gap:4px;font-size:14px;color:var(--mut)}
+.drop{display:grid;gap:6px;place-items:center;text-align:center;border:2px dashed var(--line);border-radius:16px;padding:26px 16px;cursor:pointer;color:var(--ink);background:var(--pan)}
+.drop.over,.drop:hover{border-color:var(--ink)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.prow{display:grid;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}
+details{background:var(--pan);border:1px solid var(--line);border-radius:14px;padding:0 16px;margin-bottom:10px}
+details summary{cursor:pointer;min-height:52px;display:flex;align-items:center;font-weight:700}
+details[open]{padding-bottom:14px}
+details p+p{margin-top:8px}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:20;align-items:flex-end;justify-content:center}
+.sheet-bg.on{display:flex}
+.sheet{background:var(--pan);width:min(560px,100%);border-radius:20px 20px 0 0;padding:20px 18px max(18px,env(safe-area-inset-bottom));display:grid;gap:14px;max-height:90vh;overflow:auto}
+@media(min-width:700px){.sheet-bg{align-items:center}.sheet{border-radius:20px}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;z-index:30;display:none;max-width:calc(100% - 32px);gap:12px;align-items:center}
+.toast.on{display:flex}
+.toast button{font:inherit;font-weight:700;background:var(--bg);color:var(--ink);border:0;border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
+.res{display:grid;gap:0;margin-top:12px}
+.note{font-size:14px;color:var(--mut);margin-top:8px}
+.sel-sort{width:auto;min-height:40px;padding:6px 10px;font-size:14px}
+.li .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.li .chips .chip{font-size:12.5px;padding:2px 8px}
+.neu{background:var(--soft);color:var(--mut)}
+.li .t span.chip.ok{color:var(--grn)}.li .t span.chip.warn{color:var(--amb)}.li .t span.chip.bad{color:var(--red)}.li .t span.chip.neu{color:var(--mut)}
+#start-fristen h2{margin-top:0}#start-fristen{margin-bottom:20px}
+.stack2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:760px){.stack2{grid-template-columns:1fr}}
+@media(max-width:600px){
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;border:0;border-top:1px solid var(--line);background:var(--pan);display:grid;grid-template-columns:repeat(6,1fr);padding:4px 2px max(6px,env(safe-area-inset-bottom))}
+nav a{flex-direction:column;gap:2px;font-size:10.5px;letter-spacing:-.01em;padding:6px 0;border-radius:12px;min-height:56px;justify-content:center}
+nav svg{width:24px;height:24px}
+main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+.toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+.months{height:120px;gap:3px}.mlab{gap:3px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body class="locked">
+<div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
+<div class="wrap">
+<header>
+<div class="brand">Geld-Cockpit<small id="stamp"></small></div>
+<button class="icon" id="open-search" aria-label="Suchen"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+</header>
+<nav aria-label="Bereiche">
+<a href="#start" id="t-start"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+<a href="#toepfe" id="t-toepfe"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM4 7l8 6 8-6"/></svg>Töpfe</a>
+<a href="#rechnungen" id="t-rechnungen"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Rechnungen</a>
+<a href="#vertraege" id="t-vertraege"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Verträge</a>
+<a href="#ziele" id="t-ziele"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Ziele</a>
+<a href="#mehr" id="t-mehr"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Mehr</a>
+</nav>
+</div>
+
+<main class="wrap">
+<section id="v-start">
+<div id="start-fristen"></div>
+<div class="stack2">
+<div class="pan hero" id="hero"></div>
+<div>
+<h2 style="margin-top:0">Deine Töpfe</h2>
+<div class="tiles" id="start-tiles"></div>
+</div>
+</div>
+<h2>Bald fällig</h2>
+<div class="list" id="soon"></div>
+<h2>Wohin dein Gehalt am Zahltag geht</h2>
+<div class="pan">
+<div class="split" id="split" aria-label="Aufteilung des Gehalts"></div>
+<div class="res" id="split-list"></div>
+</div>
+</section>
+
+<section id="v-toepfe">
+<h1>Deine Töpfe</h1>
+<p class="mut">Jeder Topf ist ein eigenes Konto. Die Linie zeigt, wie viel in den nächsten zwölf Monaten drin ist, wenn alle Rechnungen kommen. Tipp auf „Bearbeiten“, um etwas zu ändern.</p>
+<div class="cards" id="pot-cards" style="margin-top:16px"></div>
+<h2>Feste Daueraufträge</h2>
+<div class="list" id="fixed-list"></div>
+<h2>Jeden Monat vom Girokonto</h2>
+<div class="list" id="giro-list"></div>
+<div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-giro">+ Abbuchung hinzufügen</button></div>
+<h2>Einnahmen</h2>
+<div class="list" id="income-list"></div>
+</section>
+
+<section id="v-rechnungen">
+<h1 id="bill-title">Große Rechnungen im Jahr</h1>
+<p class="mut">Alles, was seltener als monatlich kommt. Tipp auf einen Monat, um nur ihn zu sehen.</p>
+<div class="pan" style="margin-top:14px"><div class="months" id="months"></div><div class="mlab" id="mlab"></div></div>
+<div class="filters" id="bill-filters"></div>
+<div class="list" id="bill-list"></div>
+<div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-bill">+ Rechnung hinzufügen</button><span class="small mut" id="bill-sum"></span></div>
+</section>
+
+<section id="v-vertraege">
+<h1>Deine Verträge</h1>
+<p class="mut">Alles, was regelmäßig Geld kostet, an einem Ort. Mit Kündigungsfrist, damit dich kein Termin überrascht. Tipp auf einen Vertrag, um ihn zu ändern.</p>
+<div class="pan hero" id="ct-hero" style="margin-top:14px"></div>
+<div id="ct-soon-wrap"><h2>Fristen in den nächsten drei Monaten</h2><div class="list" id="ct-soon"></div></div>
+<h2 id="tl-h">Alle Termine und Laufzeiten</h2>
+<p class="mut small">Kündigungsfristen, Vertragsenden, Preisgarantien und große Rechnungen in einer Zeitleiste. Hol sie dir mit Erinnerung in deinen Handy-Kalender.</p>
+<div class="row2" style="margin:12px 0"><button class="btn pri" id="ics">In meinen Kalender übernehmen</button></div>
+<div class="list" id="tl-list"></div>
+<div class="row2" style="margin-top:8px"><button class="btn ghost" id="tl-more"></button></div>
+<div id="tl-miss"></div>
+<h2 id="ins-h">Versicherungen und Energie auf einen Blick</h2>
+<p class="mut small">Was abgedeckt ist, was fehlt, und ein Rechner, um Angebote abzugleichen.</p>
+<div class="cards" id="ins-cards" style="margin-top:12px"></div>
+<h2>Wofür das Geld geht</h2>
+<div class="pan"><div class="split" id="ct-split" aria-label="Kosten nach Bereich"></div><div class="res" id="ct-cats"></div></div>
+<h2 id="ct-all">Alle Verträge</h2>
+<div class="row2" style="justify-content:space-between"><div class="filters" id="ct-filters" style="margin:0"></div><label class="row2" style="gap:6px;font-size:14px">Sortieren<select id="ct-sort" class="sel-sort"><option value="frist">nach Frist</option><option value="kosten">nach Kosten</option><option value="name">nach Name</option></select></label></div>
+<div class="list" id="ct-list" style="margin-top:12px"></div>
+<div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-ct">+ Vertrag hinzufügen</button><span class="small mut" id="ct-sum"></span></div>
+<p class="note">Die Verträge sind deine Übersicht. Geplant wird das Geld weiter bei Töpfe und Rechnungen. So zählt nichts doppelt.</p>
+</section>
+
+<section id="v-ziele">
+<h1>Wofür du sparst</h1>
+<p class="mut">Das Geld kommt aus dem Topf Haus-Projekte. Die Ziele werden nacheinander voll gemacht.</p>
+<div class="pan" style="margin-top:16px;display:grid;gap:8px">
+<label for="proj">So viel geht jeden Monat in Haus-Projekte: <b id="proj-v" style="color:var(--ink)"></b></label>
+<input id="proj" type="range" min="0" max="800" step="25">
+<p class="small mut" id="proj-note"></p>
+<div class="row2" id="proj-save" hidden><button class="btn pri" id="proj-ok">Betrag speichern</button><button class="btn ghost" id="proj-reset">Zurück</button></div>
+</div>
+<div class="cards" id="goal-cards" style="margin-top:14px"></div>
+<div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-goal">+ Ziel hinzufügen</button></div>
+</section>
+
+<section id="v-mehr">
+<h1 id="einlesen">Kontoauszüge einlesen</h1>
+<p class="mut">Einmal im Monat: CSV-Dateien deiner Konten auswählen. Kontostände, Ampeln und „noch frei“ aktualisieren sich dann von selbst. Die Dateien bleiben auf deinem Gerät.</p>
+<label class="drop" id="drop" for="csv" style="margin-top:14px"><b>CSV-Dateien auswählen</b><span class="small mut">Mehrere auf einmal gehen auch</span><input id="csv" type="file" accept=".csv,.txt,text/csv" multiple></label>
+<div id="preview"></div>
+<h2>Meine Konten</h2>
+<div class="list" id="acct-list"></div>
+<div class="row2" style="margin-top:10px"><button class="btn ghost" id="reset-imp">Eingelesenes zurücksetzen</button></div>
+<p class="note">Setzt den Monat und die Doppelt-Prüfung zurück, damit du Dateien neu einlesen kannst. Kontostände und deine Planung bleiben.</p>
+<h2>Hilfe</h2>
+<div id="help"></div>
+<h2>Sicherung</h2>
+<div class="pan" style="display:grid;gap:10px">
+<p class="small mut">Eine Sicherung ist unverschlüsselt. Bewahr sie sicher auf, zum Beispiel in einem Passwort-Manager. Damit kannst du alles wiederherstellen, auch wenn GitHub einmal weg ist.</p>
+<div class="row2"><button class="btn ghost" id="backup-copy">Sicherung kopieren</button><button class="btn ghost" id="backup-file">Als Datei speichern</button><button class="btn ghost" id="backup-load">Sicherung einspielen</button></div>
+</div>
+<h2>Speichern und Sicherheit</h2>
+<div class="pan" style="display:grid;gap:10px"><div id="sync"></div><hr style="border:0;border-top:1px solid var(--line);width:100%"><p class="small mut">Deine Daten liegen nur verschlüsselt bei GitHub (AES-256). Nach 15 Minuten ohne Bedienung sperrt sich das Cockpit.</p><div class="row2"><button class="btn ghost" id="lock-now">Jetzt sperren</button><button class="btn ghost" id="pw-change">Passwort ändern</button></div></div>
+<h2>Einstellungen</h2>
+<div class="pan"><label>Dein Nachname<input id="ownname"></label><p class="note">Überweisungen, in denen dein Name steht, zählen nicht als Ausgabe. Das sind deine eigenen Töpfe.</p></div>
+</section>
+</main>
+
+<div class="sheet-bg" id="sheet-bg"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" id="sheet"></div></div>
+<div class="toast" id="toast" role="status"><span id="toast-msg"></span><button id="toast-btn" hidden></button></div>
+
+<script>
+{
+const $=id=>document.getElementById(id);
+const fmt=v=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Math.round(v||0));
+const MON=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const MONL=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fd=d=>d?`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`:'';
+let S=null;
+const now=new Date(),cm=now.getMonth()+1,cy=now.getFullYear();
+let selMonth=0,selPot='',api=null,pending=[];
+const pot=id=>S.toepfe.find(p=>p.id===id);
+const pots=()=>S.toepfe.filter(p=>p.art==='topf');
+const sum=(a,k='b')=>a.reduce((s,x)=>s+(+x[k]||0),0);
+const need=id=>sum(S.rechnungen.filter(r=>r.t===id))/12;
+const inc=()=>sum(S.einnahmen),da=()=>sum(S.toepfe,'da'),fix=()=>sum(S.giro);
+function sim(p){let bal=+p.stand||0,min=bal,minM=0,pts=[bal];for(let i=1;i<=12;i++){const m=(cm-1+i)%12+1;bal+=+p.da||0;bal-=sum(S.rechnungen.filter(r=>r.t===p.id&&+r.m===m));pts.push(bal);if(bal<min){min=bal;minM=m}}return{pts,min,minM}}
+function status(p){if(p.id==='proj')return{c:'ok',t:'Spart für deine Ziele'};if(p.ziel){const r=p.ziel-(+p.stand||0);return r<=0?{c:'ok',t:'Ziel erreicht'}:{c:'warn',t:`Noch ${fmt(r)} bis zum Ziel`}}const s=sim(p),n=need(p.id);if(s.min<0)return{c:'bad',t:`Im ${MONL[s.minM-1]} fehlen ${fmt(-s.min)}`};if(p.da+0.5<n)return{c:'warn',t:'Dauerauftrag ist zu klein'};return{c:'ok',t:'Reicht das ganze Jahr'}}
+function nextBill(id){for(let i=1;i<=12;i++){const m=(cm-1+i)%12+1;const L=S.rechnungen.filter(r=>(!id||r.t===id)&&+r.m===m);if(L.length)return{m,L,s:sum(L)}}return null}
+function toast(msg,btn,fn){$('toast-msg').textContent=msg;const b=$('toast-btn');b.hidden=!btn;if(btn){b.textContent=btn;b.onclick=fn}$('toast').classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('on'),btn?8000:3500)}
+
+/* ---------- Start ---------- */
+function renderStart(){
+  const plan=inc()-da(),leben=plan-fix(),M=S.monat;
+  let h='';
+  if(M&&M.zurueck!==undefined){const dim=new Date(M.jahr,M.mon,0).getDate(),left=Math.max(dim-M.tage,0),offen=fixOffen(M),netto=M.ausgaben-M.zurueck,frei=plan-netto-offen,pct=Math.min(Math.max(netto/plan,0),1)*100,soll=plan*M.tage/dim,cls=frei<0?'r':netto>soll?'a':'',hol=Math.max(M.gross-M.zurueck,0);
+    h=`<p class="lab">Noch frei bis Ende ${MONL[M.mon-1]}</p><div class="big" style="${frei<0?'color:var(--red)':''}">${fmt(frei)}</div>
+    <p>${frei>0&&left>0?`Das sind <b>${fmt(frei/left)} pro Tag</b> für die restlichen ${left} Tage.`:frei<0?'<b>Diesen Monat ist mehr rausgegangen als geplant.</b>':''}</p>
+    <div class="bar" title="${fmt(netto)} von ${fmt(plan)}"><i class="${cls}" style="width:${pct}%"></i></div>
+    <div class="list" style="font-size:15px">
+    <div class="li" style="cursor:default;min-height:44px"><span></span><span>Vom Girokonto ausgegeben</span><span class="num">${fmt(M.ausgaben)}</span></div>
+    <div class="li" style="cursor:default;min-height:44px"><span></span><span>Aus deinen Töpfen zurückgeholt</span><span class="num" style="color:var(--grn)">+ ${fmt(M.zurueck)}</span></div>
+    ${offen?`<div class="li" style="cursor:default;min-height:44px"><span></span><span>Feste Abbuchungen, die noch kommen</span><span class="num">- ${fmt(offen)}</span></div>`:''}
+    <div class="li" style="cursor:default;min-height:44px"><span></span><span>Geplant für den Monat</span><span class="num">${fmt(plan)}</span></div></div>
+    ${hol>=20?`<p class="chip warn">Darin stecken ${fmt(M.gross)} große Rechnungen. Hol dir noch bis zu ${fmt(hol)} aus dem passenden Topf zurück.</p>`:''}
+    <p class="small mut">Stand ${M.bis}. Überweisungen an deine eigenen Konten zählen nicht als Ausgabe.</p>
+    <details style="margin:4px 0 0;background:var(--soft)"><summary>Wofür ging das Geld?</summary>${M.top.map(t=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span>${esc(t.n)}</span><span class="num">${fmt(t.b)}</span></div>`).join('')}</details>
+    <div class="row2"><button class="btn ghost" data-go="mehr" data-anchor="einlesen">Neuen Auszug einlesen</button></div>`}
+  else{h=`<p class="lab">Dein Wochengeld zum Leben</p><div class="big" style="${leben<0?'color:var(--red)':''}">${fmt(leben/4.35)}</div>
+    <p>Das bleibt nach allen Daueraufträgen und festen Abbuchungen. Bisher hast du für den Alltag etwa <b>${fmt(S.alltag/4.35)} pro Woche</b> ausgegeben.</p>
+    <p class="small mut">Lies deinen Kontoauszug ein, dann siehst du hier jeden Tag, was im Monat noch frei ist.</p>
+    <div class="row2"><button class="btn pri" data-go="mehr" data-anchor="einlesen">Kontoauszug einlesen</button></div>`}
+  $('hero').innerHTML=h;
+  $('start-tiles').innerHTML=pots().map(p=>{const st=status(p);return`<button class="tile" data-pot="${p.id}"><span class="nm"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</span><span class="amt">${fmt(p.stand)}</span><span class="chip ${st.c}">${esc(st.t)}</span></button>`}).join('');
+  const soon=[];for(let i=1;i<=3;i++){const m=(cm-1+i)%12+1;S.rechnungen.filter(r=>+r.m===m&&+r.b>=100).forEach(r=>soon.push({...r,i}))}
+  $('soon').innerHTML=soon.length?soon.slice(0,5).map(r=>{const p=pot(r.t)||{};return`<button class="li" data-go="rechnungen" data-month="${r.m}"><span class="sw" style="background:${p.f}"></span><span class="t">${esc(r.n)}<span>${MONL[r.m-1]}, zahlt der Topf ${esc(p.n)}</span></span><span class="num">${fmt(r.b)}</span></button>`}).join(''):`<p class="li mut">In den nächsten drei Monaten kommt keine große Rechnung.</p>`;
+  const segs=S.toepfe.map(p=>({id:p.id,n:p.n,v:+p.da||0,f:p.f,b:p.bank})).concat([{id:'giro',n:'Feste Abbuchungen',v:fix(),f:'#94a3a8',b:'ING Girokonto'}]);
+  $('split').innerHTML=segs.map(s=>`<button style="flex:${Math.max(s.v,0)} 1 0;background:${s.f}" aria-label="${esc(s.n)} ${fmt(s.v)}" data-pot="${s.id}"></button>`).join('')+(leben>0?`<div class="rest" style="flex:${leben} 1 0"></div>`:'');
+  $('split-list').innerHTML=segs.map(s=>`<button class="li" data-pot="${s.id}"><span class="sw" style="background:${s.f}"></span><span class="t">${esc(s.n)}<span>${esc(s.b)}</span></span><span class="num">${fmt(s.v)}</span></button>`).join('')+`<div class="li" style="cursor:default"><span class="sw" style="background:repeating-linear-gradient(135deg,var(--soft) 0 3px,var(--line) 3px 5px)"></span><span class="t"><b>Bleibt zum Leben</b><span>Lebensmittel, Tanken extra, Einkäufe</span></span><span class="num" style="${leben<0?'color:var(--red)':''}">${fmt(leben)}</span></div>`;
+}
+
+/* ---------- Töpfe ---------- */
+function spark(el,pts){const draw=()=>{const W=el.clientWidth,H=el.clientHeight;if(!W)return;const mx=Math.max(...pts,0),mn=Math.min(...pts,0),pl=6,pb=18,pt=8,rng=(mx-mn)||1;const x=i=>pl+i*(W-2*pl)/(pts.length-1),y=v=>pt+(mx-v)*(H-pt-pb)/rng;const d=pts.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');const neg=pts.some(v=>v<0);let lab='';for(let i=0;i<pts.length;i+=W<380?3:2)lab+=`<text x="${x(i)}" y="${H-3}" font-size="11" text-anchor="${i===0?'start':i===pts.length-1?'end':'middle'}" fill="currentColor" opacity=".6">${MON[(cm-1+i)%12]}</text>`;el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><line x1="${pl}" x2="${W-pl}" y1="${y(0)}" y2="${y(0)}" stroke="currentColor" opacity=".25" stroke-dasharray="4 4"/><path d="${d}" fill="none" stroke="${neg?'var(--red)':'currentColor'}" stroke-width="2.5" stroke-linejoin="round"/>${pts.map((v,i)=>v<0?`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="var(--red)"/>`:'').join('')}${lab}</svg>`};const ro=new ResizeObserver(draw);ro.observe(el);draw()}
+function renderPots(){
+  $('pot-cards').innerHTML=pots().map(p=>{const st=status(p),n=need(p.id),nb=nextBill(p.id),sug=Math.ceil(n/5)*5,diff=Math.round(p.da-n);
+    return`<div class="card" id="card-${p.id}"><div class="row2" style="justify-content:space-between"><h3 class="row2" style="gap:8px"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</h3><span class="small mut">${esc(p.bank)}${p.datum?`, Stand ${p.datum}`:''}</span></div>
+    <div class="row2" style="justify-content:space-between;align-items:end"><span class="amt" style="font-size:34px;font-weight:800;letter-spacing:-.02em">${fmt(p.stand)}</span><span class="small mut">+ ${fmt(p.da)} jeden Monat</span></div>
+    <span class="chip ${st.c}">${esc(st.t)}</span>
+    ${n>0?`<div class="spark" data-sp="${p.id}" style="color:var(--ink)"></div>`:''}
+    ${nb&&n>0?`<p class="small">Nächste Rechnung: <b>${MONL[nb.m-1]}, ${fmt(nb.s)}</b> (${esc(nb.L.map(r=>r.n).join(', '))})</p>`:''}
+    ${p.ziel?`<div class="bar"><i style="width:${Math.min((+p.stand||0)/p.ziel*100,100)}%"></i></div><p class="small mut">Ziel ${fmt(p.ziel)} für Unerwartetes wie eine Nachzahlung.</p>`:''}
+    ${n>0&&Math.abs(diff)>=5?`<p class="small">${diff>0?`Du legst ${fmt(diff)} mehr zurück als die Rechnungen brauchen. Das ist dein Puffer.`:`Für die Rechnungen brauchst du ${fmt(sug)} im Monat.`}</p>`:''}
+    <div class="row2"><button class="btn ghost" data-edit-pot="${p.id}">Bearbeiten</button>${n>0&&Math.abs(diff)>=5?`<button class="btn ghost" data-take="${p.id}">Auf ${fmt(sug)} ändern</button>`:''}</div></div>`}).join('');
+  pots().forEach(p=>{const el=document.querySelector(`[data-sp="${p.id}"]`);if(el)spark(el,sim(p).pts)});
+  $('fixed-list').innerHTML=S.toepfe.filter(p=>p.art==='fest').map(p=>`<button class="li" data-edit-pot="${p.id}"><span class="sw" style="background:${p.f}"></span><span class="t">${esc(p.n)}<span>${esc(p.bank)}</span></span><span class="num">${fmt(p.da)}</span></button>`).join('');
+  $('giro-list').innerHTML=S.giro.map((g,i)=>`<button class="li" data-edit-giro="${i}"><span class="sw" style="background:#94a3a8"></span><span class="t">${esc(g.n)}</span><span class="num">${fmt(g.b)}</span></button>`).join('')+`<div class="li" style="cursor:default"><span></span><b>Zusammen</b><span class="num">${fmt(fix())}</span></div>`;
+  $('income-list').innerHTML=S.einnahmen.map((g,i)=>`<button class="li" data-edit-inc="${i}"><span class="sw" style="background:var(--grn)"></span><span class="t">${esc(g.n)}</span><span class="num">${fmt(g.b)}</span></button>`).join('');
+}
+
+/* ---------- Rechnungen ---------- */
+function renderBills(){
+  const tp=pots().filter(p=>S.rechnungen.some(r=>r.t===p.id));
+  const tot=Array.from({length:12},(_,i)=>sum(S.rechnungen.filter(r=>+r.m===i+1))),mx=Math.max(...tot,1);
+  $('months').innerHTML=tot.map((t,i)=>`<button class="mcol${selMonth===i+1?' sel':''}" data-month="${i+1}" aria-label="${MONL[i]}: ${fmt(t)}" title="${MONL[i]}: ${fmt(t)}">${tp.map(p=>{const v=sum(S.rechnungen.filter(r=>r.t===p.id&&+r.m===i+1));return v?`<span style="height:${v/mx*100}%;background:${p.f}"></span>`:''}).join('')}</button>`).join('');
+  $('mlab').innerHTML=MON.map(m=>`<span>${m}</span>`).join('');
+  const pk=tot.indexOf(Math.max(...tot));$('bill-title').textContent=`Im ${MONL[pk]} kommen mit ${fmt(tot[pk])} die meisten Rechnungen`;
+  $('bill-filters').innerHTML=[{id:'',n:'Alle Töpfe'}].concat(tp).map(p=>`<button class="fchip" aria-pressed="${selPot===p.id}" data-fpot="${p.id}">${esc(p.n)}</button>`).join('')+(selMonth?`<button class="fchip" aria-pressed="true" data-month="0">${MONL[selMonth-1]} ×</button>`:'');
+  const L=S.rechnungen.map((r,i)=>({...r,i})).filter(r=>(!selPot||r.t===selPot)&&(!selMonth||+r.m===selMonth)).sort((a,b)=>(((+a.m-cm+11)%12)-((+b.m-cm+11)%12))||b.b-a.b);
+  let html='',last=0;L.forEach(r=>{if(+r.m!==last){last=+r.m;const g=L.filter(x=>+x.m===last);html+=`<div class="ghead"><span>${MONL[last-1]}</span><span>${fmt(sum(g))}</span></div>`}const p=pot(r.t)||{};html+=`<button class="li" data-edit-bill="${r.i}"><span class="sw" style="background:${p.f}"></span><span class="t">${esc(r.n)}<span>Topf ${esc(p.n)}</span></span><span class="num">${fmt(r.b)}</span></button>`});
+  $('bill-list').innerHTML=html||`<p class="li mut">Keine Rechnung in dieser Auswahl.</p>`;
+  $('bill-sum').textContent=`Im ganzen Jahr ${fmt(sum(S.rechnungen))}, also ${fmt(sum(S.rechnungen)/12)} pro Monat.`;
+}
+
+/* ---------- Verträge ---------- */
+const KAT={haus:['Versicherungen Haus','#7a8f6a'],auto:['Auto','#b07a4f'],vors:['Vorsorge','#6b7fa8'],kredit:['Hauskredit','#8c6d8f'],energie:['Wohnen und Gebühren','#5f9a9a'],abo:['Telefon, Internet, Abos','#a89a5b'],verein:['Vereine','#9a6b6b'],hund:['Hund','#7d7a72'],ein:['Einnahmen','#2f6b4f']};
+const VERS=['haus','auto','vors'];
+const PORT={wohngebaeude:[['Check24','https://www.check24.de/wohngebaeudeversicherung/'],['Verivox','https://www.verivox.de/wohngebaeudeversicherung/']],hausrat:[['Check24','https://www.check24.de/hausratversicherung/'],['Verivox','https://www.verivox.de/hausratversicherung/']],haftpflicht:[['Check24','https://www.check24.de/haftpflichtversicherung/'],['Verivox','https://www.verivox.de/haftpflichtversicherung/']],kfz:[['Check24','https://www.check24.de/kfz-versicherung/'],['HUK24','https://www.huk24.de/']],strom:[['Check24','https://www.check24.de/strom/'],['Verivox','https://www.verivox.de/strom/']],dsl:[['Check24','https://www.check24.de/dsl/']],handy:[['Check24','https://www.check24.de/handytarife/']]};
+const ICON={1:['✓','var(--grn)','Abgedeckt'],2:['!','var(--amb)','Eingeschränkt'],0:['✗','var(--red)','Fehlt oder Achtung']};
+const covCount=v=>{const c={0:0,1:0,2:0};(v.cov||[]).forEach(x=>c[x[1]]++);return c};
+function renderIns(){
+  const L=ctAll().map((v,i)=>({v,i})).filter(x=>x.v.cov&&x.v.cov.length);
+  $('ins-cards').innerHTML=L.map(({v,i})=>{const c=covCount(v),f=frist(v),warn=(v.cov.find(x=>x[1]===0)||v.cov.find(x=>x[1]===2));
+    return`<div class="card"><div class="row2" style="justify-content:space-between;align-items:start"><h3 style="max-width:70%">${esc(v.n)}<span class="small mut" style="display:block;font-weight:400">${esc(v.a)}</span></h3><span class="num">${v.ein?'+ ':''}${fmt(v.b)}<span class="small mut" style="display:block;font-weight:400">${v.ein?'im Jahr rein':'im Jahr'}</span></span></div>
+    <div class="row2" style="gap:6px"><span class="chip ok">${c[1]} abgedeckt</span>${c[2]?`<span class="chip warn">${c[2]} eingeschränkt</span>`:''}${c[0]?`<span class="chip bad">${c[0]} Achtung</span>`:''}</div>
+    ${warn?`<p class="small"><b style="color:${ICON[warn[1]][1]}">${ICON[warn[1]][0]}</b> ${esc(warn[0])}</p>`:''}
+    <p class="small mut">${esc(f.t)}</p>
+    <div class="row2"><button class="btn ghost" data-open-ct="${i}">${v.must&&v.must.length?'Ansehen und vergleichen':'Ansehen'}</button></div></div>`}).join('');
+}
+function openContract(i){
+  const v=ctAll()[i];if(!v)return;const f=frist(v),c=covCount(v),k=KAT[v.k]||['',''];
+  const isStrom=v.port==='strom';
+  const cov=[0,2,1].map(s=>(v.cov||[]).filter(x=>x[1]===s).map(x=>`<div style="display:grid;grid-template-columns:22px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)"><b style="color:${ICON[s][1]};font-size:18px;line-height:1.3" aria-label="${ICON[s][2]}">${ICON[s][0]}</b><span>${esc(x[0])}${x[2]?`<span class="small mut" style="display:block">${esc(x[2])}</span>`:''}</span></div>`).join('')).join('');
+  const must=v.must||[];
+  const ports=(PORT[v.port]||[]).map(([n,u])=>`<a class="btn ghost" href="${u}" target="_blank" rel="noopener noreferrer">${esc(n)} öffnen</a>`).join('');
+  const offers=(v.angebote||[]).map((o,j)=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span>${esc(o.a||'Angebot')} <span class="small mut">${esc(o.d)}, ${o.n} von ${o.of} Punkten</span></span><span class="row2" style="gap:6px"><b class="num" style="color:${o.p<v.b?'var(--grn)':'var(--red)'}">${fmt(o.p)}</b><button class="fchip" data-del-off="${j}" aria-label="Angebot löschen">×</button></span></div>`).join('');
+  $('sheet').innerHTML=`<div class="row2" style="justify-content:space-between;align-items:start"><h3 id="sheet-title" style="font-size:20px;max-width:75%">${esc(v.n)}<span class="small mut" style="display:block;font-weight:400">${esc([v.a,v.nr].filter(Boolean).join(' · '))}</span></h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
+  <div class="pan" style="display:grid;gap:6px;padding:14px"><div class="row2" style="justify-content:space-between"><span class="mut">${v.ein?'Einnahme im Jahr':'Kosten im Jahr'}</span><b class="num" style="font-size:22px">${v.b?fmt(v.b):'fehlt'}</b></div><div class="row2" style="justify-content:space-between"><span class="mut">Im Monat</span><span class="num">${fmt(v.b/12)}</span></div><span class="chip ${v.foerderende?'warn':f.c}">${esc(f.t)}</span>${f.e&&f.d?`<span class="small mut">Verlängert sich sonst am ${fd(f.e)}.</span>`:''}</div>
+  ${v.tipp?`<p class="small" style="background:var(--soft);border-radius:10px;padding:10px 12px">${esc(v.tipp)}</p>`:''}
+  ${cov?`<div><h3 style="margin-bottom:4px">Das ist abgedeckt</h3><p class="small mut">${c[1]} abgedeckt${c[2]?`, ${c[2]} eingeschränkt`:''}${c[0]?`, ${c[0]} Achtung`:''}</p>${cov}</div>`:''}
+  ${must.length||isStrom?`<div style="display:grid;gap:10px"><h3>Besseres Angebot prüfen</h3><p class="small mut">Hol dir ein Angebot, zum Beispiel über die Links unten. Hake ab, was es auch bietet. Billiger ist es nur, wenn alles drin ist.</p>
+   ${must.map((m,j)=>`<label class="row2" style="gap:10px;color:var(--ink);font-size:15px;flex-wrap:nowrap"><input type="checkbox" data-must="${j}" style="width:22px;height:22px;min-height:0;flex:none">${esc(m)}</label>`).join('')}
+   <label>Anbieter des Angebots<input id="of-a" placeholder="z. B. HUK24"></label>
+   ${isStrom?`<div class="row2" style="flex-wrap:nowrap"><label style="flex:1">Arbeitspreis ct/kWh<input id="of-ap" type="number" inputmode="decimal" step="any"></label><label style="flex:1">Grundpreis €/Monat<input id="of-gp" type="number" inputmode="decimal" step="any"></label></div><label>Dein Verbrauch kWh im Jahr<input id="of-kwh" type="number" inputmode="decimal" value="${+v.kwh||4000}"></label>`:`<label>Preis im Jahr in €<input id="of-p" type="number" inputmode="decimal" step="any"></label>`}
+   <p id="of-res" class="small" aria-live="polite"></p>
+   <div class="row2"><button class="btn pri" id="of-save">Angebot merken</button></div>
+   ${offers?`<div><p class="small mut">Gemerkte Angebote</p>${offers}</div>`:''}
+   ${ports?`<div class="row2">${ports}</div>`:''}</div>`:''}
+  <div class="row2"><button class="btn ghost" id="ct-edit">Bearbeiten</button></div>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ct-edit').onclick=()=>editContract(i);
+  if(!$('of-res'))return;
+  const price=()=>{if(isStrom){const ap=+String($('of-ap').value).replace(',','.'),gp=+String($('of-gp').value).replace(',','.'),kwh=+$('of-kwh').value||0;return ap?kwh*ap/100+gp*12:0}return +String($('of-p').value).replace(',','.')||0};
+  const cur=()=>isStrom?(+$('of-kwh').value||0)*(+v.ap||0)/100+(+v.gp||0)*12:+v.b||0;
+  const upd=()=>{const p=price(),n=[...document.querySelectorAll('[data-must]')].filter(x=>x.checked).length,of=must.length,d=cur()-p;
+    if(!p){$('of-res').innerHTML=of?`${n} von ${of} Punkten abgehakt. Trag noch den Preis ein.`:'Trag den Preis ein.';return}
+    let t=d>0?`<b style="color:var(--grn)">${fmt(d)} im Jahr günstiger</b>`:`<b style="color:var(--red)">${fmt(-d)} im Jahr teurer</b>`;
+    t+=of?` · ${n} von ${of} Punkten erfüllt.`:'';
+    if(d>0&&n<of)t+=' Es fehlt noch etwas, prüf das Angebot genauer.';
+    if(d>0&&n===of&&f.d)t+=` Lohnt sich. Wechseln geht zum ${fd(f.e)}, kündigen bis ${fd(f.d)}.`;
+    if(d>0&&n===of&&v.k==='haus')t+=' Achtung: Kündigst du einen BGV-Vertrag, kann der Family-Rabatt von 10 % bei den anderen wegfallen.';
+    $('of-res').innerHTML=t};
+  $('sheet').querySelectorAll('input').forEach(x=>x.addEventListener('input',upd));upd();
+  $('of-save').onclick=()=>{const p=Math.round(price()*100)/100;if(!p){$('of-res').textContent='Bitte zuerst den Preis eintragen.';return}const n=[...document.querySelectorAll('[data-must]')].filter(x=>x.checked).length;v.angebote=v.angebote||[];v.angebote.push({a:$('of-a').value.trim(),p,d:fd(new Date()),n,of:must.length});if(isStrom)v.kwh=+$('of-kwh').value||v.kwh;commit('Angebot gemerkt');openContract(i)};
+  $('sheet').querySelectorAll('[data-del-off]').forEach(b=>b.onclick=()=>{v.angebote.splice(+b.dataset.delOff,1);commit('Angebot gelöscht');openContract(i)});
+}
+const RH={monat:'monatlich',quartal:'vierteljährlich',jahr:'jährlich'};
+const STX={ok:['ok','Passt'],pruefen:['warn','Prüfen'],kuendigen:['bad','Kündigen']};
+let selKat='',ctSort='frist';
+const today0=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const pd=s=>{const[y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d||1)};
+function frist(v){
+  if(v.pf)return{lvl:0,c:'neu',t:'Pflicht, nicht kündbar'};
+  if(v.foerderende){const d=pd(v.foerderende),y=Math.round((d-today0())/864e5/365*10)/10;return{lvl:0,c:'warn',t:`Förderung endet am ${fd(d)} (in ${String(y).replace('.',',')} Jahren)`}}
+  if(!v.ende)return v.rh==='monat'&&!v.frist&&v.k==='abo'?{lvl:0,c:'neu',t:'Monatlich kündbar'}:{lvl:0,c:'neu',t:'Kein Termin hinterlegt'};
+  const T=today0();let e=pd(v.ende);while(e<=T)e.setFullYear(e.getFullYear()+1);
+  const dl=x=>{const d=new Date(x);d.setMonth(d.getMonth()-(+v.frist||0));d.setDate(d.getDate()-1);return d};
+  let d=dl(e),miss=false;if(d<T){miss=true;e.setFullYear(e.getFullYear()+1);d=dl(e)}
+  const days=Math.round((d-T)/864e5);
+  const c=days<=42?'bad':days<=90?'warn':'ok';
+  return{lvl:c==='bad'?3:c==='warn'?2:1,c,d,e,days,miss,t:`${miss?'Termin verpasst. Nächste Chance: ':''}Kündigen bis ${fd(d)}${days<=90?` (noch ${days===0?'heute':days===1?'1 Tag':days+' Tage'})`:''}`};
+}
+const ctAll=()=>(S.vertraege||[]);
+const ctCost=()=>ctAll().filter(v=>!v.ein);
+function payer(v){if(v.wo==='giro')return'Girokonto';const p=pot(v.wo);return p?(p.art==='topf'?'Topf '+p.n:'Dauerauftrag '+p.n):''}
+function ctRow(v,i){const f=frist(v),st=STX[v.st]||STX.ok,k=KAT[v.k]||['Sonstiges','#999'];
+  return`<button class="li" data-open-ct="${i}"><span class="sw" style="background:${k[1]}"></span><span class="t"><b style="font-weight:600">${esc(v.n)}</b><span>${esc([v.a,RH[v.rh],payer(v)].filter(Boolean).join(' · '))}</span><span class="chips"><span class="chip ${f.c}">${esc(f.t)}</span>${v.pf||v.ein?'':`<span class="chip ${st[0]}">${st[1]}</span>`}${v.cov&&v.cov.some(x=>x[1]===0)?`<span class="chip bad">${v.cov.filter(x=>x[1]===0).length} Achtung</span>`:''}</span></span><span class="num" style="${v.ein?'color:var(--grn)':''}">${v.b?(v.ein?'+ ':'')+fmt(v.b):'?'}<br><span class="small mut" style="font-weight:400">${v.b?fmt(v.b/12)+' im Monat':'Betrag fehlt'}</span></span></button>`}
+function renderContracts(){
+  const A=ctAll(),C=ctCost(),tot=sum(C),F=A.map((v,i)=>({v,i,f:frist(v)}));
+  const urgent=F.filter(x=>x.f.lvl===3),soon=F.filter(x=>x.f.lvl>=2).sort((a,b)=>a.f.d-b.f.d),chk=A.filter(v=>v.st!=='ok'&&!v.pf),miss=A.filter(v=>!v.b);
+  $('ct-hero').innerHTML=`<p class="lab">Deine Verträge kosten dich im Monat</p><div class="big">${fmt(tot/12)}</div><p>Das sind <b>${fmt(tot)} im Jahr</b> für ${C.length} Verträge und Abgaben.</p>
+  <div class="row2" style="gap:6px">${urgent.length?`<button class="chip bad" style="border:0;cursor:pointer;font:inherit;font-size:14px;font-weight:700" data-ctf="frist">${urgent.length===1?'1 Frist':urgent.length+' Fristen'} in den nächsten 6 Wochen</button>`:`<span class="chip ok">Keine Frist in den nächsten 6 Wochen</span>`}${chk.length?`<button class="chip warn" style="border:0;cursor:pointer;font:inherit;font-size:14px;font-weight:700" data-ctf="pruefen">${chk.length} zum Prüfen oder Sparen</button>`:''}${miss.length?`<button class="chip neu" style="border:0;cursor:pointer;font:inherit;font-size:14px;font-weight:700" data-ctf="fehlt">Bei ${miss.length} fehlt der Betrag</button>`:''}</div>`;
+  $('ct-soon-wrap').hidden=!soon.length;
+  $('ct-soon').innerHTML=soon.map(x=>ctRow(x.v,x.i)).join('');
+  const cats=Object.keys(KAT).filter(id=>id!=='ein').map(id=>({id,n:KAT[id][0],f:KAT[id][1],v:sum(C.filter(x=>x.k===id))})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
+  $('ct-split').innerHTML=cats.map(c=>`<button style="flex:${c.v} 1 0;background:${c.f}" aria-label="${esc(c.n)} ${fmt(c.v)} im Jahr" title="${esc(c.n)}: ${fmt(c.v)} im Jahr" data-ctf="${c.id}"></button>`).join('');
+  $('ct-cats').innerHTML=cats.map(c=>`<button class="li" data-ctf="${c.id}"><span class="sw" style="background:${c.f}"></span><span class="t">${esc(c.n)}<span>${fmt(c.v)} im Jahr, ${Math.round(c.v/tot*100)} %</span></span><span class="num">${fmt(c.v/12)}<span class="small mut" style="font-weight:400"> /Monat</span></span></button>`).join('');
+  const fl=[['','Alle'],['vers','Versicherungen'],['frist','Frist bald'],['pruefen','Prüfen'],['fehlt','Betrag fehlt']].concat(cats.map(c=>[c.id,c.n]),[['ein','Einnahmen']]);
+  $('ct-filters').innerHTML=fl.map(([id,n])=>`<button class="fchip" aria-pressed="${selKat===id}" data-ctf="${id}">${esc(n)}</button>`).join('');
+  $('ct-sort').value=ctSort;
+  let L=F.filter(x=>!selKat||(selKat==='frist'?x.f.lvl>=2:selKat==='pruefen'?x.v.st!=='ok'&&!x.v.pf:selKat==='fehlt'?!x.v.b:selKat==='vers'?VERS.includes(x.v.k):x.v.k===selKat));
+  L.sort(ctSort==='kosten'?(a,b)=>b.v.b-a.v.b:ctSort==='name'?(a,b)=>a.v.n.localeCompare(b.v.n,'de'):(a,b)=>(a.f.d?0:1)-(b.f.d?0:1)||(a.f.d&&b.f.d?a.f.d-b.f.d:0)||b.v.b-a.v.b);
+  $('ct-list').innerHTML=L.map(x=>ctRow(x.v,x.i)).join('')||`<p class="li mut">Kein Vertrag in dieser Auswahl.</p>`;
+  $('ct-sum').textContent=selKat?`${L.length} von ${A.length}, zusammen ${fmt(sum(L.map(x=>x.v).filter(v=>!v.ein)))} Kosten im Jahr`:'';
+  renderIns();renderTimeline();
+  const sf=F.filter(x=>x.f.lvl===3).sort((a,b)=>a.f.d-b.f.d);
+  const nx=allDates().filter(x=>x.k!=='rech'&&x.k!=='ende').slice(0,3);
+  $('start-fristen').innerHTML=sf.length?`<h2>Kündigungsfristen, bald handeln</h2><div class="list">${sf.map(x=>`<button class="li" data-go="vertraege" data-ct="${x.i}"><span class="sw" style="background:var(--red)"></span><span class="t">${esc(x.v.n)}<span>${esc(x.f.t)}</span></span><span class="num">${fmt(x.v.b)}</span></button>`).join('')}</div>`:(nx.length?`<h2>Nächste Termine</h2><div class="list">${nx.map(x=>`<button class="li" data-go="vertraege" data-ct="${x.i}"><span class="sw" style="background:var(--amb)"></span><span class="t">${esc(x.t)}<span>${esc(x.s)}</span></span><span class="num small">${fd(x.d)}</span></button>`).join('')}</div>`:'');
+}
+function editContract(i){const v=i==null?{n:'',a:'',k:selKat&&KAT[selKat]?selKat:'haus',b:0,rh:'jahr',wo:'giro',ende:'',frist:1,st:'ok',tipp:''}:ctAll()[i];
+  const f=i==null?null:frist(v);
+  const woOpts=[['giro','Girokonto']].concat(S.toepfe.map(p=>[p.id,(p.art==='topf'?'Topf ':'Dauerauftrag ')+p.n]));
+  const fields=[];
+  if(f&&f.d)fields.push({type:'info',v:`${f.t}. Der Vertrag verlängert sich sonst am ${fd(f.e)}.`});
+  if(v.tipp)fields.push({type:'info',v:v.tipp,cls:'tip'});
+  fields.push({l:'Vertrag',v:v.n},{l:'Anbieter',v:v.a},{l:'Bereich',v:v.k,type:'select',opts:Object.entries(KAT).map(([k,x])=>[k,x[0]])},{l:'Kosten im Jahr in €',v:v.b,type:'number',hint:'Bei monatlicher Zahlung: Monatsbetrag mal 12.'},{l:'Zahlweise',v:v.rh,type:'select',opts:Object.entries(RH)},{l:'Bezahlt aus',v:v.wo,type:'select',opts:woOpts});
+  if(!v.pf)fields.push({l:'Läuft bis (Ende des Vertragsjahres)',v:v.ende,type:'date',hint:'Steht in der Police oder auf der Beitragsrechnung. Leer lassen, wenn unbekannt.'},{l:'Kündigungsfrist',v:String(v.frist||0),type:'select',opts:[['0','Jederzeit'],['1','1 Monat vor Ablauf'],['3','3 Monate vor Ablauf']]},{l:'Was ist zu tun?',v:v.st,type:'select',opts:[['ok','Passt so'],['pruefen','Prüfen oder vergleichen'],['kuendigen','Kündigen']]});
+  fields.push({l:'Weiterer Termin (z. B. Preisgarantie endet)',v:(v.termine&&v.termine[0]||{}).d||'',type:'date'},{l:'Was passiert an diesem Termin?',v:(v.termine&&v.termine[0]||{}).t||''},{l:'Notiz',v:v.tipp,type:'area'});
+  sheet(i==null?'Neuer Vertrag':v.n,fields,vals=>{const q=vals.filter(x=>x!==null);const o={n:q[0]||'Vertrag',a:q[1],k:q[2],b:q[3],rh:q[4],wo:q[5]};let j=6;if(!v.pf){o.ende=q[j++];o.frist=+q[j++];o.st=q[j++]}o.termine=q[j]?[{d:q[j],t:q[j+1]||'Termin'}].concat((v.termine||[]).slice(1)):(v.termine||[]).slice(1);o.tipp=q[j+2];if(i==null){S.vertraege=S.vertraege||[];S.vertraege.push(o)}else Object.assign(v,o)},i==null?null:()=>S.vertraege.splice(i,1));
+}
+
+/* ---------- Termine und Laufzeiten ---------- */
+function allDates(){const T=today0(),out=[];
+  ctAll().forEach((v,i)=>{const f=frist(v);
+    if(f.d&&!v.pf&&!v.ein){out.push({d:f.d,i,v,t:`Letzter Tag zum Kündigen: ${v.n}`,s:`${v.a||''}${v.frist?`, Frist ${v.frist} ${v.frist==1?'Monat':'Monate'}`:''}`,k:'kuend'});out.push({d:new Date(f.e.getTime()-864e5),i,v,t:`Vertragsjahr endet: ${v.n}`,s:`Verlängert sich am ${fd(f.e)} um ein Jahr`,k:'ende'})}
+    (v.termine||[]).forEach(x=>{const d=pd(x.d);if(d>=T)out.push({d,i,v,t:`${x.t}: ${v.n}`,s:v.a||'',k:'info'})});
+    if(v.foerderende){const d=pd(v.foerderende);if(d>=T)out.push({d,i,v,t:`Förderung endet: ${v.n}`,s:'Danach deutlich weniger Einnahmen',k:'info'})}});
+  S.rechnungen.forEach(r=>{if(+r.b<300)return;const y=+r.m>=cm?cy:cy+1;const d=new Date(y,r.m-1,1);out.push({d,t:`Große Rechnung: ${r.n}`,s:`${fmt(r.b)} aus Topf ${(pot(r.t)||{}).n||''}`,k:'rech'})});
+  return out.filter(x=>x.d>=T).sort((a,b)=>a.d-b.d)}
+let tlAll=false;
+function renderTimeline(){const D=allDates(),T=today0(),lim=new Date(T);lim.setMonth(lim.getMonth()+18);
+  const L=tlAll?D:D.filter(x=>x.d<=lim);let y=0,h='';
+  L.forEach(x=>{if(x.d.getFullYear()!==y){y=x.d.getFullYear();h+=`<div class="ghead"><span>${y}</span><span></span></div>`}
+    const days=Math.round((x.d-T)/864e5),c=x.k==='kuend'?(days<=42?'bad':days<=90?'warn':'ok'):x.k==='rech'?'neu':x.k==='info'?'warn':'neu';
+    h+=`<button class="li" ${x.i!=null?`data-open-ct="${x.i}"`:`data-go="rechnungen" data-month="${x.d.getMonth()+1}"`}><span class="sw" style="background:${c==='bad'?'var(--red)':c==='warn'?'var(--amb)':c==='ok'?'var(--grn)':'var(--line)'}"></span><span class="t">${esc(x.t)}<span>${esc(x.s)}</span></span><span class="num small">${fd(x.d)}<br><span class="mut" style="font-weight:400">${days<1?'heute':days<60?'in '+days+' Tagen':'in '+Math.round(days/30.4)+' Mon.'}</span></span></button>`});
+  $('tl-list').innerHTML=h||'<p class="li mut">Keine Termine.</p>';
+  $('tl-more').textContent=tlAll?'Nur die nächsten 18 Monate':`Alle ${D.length} Termine zeigen`;$('tl-more').hidden=D.length<=L.length&&!tlAll;
+  const miss=ctAll().map((v,i)=>({v,i})).filter(x=>!x.v.pf&&!x.v.ein&&!x.v.ende&&!(x.v.k==='abo'&&x.v.rh==='monat'&&!x.v.frist)&&!x.v.ohneEnde);
+  $('tl-miss').innerHTML=miss.length?`<h3 style="margin:18px 0 8px">Hier fehlt noch die Laufzeit</h3><p class="small mut" style="margin-bottom:8px">Ohne Laufzeit kann dich das Cockpit nicht rechtzeitig warnen. Tipp drauf und trag sie ein.</p><div class="list">${miss.map(x=>`<button class="li" data-edit-ct="${x.i}"><span class="sw" style="background:var(--line)"></span><span class="t">${esc(x.v.n)}<span>${esc(x.v.a||'Anbieter fehlt')}</span></span><span class="small">Eintragen ›</span></button>`).join('')}</div>`:'<p class="chip ok" style="margin-top:12px">Bei allen Verträgen ist die Laufzeit eingetragen</p>';
+}
+function icsExport(){const D=allDates().filter(x=>x.k!=='rech');const p=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  const esc2=s=>String(s).replace(/[\;,]/g,m=>'\\'+m).replace(/\n/g,'\\n');const stamp=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+  const ev=D.map((x,j)=>{const e=new Date(x.d);e.setDate(e.getDate()+1);const alarms=x.k==='kuend'?['P42D','P7D','P1D']:['P30D'];
+    return['BEGIN:VEVENT',`UID:gc-${p(x.d)}-${j}-${x.k}@geld-cockpit`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${p(x.d)}`,`DTEND;VALUE=DATE:${p(e)}`,`SUMMARY:${esc2(x.t)}`,`DESCRIPTION:${esc2(x.s+(x.v&&x.v.tipp?'\n'+x.v.tipp:''))}`].concat(alarms.flatMap(a=>['BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${esc2(x.t)}`,`TRIGGER:-${a}`,'END:VALARM'])).concat(['END:VEVENT']).join('\r\n')});
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Geld-Cockpit//DE','CALSCALE:GREGORIAN','X-WR-CALNAME:Geld-Cockpit Fristen'].concat(ev,['END:VCALENDAR']).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='geld-cockpit-fristen.ics';a.click();
+  toast(`${D.length} Termine exportiert. Datei öffnen, dann landen sie mit Erinnerung in deinem Kalender.`)}
+/* ---------- Ziele ---------- */
+function renderGoals(){
+  const p=pot('proj'),per=+$('proj').dataset.v||+p.da||0;$('proj').value=per;$('proj-v').textContent=fmt(per);
+  $('proj-save').hidden=per===+p.da;
+  let acc=+p.stand||0,month=0;const first=S.ziele.find(g=>g.wunsch&&g.b>0);
+  if(first){const[y,m]=first.wunsch.split('-').map(Number),mo=(y-cy)*12+(m-cm);$('proj-note').innerHTML=mo>0?`Damit „${esc(first.n)}“ bis ${MONL[m-1]} ${y} klappt, bräuchtest du <b>${fmt((first.b-acc)/mo)}</b> im Monat.`:''}
+  $('goal-cards').innerHTML=S.ziele.map((g,i)=>{const b=+g.b||0;let txt,pct=0,c='warn';
+    if(!b){txt='Noch kein Betrag. Tipp auf Bearbeiten.'}
+    else{const have=Math.min(acc,b);pct=have/b*100;const rest=b-have;
+      if(rest<=0){txt='Geschafft';c='ok'}
+      else if(per<=0){txt='Ohne monatlichen Betrag kommst du nicht ans Ziel';c='bad'}
+      else{month+=Math.ceil(rest/per);const d=new Date(cy,cm-1+month,1);txt=`Zusammen im ${MONL[d.getMonth()]} ${d.getFullYear()}`;
+        if(g.wunsch){const[y,m]=g.wunsch.split('-').map(Number),late=(d.getFullYear()-y)*12+(d.getMonth()+1-m);c=late>0?'bad':'ok';if(late>0)txt+=`, ${late} Monate nach deinem Wunsch`}}
+      acc=Math.max(acc-b,0)}
+    return`<div class="card"><div class="row2" style="justify-content:space-between"><h3>${esc(g.n)}</h3><span class="num">${b?fmt(b):''}</span></div><div class="bar"><i style="width:${pct}%"></i></div><span class="chip ${c}">${esc(txt)}</span>${g.wunsch?`<p class="small mut">Wunschtermin ${MONL[+g.wunsch.split('-')[1]-1]} ${g.wunsch.split('-')[0]}</p>`:''}<div class="row2"><button class="btn ghost" data-edit-goal="${i}">Bearbeiten</button></div></div>`}).join('');
+}
+
+/* ---------- Mehr ---------- */
+const HELP=[
+ ['Was ist ein Topf?','Ein eigenes Konto für eine Sorte Rechnungen, zum Beispiel ein ING Extra-Konto „Auto“. Jeden Monat geht per Dauerauftrag ein fester Betrag hinein. Kommt die Rechnung, zahlst du sie aus dem Topf.'],
+ ['Welche Rechnung gehört in einen Topf?','Alles, was seltener als monatlich kommt: Heizöl, Wasser, Versicherungen, Kfz-Steuer. Was jeden Monat abgebucht wird, wie Strom oder Handy, bleibt auf dem Girokonto.'],
+ ['Was bedeutet die rote Linie?','Die Linie zeigt den Kontostand des Topfs in den nächsten zwölf Monaten. Wird sie rot, reicht das Geld in diesem Monat nicht. Dann den Dauerauftrag erhöhen oder rechtzeitig nachlegen.'],
+ ['Was heißt „noch frei“?','Dein Einkommen minus alle Daueraufträge minus das, was du diesen Monat vom Girokonto ausgegeben hast, plus das, was du dir aus deinen Töpfen zurückgeholt hast. Feste Abbuchungen, die noch kommen, sind schon abgezogen.'],
+ ['Was zählt als Ausgabe?','Alles, was vom Girokonto an andere abgeht, auch große Rechnungen wie Heizöl. Holst du dir Geld aus einem Topf zurück, wird das gegengerechnet. Überweisungen an deine eigenen Konten zählen nicht als Ausgabe.'],
+ ['Wie lese ich Kontoauszüge ein?','ING: im Browser das Konto öffnen, ganz unten auf „Exportieren“. C24: auf der Check24-Webseite die Umsätze als CSV exportieren. SPARDA: im Online-Banking beim Kredit die Umsätze als CSV exportieren. Dann hier alle Dateien auf einmal auswählen.'],
+ ['Was passiert mit meinen Daten?','Alles wird auf deinem Gerät mit deinem Passwort verschlüsselt (AES-256) und erst dann bei GitHub gespeichert. Dort liegt nur Zeichensalat. Die CSV-Dateien werden nur auf deinem Gerät gelesen. Gespeichert werden Kontostände, Monatssummen und unlesbare Prüfnummern der Buchungen, keine einzelnen Buchungen. Ohne dein Passwort kommt niemand an die Daten, auch Claude nicht.'],
+ ['Was passiert, wenn ich eine Datei zweimal einlese?','Nichts Schlimmes. Das Cockpit erkennt die gleiche Datei und überspringt sie. Überschneiden sich zwei Auszüge, zählt jede Buchung nur einmal. Eine ältere Datei überschreibt nie einen neueren Kontostand.'],
+ ['Was zeigt der Bereich Verträge?','Alle Verträge und festen Abgaben mit ihren Kosten im Jahr und im Monat. Die Ampel zeigt, bis wann du kündigen musst: Rot heißt, die Frist endet in den nächsten sechs Wochen. Gelb heißt, in den nächsten drei Monaten. Rote Fristen stehen auch auf der Startseite.'],
+ ['Wie bekomme ich die Fristen in meinen Kalender?','Bei Verträge auf „In meinen Kalender übernehmen“ tippen und die Datei öffnen. Jede Kündigungsfrist kommt mit Erinnerung sechs Wochen, eine Woche und einen Tag vorher. Nach neuen Verträgen den Export einfach wiederholen.'],
+ ['Wie vergleiche ich ein Angebot?','Bei Verträge auf „Ansehen und vergleichen“ tippen. Dort steht, was dein Vertrag abdeckt und was ein neues Angebot mindestens bieten muss. Angebot holen, zum Beispiel über Check24 oder Verivox, Preis eintragen und abhaken, was es bietet. Das Cockpit rechnet aus, was du sparst, und sagt dir, bis wann du kündigen musst. Mit „Angebot merken“ bleibt es gespeichert.'],
+ ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
+ ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
+ ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Mehr, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
+ ['Wie richte ich ein zweites Gerät ein?','Seite auf dem Gerät öffnen, Passwort eingeben. Zum Speichern einmal unter Mehr den GitHub-Schlüssel eintragen.'],
+ ['Wie kommt die App auf den Home-Bildschirm?','Die Seite auf dem Handy in Safari oder Chrome öffnen, auf „Teilen“ und dann „Zum Home-Bildschirm“ tippen.'],
+ ['Steuer: Was bringt mir mehr Netto?','Prüf deine Steuerklasse: Als Alleinverdiener kann Klasse III jeden Monat mehr Netto bringen statt einer großen Erstattung später. Trag außerdem die Pendlerpauschale ein: seit 2026 38 Cent pro Kilometer der einfachen Strecke.']];
+function renderMehr(){
+  $('ownname').value=S.eigenname||'';
+  const acc=[{id:'girokonto',n:'ING Girokonto',bank:'ING',a:S.girokonto}].concat(S.toepfe.filter(p=>p.art==='topf'||p.id==='hund'||p.id==='kredit').map(p=>({id:p.id,n:p.n,bank:p.bank,a:p,f:p.f})));
+  $('acct-list').innerHTML=acc.map(x=>`<div class="li" style="cursor:default"><span class="sw" style="background:${x.f||'#94a3a8'}"></span><span class="t">${esc(x.n)}<span>${esc(x.bank)}${x.a.iban4?`, IBAN …${esc(x.a.iban4)}`:''}, ${x.a.datum?`Stand ${x.a.datum}`:'noch nicht eingelesen'}</span></span><span class="num">${x.a.stand!=null&&x.a.stand!==''?fmt(x.a.stand):'-'}</span></div>`).join('');
+  $('help').innerHTML=HELP.map(([q,a],i)=>`<details id="help-${i}"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
+}
+
+/* ---------- Dialog ---------- */
+function sheet(title,fields,onSave,onDelete,okLabel){
+  $('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">${esc(title)}</h3>`+fields.map((f,i)=>f.type==='info'?`<p class="small" style="background:var(--soft);border-radius:10px;padding:10px 12px">${esc(f.v)}</p>`:f.type==='area'?`<label>${esc(f.l)}<textarea id="f${i}" rows="3">${esc(f.v??'')}</textarea></label>`:f.type==='select'?`<label>${esc(f.l)}<select id="f${i}">${f.opts.map(o=>`<option value="${esc(o[0])}"${o[0]==f.v?' selected':''}>${esc(o[1])}</option>`).join('')}</select></label>`:`<label>${esc(f.l)}<input id="f${i}" type="${f.type||'text'}" ${f.type==='number'?'inputmode="decimal" step="any"':''} value="${esc(f.v??'')}"></label>`+(f.hint?`<p class="small mut" style="margin-top:-8px">${esc(f.hint)}</p>`:'')).join('')+
+  `<div class="row2"><button class="btn pri" id="s-ok">${esc(okLabel||'Speichern')}</button><button class="btn ghost" id="s-x">Abbrechen</button>${onDelete?`<button class="btn danger" id="s-del" style="margin-left:auto">Löschen</button>`:''}</div>`;
+  $('sheet-bg').classList.add('on');setTimeout(()=>{const f=$('f0');if(f)f.focus()},50);
+  $('s-x').onclick=closeSheet;$('s-ok').onclick=()=>{const vals=fields.map((f,i)=>{if(f.type==='info')return null;const v=$('f'+i).value;return f.type==='number'?(v===''?0:+v.replace(',','.')):v});onSave(vals);closeSheet();commit()};
+  if(onDelete)$('s-del').onclick=()=>{onDelete();closeSheet();commit()};
+}
+function closeSheet(){$('sheet-bg').classList.remove('on')}
+$('sheet-bg').onclick=e=>{if(e.target.id==='sheet-bg')closeSheet()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+const potOpts=()=>pots().map(p=>[p.id,p.n]);
+const monOpts=MONL.map((m,i)=>[String(i+1),m]);
+function editPot(id){const p=pot(id);if(!p)return;const f=[{l:'Name',v:p.n},{l:'Bank oder Konto',v:p.bank},{l:'Dauerauftrag pro Monat in €',v:p.da,type:'number'}];if(p.art==='topf')f.push({l:'Kontostand heute in €',v:p.stand,type:'number',hint:'Wird beim Einlesen automatisch aktualisiert.'});if(p.ziel!==undefined)f.push({l:'Ziel in €',v:p.ziel,type:'number'});
+  sheet(p.n,f,v=>{p.n=v[0];p.bank=v[1];p.da=v[2];if(p.art==='topf')p.stand=v[3];if(p.ziel!==undefined)p.ziel=v[4]})}
+function editGiro(i){const g=i==null?{n:'',b:0}:S.giro[i];sheet(i==null?'Neue Abbuchung':g.n,[{l:'Was',v:g.n},{l:'Betrag pro Monat in €',v:g.b,type:'number'}],v=>{if(i==null)S.giro.push({n:v[0]||'Abbuchung',b:v[1]});else{g.n=v[0];g.b=v[1]}},i==null?null:()=>S.giro.splice(i,1))}
+function editInc(i){const g=S.einnahmen[i];sheet(g.n,[{l:'Was',v:g.n},{l:'Betrag pro Monat in €',v:g.b,type:'number'}],v=>{g.n=v[0];g.b=v[1]})}
+function editBill(i){const r=i==null?{n:'',m:selMonth||cm,b:0,t:selPot||'haus'}:S.rechnungen[i];sheet(i==null?'Neue Rechnung':r.n,[{l:'Rechnung',v:r.n},{l:'Betrag in €',v:r.b,type:'number'},{l:'Monat',v:String(r.m),type:'select',opts:monOpts},{l:'Welcher Topf zahlt?',v:r.t,type:'select',opts:potOpts()}],v=>{const o={n:v[0]||'Rechnung',b:v[1],m:+v[2],t:v[3]};if(i==null)S.rechnungen.push(o);else Object.assign(r,o)},i==null?null:()=>S.rechnungen.splice(i,1))}
+function editGoal(i){const g=i==null?{n:'',b:0,wunsch:''}:S.ziele[i];sheet(i==null?'Neues Ziel':g.n,[{l:'Ziel',v:g.n},{l:'Kostet in €',v:g.b,type:'number'},{l:'Wunschtermin (frei lassen, wenn egal)',v:g.wunsch,type:'month'}],v=>{const o={n:v[0]||'Ziel',b:v[1],wunsch:v[2]};if(i==null)S.ziele.push(o);else Object.assign(g,o)},i==null?null:()=>S.ziele.splice(i,1))}
+
+/* ---------- Suche ---------- */
+function openSearch(){
+  $('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Suchen</h3><input id="q" type="search" placeholder="z. B. Heizöl, HUK, Strom, Zaun, Hilfe" aria-label="Suchbegriff"><div class="list" id="q-res"></div><button class="btn ghost" id="s-x">Schließen</button>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;const q=$('q');setTimeout(()=>q.focus(),50);
+  const run=()=>{const t=q.value.trim().toLowerCase();if(!t){$('q-res').innerHTML='';return}
+    const R=[];S.toepfe.forEach(p=>{if(p.n.toLowerCase().includes(t))R.push({l:p.n,s:'Topf',a:()=>{closeSheet();go('toepfe');setTimeout(()=>editPot(p.id),80)}})});
+    S.rechnungen.forEach((r,i)=>{if(r.n.toLowerCase().includes(t))R.push({l:r.n,s:`Rechnung, ${MONL[r.m-1]}, ${fmt(r.b)}`,a:()=>{closeSheet();go('rechnungen');setTimeout(()=>editBill(i),80)}})});
+    S.giro.forEach((g,i)=>{if(g.n.toLowerCase().includes(t))R.push({l:g.n,s:`Abbuchung, ${fmt(g.b)} im Monat`,a:()=>{closeSheet();go('toepfe');setTimeout(()=>editGiro(i),80)}})});
+    ctAll().forEach((v,i)=>{if((v.n+' '+v.a+' '+(KAT[v.k]||[''])[0]).toLowerCase().includes(t))R.push({l:v.n,s:`Vertrag, ${v.a?v.a+', ':''}${v.b?fmt(v.b)+' im Jahr':'Betrag fehlt'}`,a:()=>{closeSheet();go('vertraege');setTimeout(()=>openContract(i),80)}})});
+    S.ziele.forEach((g,i)=>{if(g.n.toLowerCase().includes(t))R.push({l:g.n,s:'Ziel',a:()=>{closeSheet();go('ziele');setTimeout(()=>editGoal(i),80)}})});
+    HELP.forEach(([h,a],i)=>{if((h+' '+a).toLowerCase().includes(t))R.push({l:h,s:'Hilfe',a:()=>{closeSheet();go('mehr');setTimeout(()=>{const d=$('help-'+i);d.open=true;d.scrollIntoView({block:'center'})},80)}})});
+    $('q-res').innerHTML=R.length?R.slice(0,20).map((r,i)=>`<button class="li" data-r="${i}"><span></span><span class="t">${esc(r.l)}<span>${esc(r.s)}</span></span><span>›</span></button>`).join(''):`<p class="li mut">Nichts gefunden.</p>`;
+    $('q-res').querySelectorAll('[data-r]').forEach(b=>b.onclick=R[+b.dataset.r].a)};
+  q.oninput=run;
+}
+$('open-search').onclick=openSearch;
+
+/* ---------- Import ---------- */
+function decode(buf){let t=new TextDecoder('utf-8').decode(buf);if(t.includes('\uFFFD'))t=new TextDecoder('windows-1252').decode(buf);return t.replace(/^\uFEFF/,'')}
+function splitCSV(text,d){const rows=[];let row=[],f='',q=false;for(let i=0;i<text.length;i++){const c=text[i];if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}else if(c==='"')q=true;else if(c===d){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}else f+=c}if(f!==''||row.length){row.push(f);rows.push(row)}return rows.map(r=>r.map(x=>x.trim()))}
+function num(v){if(v==null)return NaN;let t=String(v).replace(/[€\s ]|EUR/g,'');if(!t)return NaN;let neg=false;if(/^\(.*\)$/.test(t)){neg=true;t=t.slice(1,-1)}if(/-$/.test(t)){neg=true;t=t.slice(0,-1)}if(/,\d{1,2}$/.test(t))t=t.replace(/\./g,'').replace(',','.');else if(/\.\d{1,2}$/.test(t))t=t.replace(/,/g,'');else t=t.replace(/[.,]/g,'');const n=parseFloat(t);return neg?-n:n}
+function dat(v){let m=String(v||'').match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);if(m){let y=+m[3];if(y<100)y+=2000;return new Date(y,m[2]-1,+m[1])}m=String(v||'').match(/(\d{4})-(\d{2})-(\d{2})/);return m?new Date(+m[1],m[2]-1,+m[3]):null}
+function analyze(name,text){
+  const first=text.split(/\r?\n/).slice(0,40).join('\n');
+  const d=[';','\t',','].map(c=>[c,(first.match(new RegExp(c==='\t'?'\t':'\\'+c,'g'))||[]).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const rows=splitCSV(text,d);
+  const ibanM=text.slice(0,3000).replace(/\s/g,'').match(/DE\d{20}/);const iban4=ibanM?ibanM[0].slice(-4):'';
+  let metaSaldo=NaN;for(const r of rows.slice(0,20)){if(r[0]&&/^(saldo|kontostand|aktueller kontostand|neuer kontostand|endsaldo)/i.test(r[0])){const v=r.slice(1).map(num).find(x=>!isNaN(x));if(v!==undefined)metaSaldo=v}}
+  let h=-1,ci={};
+  for(let i=0;i<Math.min(rows.length,60);i++){const r=rows[i].map(x=>x.toLowerCase());const dI=r.findIndex(x=>/^(buchung|buchungstag|buchungsdatum|datum|valuta|wertstellung|wertstellungsdatum|date|booking date)$/.test(x));const aI=r.findIndex(x=>/^(betrag|umsatz|amount)(\s*\((eur|€)\)|\s+in\s+eur)?$/.test(x));if(r.length>=3&&dI>-1&&aI>-1){h=i;ci={d:dI,a:aI,s:r.findIndex(x=>/^(saldo|kontostand)/.test(x)),n:r.findIndex(x=>/(auftraggeber|empfänger|empfaenger|zahlungspflichtige|name|beguenstigter|begünstigter|payee)/.test(x)),z:r.findIndex(x=>/(verwendungszweck|buchungstext|beschreibung|purpose)/.test(x))};break}}
+  if(h<0){const soll=rows.findIndex(r=>r.some(x=>/^soll$/i.test(x)));return{name,error:'Spalten Datum und Betrag nicht gefunden. Ist das eine CSV-Datei aus dem Online-Banking?'+(soll>-1?' (Soll/Haben-Spalten werden noch nicht unterstützt.)':'')}}
+  const tx=[];rows.slice(h+1).forEach((r,i)=>{const dt=dat(r[ci.d]),a=num(r[ci.a]);if(!dt||isNaN(a))return;tx.push({d:dt,a,s:ci.s>-1?num(r[ci.s]):NaN,n:ci.n>-1?r[ci.n]:'',z:ci.z>-1?r[ci.z]:'',i})});
+  if(!tx.length)return{name,error:'Keine Buchungen in der Datei gefunden.'};
+  const maxT=Math.max(...tx.map(t=>+t.d)),desc=+tx[0].d>=+tx[tx.length-1].d;
+  const newest=tx.filter(t=>+t.d===maxT);const pick=desc?newest[0]:newest[newest.length-1];
+  let bal=!isNaN(pick.s)?pick.s:metaSaldo,src=!isNaN(pick.s)?'aus der Saldo-Spalte':!isNaN(metaSaldo)?'aus dem Dateikopf':'';
+  return{name,iban4,tx,bal:isNaN(bal)?null:bal,src,datum:new Date(maxT),von:new Date(Math.min(...tx.map(t=>+t.d)))};
+}
+
+function targets(){return[{id:'girokonto',n:'ING Girokonto',bank:'ING',iban4:S.girokonto.iban4}].concat(S.toepfe.filter(p=>p.art==='topf'||p.id==='hund'||p.id==='kredit').map(p=>({id:p.id,n:p.n,bank:p.bank,iban4:p.iban4||''})))}
+function guess(a){const t=targets();if(a.iban4){const m=t.find(x=>x.iban4===a.iban4);if(m)return m.id}const f=a.name.toLowerCase();if(/c24|check24/.test(f))return'hund';if(/sparda/.test(f))return'kredit';return S.girokonto.iban4?'':'girokonto'}
+function fnv(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
+const ymd=d=>d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+function keyTx(tx){const cnt={};tx.forEach(t=>{const base=`${ymd(t.d)}|${t.a.toFixed(2)}|${t.n}|${t.z}`;cnt[base]=(cnt[base]||0)+1;t.h=fnv(base+'#'+cnt[base])})}
+const accOf=id=>id==='girokonto'?S.girokonto:pot(id);
+function fresh(a){const acc=a.target&&accOf(a.target);const seen=(acc&&acc.seen)||{};return a.tx.filter(t=>!seen[t.h])}
+async function readFiles(files){pending=[];S.dateien=S.dateien||[];
+  for(const f of files){if(f.size>5e6){pending.push({name:f.name,error:'Die Datei ist zu groß.'});continue}
+    try{const text=decode(await f.arrayBuffer()),fh=fnv(text),old=S.dateien.find(x=>x.fh===fh);
+      if(old){pending.push({name:f.name,dup:old.am});continue}
+      if(pending.some(x=>x.fh===fh)){pending.push({name:f.name,dup:'gerade eben'});continue}
+      const a=analyze(f.name,text);a.fh=fh;if(!a.error){keyTx(a.tx);a.target=guess(a)}pending.push(a)}
+    catch(e){pending.push({name:f.name,error:'Die Datei konnte nicht gelesen werden.'})}}
+  renderPreview()}
+function renderPreview(){
+  if(!pending.length){$('preview').innerHTML='';return}
+  const opts=t=>`<option value="">Welches Konto ist das?</option>`+targets().map(x=>`<option value="${x.id}"${t===x.id?' selected':''}>${esc(x.n)} (${esc(x.bank)})</option>`).join('');
+  const B=n=>n===1?'1 neue Buchung':`${n} neue Buchungen`;
+  const info=a=>{const n=fresh(a).length,k=a.tx.length-n;if(!a.target)return'';const acc=accOf(a.target),older=a.bal!=null&&acc.lastImp&&+a.datum<acc.lastImp;
+    return (n===0?`<span class="chip warn">Alle ${a.tx.length} Buchungen kennt das Cockpit schon. Es ändert sich nichts.</span>`:k?`<span class="chip ok">${B(n)}, ${k} schon bekannt und übersprungen</span>`:`<span class="chip ok">${B(n)}</span>`)+(older?`<span class="chip warn">Die Datei ist älter als der letzte Stand vom ${acc.datum}. Der Kontostand bleibt.</span>`:'')};
+  $('preview').innerHTML=`<div class="pan" style="margin-top:12px">`+pending.map((a,i)=>a.dup?`<div class="prow"><b style="overflow-wrap:anywhere">${esc(a.name)}</b><span class="chip warn">Diese Datei hast du ${a.dup==='gerade eben'?'doppelt ausgewählt':'schon am '+esc(a.dup)+' eingelesen'}. Sie wird übersprungen.</span></div>`:a.error?`<div class="prow"><b style="overflow-wrap:anywhere">${esc(a.name)}</b><span class="chip bad">${esc(a.error)}</span></div>`:
+  `<div class="prow"><b style="overflow-wrap:anywhere">${esc(a.name)}</b><span class="small mut">${a.tx.length} Buchungen vom ${fd(a.von)} bis ${fd(a.datum)}${a.iban4?`, IBAN endet auf ${a.iban4}`:''}</span>${a.bal!=null?`<span>Kontostand <b>${fmt(a.bal)}</b></span>`:`<span class="chip warn">Kein Kontostand in der Datei, ich rechne mit den neuen Buchungen weiter</span>`}<select aria-label="Konto für ${esc(a.name)}" data-pend="${i}">${opts(a.target)}</select><span id="pi-${i}" style="display:grid;gap:6px">${info(a)}</span></div>`).join('')+
+  (pending.some(a=>!a.dup&&!a.error)?`<div class="row2" style="margin-top:12px"><button class="btn pri" id="apply">Übernehmen</button><button class="btn ghost" id="cancel">Abbrechen</button></div>`:`<div class="row2" style="margin-top:12px"><button class="btn ghost" id="cancel">Schließen</button></div>`)+`<p class="small" id="apply-msg"></p></div>`;
+  if($('apply'))$('apply').onclick=applyImport;$('cancel').onclick=()=>{pending=[];$('csv').value='';renderPreview()};
+  $('preview').querySelectorAll('[data-pend]').forEach(s=>s.onchange=()=>{const a=pending[+s.dataset.pend];a.target=s.value;$('pi-'+s.dataset.pend).innerHTML=info(a)});
+}
+const POTKEYS=()=>['heizöl','heizoel','brennstoff','gemeindekasse','avr kommunal','rundfunk','huk-coburg','huk24','bgv','bundeskasse','kfz-steuer','grundsteuer'].concat(S.rechnungen.flatMap(r=>r.n.toLowerCase().split(/[^a-zäöüß0-9-]+/)).filter(w=>w.length>=5&&!['abschlag','wartung','steuer','liter'].includes(w)));
+const FIXSTOP=['versicherung','monat','abos','handy','strom','internet'];
+const norm=s=>String(s).toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss');
+const fixWords=g=>norm(g.n).split(/[^a-z0-9]+/).filter(x=>x.length>=4&&!FIXSTOP.includes(x)).map(x=>x.slice(0,6));
+function fixOffen(M){const seen=M.fixSeen||[];return S.giro.filter(g=>!/tank/i.test(g.n)&&fixWords(g).length&&!seen.includes(g.n)).reduce((s,g)=>s+(+g.b||0),0)}
+function mergeMonth(all,news){
+  const own=(S.eigenname||'').trim().toLowerCase(),last=new Date(Math.max(...all.map(t=>+t.d))),y=last.getFullYear(),m=last.getMonth()+1;
+  let M=S.monat;
+  if(!M||!M.by||M.zurueck===undefined||y*12+m>M.jahr*12+M.mon)M=S.monat={mon:m,jahr:y,ausgaben:0,zurueck:0,gross:0,by:{},fixSeen:[],tage:0,bis:''};
+  else if(y*12+m<M.jahr*12+M.mon)return;
+  const keys=POTKEYS(),txt=t=>norm(t.n+' '+t.z),isOwn=t=>own&&(t.n+' '+t.z).toLowerCase().includes(own);
+  news.filter(t=>t.d.getFullYear()===y&&t.d.getMonth()+1===m).forEach(t=>{
+    if(isOwn(t)){if(t.a>0)M.zurueck+=t.a;return}
+    if(t.a>=0)return;
+    M.ausgaben+=-t.a;
+    if(keys.some(k=>txt(t).includes(norm(k)))||-t.a>=300)M.gross+=-t.a;
+    const k=(t.n||t.z||'Unbekannt').replace(/\s+/g,' ').slice(0,40);M.by[k]=(M.by[k]||0)-t.a;
+    S.giro.forEach(g=>{const w=fixWords(g);if(w.length&&w.some(x=>txt(t).includes(x))&&!M.fixSeen.includes(g.n))M.fixSeen.push(g.n)})});
+  M.by=Object.fromEntries(Object.entries(M.by).sort((a,b)=>b[1]-a[1]).slice(0,12));
+  M.top=Object.entries(M.by).slice(0,6).map(([n,b])=>({n,b:Math.round(b)}));
+  ['ausgaben','zurueck','gross'].forEach(k=>M[k]=Math.round(M[k]*100)/100);
+  if(last.getDate()>=M.tage){M.tage=last.getDate();M.bis=fd(last)}
+}
+async function applyImport(){
+  const ok=pending.filter(a=>!a.error&&!a.dup&&a.target);
+  if(!ok.length){$('apply-msg').textContent='Bitte wähle bei jeder Datei, zu welchem Konto sie gehört.';return}
+  let nNew=0,nOld=0;const cut=ymd(new Date(Date.now()-150*864e5));
+  for(const a of ok){const acc=accOf(a.target),news=fresh(a);nNew+=news.length;nOld+=a.tx.length-news.length;
+    if(a.iban4)acc.iban4=a.iban4;
+    const newer=!acc.lastImp||+a.datum>=acc.lastImp;
+    if(a.bal!=null){if(newer){acc.stand=Math.round(a.bal*100)/100;acc.lastImp=+a.datum;acc.datum=fd(a.datum)}}
+    else if(news.length){acc.stand=Math.round(((+acc.stand||0)+news.reduce((s,t)=>s+t.a,0))*100)/100;if(newer){acc.lastImp=+a.datum;acc.datum=fd(a.datum)}}
+    if(a.target==='girokonto')mergeMonth(a.tx,news);
+    acc.seen=acc.seen||{};news.forEach(t=>acc.seen[t.h]=ymd(t.d));
+    for(const h in acc.seen)if(acc.seen[h]<cut)delete acc.seen[h];
+    S.dateien.push({fh:a.fh,am:fd(new Date())})}
+  S.dateien=S.dateien.slice(-60);
+  pending=[];$('csv').value='';renderPreview();go('start');
+  commit(nOld?`${nNew===1?'1 neue Buchung':nNew+' neue Buchungen'} übernommen, ${nOld} doppelte übersprungen.`:`${nNew===1?'1 Buchung':nNew+' Buchungen'} übernommen.`);
+}
+$('csv').onchange=e=>readFiles([...e.target.files]);
+{const dz=$('drop');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});dz.addEventListener('dragleave',()=>dz.classList.remove('over'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');readFiles([...e.dataTransfer.files])})}
+
+/* ---------- Sicherung ---------- */
+$('backup-file').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='cockpit-sicherung-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Sicherung gespeichert. Die Datei ist unverschlüsselt, leg sie sicher ab.')};
+$('backup-copy').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));toast('Sicherung kopiert. Füg sie in deine Notizen ein.')}catch(e){toast('Kopieren ging nicht. Versuch es noch einmal.')}};
+$('backup-load').onclick=()=>{$('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Sicherung einspielen</h3><p class="small mut">Füg hier den kopierten Text ein. Deine jetzigen Einstellungen werden ersetzt.</p><textarea id="bk" rows="6" aria-label="Sicherung"></textarea><div class="row2"><button class="btn pri" id="bk-ok">Einspielen</button><button class="btn ghost" id="s-x">Abbrechen</button></div><p class="small" id="bk-msg"></p>`;$('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;
+  $('bk-ok').onclick=()=>{try{const o=JSON.parse($('bk').value);if(!o.toepfe||!o.rechnungen)throw 0;S=o;closeSheet();renderAll();commit('Sicherung eingespielt')}catch(e){$('bk-msg').textContent='Das ist keine gültige Sicherung.'}}};
+$('reset-imp').onclick=()=>{sheet('Eingelesenes zurücksetzen',[],()=>{S.monat=null;S.dateien=[];S.girokonto.seen={};S.toepfe.forEach(p=>{p.seen={}})},null,'Ja, zurücksetzen')};
+$('ownname').onchange=e=>{S.eigenname=e.target.value;commit()};
+$('lock-now').onclick=()=>lockNow();$('pw-change').onclick=()=>changePw();
+
+/* ---------- Verschlüsselung und GitHub ---------- */
+const GH={owner:'Sevener777',repo:'geld-cockpit',path:'data/cockpit.enc',branch:'main'};
+let KEY=null,SALT=null,TOKEN='',remoteSha=null;
+const b64=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=8192)s+=String.fromCharCode.apply(null,a.subarray(i,i+8192));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const te=new TextEncoder(),tdec=new TextDecoder();
+async function deriveKey(pw,salt){const base=await crypto.subtle.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:600000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function enc(obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},KEY,te.encode(JSON.stringify(obj)));return{iv:b64(iv),ct:b64(ct)}}
+async function dec(o,key){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},key||KEY,unb64(o.ct));return JSON.parse(tdec.decode(pt))}
+async function envelope(){const e=await enc(S);return{v:1,app:'geld-cockpit',ts:Date.now(),salt:b64(SALT),iv:e.iv,ct:e.ct}}
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
+async function ghReq(method,body){const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}${method==='GET'?'?ref='+GH.branch:''}`,{method,cache:'no-store',headers:{'Authorization':'Bearer '+TOKEN,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},body:body?JSON.stringify(body):undefined});return r}
+async function ghGet(){if(!TOKEN)return null;const r=await ghReq('GET');if(r.status===404){remoteSha=null;return null}if(!r.ok)throw new Error('gh '+r.status);const j=await r.json();remoteSha=j.sha;return JSON.parse(tdec.decode(unb64(j.content.replace(/\n/g,''))))}
+async function ghPut(env,retry){const body={message:'Stand vom '+new Date().toLocaleString('de-DE'),content:b64(te.encode(JSON.stringify(env))),branch:GH.branch};if(remoteSha)body.sha=remoteSha;const r=await ghReq('PUT',body);
+  if((r.status===409||r.status===422)&&!retry){await ghGet().catch(()=>{});return ghPut(env,true)}
+  if(!r.ok)throw new Error(r.status===401||r.status===403?'token':'gh '+r.status);const j=await r.json();remoteSha=j.content.sha;return true}
+let saving=Promise.resolve();
+async function commit(msg){
+  renderAll();if(!KEY)return;
+  S.gespeichert=fd(new Date());lsSet('gc-tab',location.hash.slice(1));
+  const env=await envelope();lsSet('gc-env',JSON.stringify(env));
+  if(!TOKEN){toast((msg?msg+'. ':'')+'Auf diesem Gerät gespeichert. Richte unter Mehr das Speichern bei GitHub ein, dann haben alle Geräte denselben Stand.');return}
+  toast('Speichere ...');
+  saving=saving.then(()=>ghPut(env)).then(()=>{lsSet('gc-synced',String(env.ts));toast(msg||'Gespeichert');renderSync()}).catch(err=>{toast(String(err.message)==='token'?'Der GitHub-Schlüssel gilt nicht mehr. Unter Mehr neu eintragen.':'Gespeichert auf diesem Gerät. GitHub war nicht erreichbar.','Nochmal',()=>commit(msg))});
+}
+async function saveToken(t){TOKEN=t.trim();if(TOKEN){lsSet('gc-tok',JSON.stringify(await enc({t:TOKEN})))}else lsDel('gc-tok')}
+function renderSync(){const el=$('sync');if(!el)return;const syn=+lsGet('gc-synced')||0;
+  el.innerHTML=TOKEN?`<span class="chip ok">Speichern bei GitHub ist eingerichtet</span><p class="small mut">${syn?'Zuletzt abgeglichen am '+new Date(syn).toLocaleString('de-DE'):'Noch nicht abgeglichen'}. Projekt: ${GH.owner}/${GH.repo}</p><div class="row2"><button class="btn ghost" id="sync-now">Jetzt abgleichen</button><button class="btn ghost" id="tok-set">Schlüssel ändern</button></div>`
+  :`<span class="chip warn">Nur auf diesem Gerät gespeichert</span><p class="small mut">Trag einmal deinen GitHub-Schlüssel ein. Er darf nur dieses eine Projekt ändern und wird verschlüsselt auf diesem Gerät abgelegt.</p><div class="row2"><button class="btn pri" id="tok-set">Schlüssel eintragen</button></div>`;
+  $('tok-set').onclick=()=>sheet('GitHub-Schlüssel',[{type:'info',v:'Auf github.com: Settings, Developer settings, Personal access tokens, Fine-grained tokens. Nur das Projekt geld-cockpit auswählen und bei Contents „Read and write“ erlauben.'},{l:'Schlüssel (beginnt mit github_pat_)',v:'',type:'password'}],async v=>{await saveToken(v[1]||'');try{const r=await ghGet();if(r&&r.ts>(+lsGet('gc-synced')||0)&&r.ts>JSON.parse(lsGet('gc-env')||'{}').ts){S=await dec(r);renderAll()}}catch(e){toast('Mit diesem Schlüssel klappt der Zugriff nicht. Bitte prüfen.');return}commit('Schlüssel gespeichert')},null,'Speichern');
+  if($('sync-now'))$('sync-now').onclick=async()=>{try{const r=await ghGet();if(r&&r.ts>JSON.parse(lsGet('gc-env')||'{}').ts){S=await dec(r);lsSet('gc-env',JSON.stringify(r));lsSet('gc-synced',String(r.ts));renderAll();toast('Neuer Stand von GitHub geladen')}else commit('Abgeglichen')}catch(e){toast('GitHub war nicht erreichbar.')}};
+}
+function changePw(){sheet('Passwort ändern',[{l:'Neues Passwort (mindestens 10 Zeichen)',v:'',type:'password'},{l:'Noch einmal',v:'',type:'password'}],async v=>{if(v[0].length<10||v[0]!==v[1]){toast('Die Passwörter sind zu kurz oder nicht gleich. Nichts geändert.');return}SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await deriveKey(v[0],SALT);if(TOKEN)await saveToken(TOKEN);commit('Passwort geändert')},null,'Ändern')}
+/* ---------- Sperre ---------- */
+let idle;const lockNow=()=>{KEY=null;S=null;location.reload()};
+const resetIdle=()=>{clearTimeout(idle);idle=setTimeout(lockNow,15*60*1000)};
+['click','keydown','touchstart','scroll'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));
+async function loadRemote(){try{const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;const j=await r.json();return j&&j.ct?j:null}catch(e){return null}}
+function enterApp(){document.body.classList.remove('locked');$('lock').hidden=true;renderAll();renderSync();resetIdle();let start=location.hash.slice(1);if(!start)start=lsGet('gc-tab')||'';go(start||'start')}
+async function boot(){
+  const local=JSON.parse(lsGet('gc-env')||'null'),remote=await loadRemote();
+  const env=[local,remote].filter(Boolean).sort((a,b)=>b.ts-a.ts)[0];
+  const L=$('lock-box');
+  if(env){L.innerHTML=`<h1>Geld-Cockpit</h1><p class="mut">Gesperrt. Gib dein Passwort ein. Auf dem iPhone kannst du es speichern und danach mit Face ID entsperren.</p><form id="lk" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>Passwort<input id="pw" type="password" autocomplete="current-password" required></label><button class="btn pri full" id="pw-ok">Entsperren</button><p class="small" id="pw-msg" aria-live="polite"></p></form>`;
+    $('pw').focus();
+    $('lk').onsubmit=async e=>{e.preventDefault();$('pw-ok').disabled=true;$('pw-msg').textContent='Entschlüssele ...';
+      try{SALT=unb64(env.salt);KEY=await deriveKey($('pw').value,SALT);S=await dec(env);
+        const tk=JSON.parse(lsGet('gc-tok')||'null');if(tk){try{TOKEN=(await dec(tk)).t}catch(x){}}
+        if(TOKEN){try{const g=await ghGet();if(g&&g.ts>env.ts){S=await dec(g,await deriveKey($('pw').value,unb64(g.salt)));lsSet('gc-env',JSON.stringify(g))}}catch(x){}}
+        enterApp()}
+      catch(err){KEY=null;$('pw-ok').disabled=false;$('pw-msg').textContent='Das Passwort stimmt nicht.';$('pw').select()}}}
+  else{L.innerHTML=`<h1>Geld-Cockpit einrichten</h1><p class="mut">Einmalig: Startdatei auswählen und ein Passwort festlegen. Ab dann sind deine Daten nur mit diesem Passwort lesbar.</p>
+    <form id="su" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>1. Startdatei (cockpit-start.json)<input id="su-f" type="file" accept=".json,application/json" required></label>
+    <label>2. Passwort (mindestens 10 Zeichen)<input id="su-p1" type="password" autocomplete="new-password" minlength="10" required></label><label>Passwort noch einmal<input id="su-p2" type="password" autocomplete="new-password" required></label>
+    <p class="small mut">Schreib dir das Passwort auf und leg es sicher ab. Ohne Passwort kommt niemand an die Daten, auch du nicht.</p><button class="btn pri full" id="su-ok">Einrichten</button><p class="small" id="su-msg" aria-live="polite"></p></form>`;
+    $('su').onsubmit=async e=>{e.preventDefault();const m=$('su-msg');
+      if($('su-p1').value.length<10||$('su-p1').value!==$('su-p2').value){m.textContent='Die Passwörter sind zu kurz oder nicht gleich.';return}
+      try{const o=JSON.parse(await $('su-f').files[0].text());if(!o.toepfe||!o.rechnungen)throw 0;S=o}catch(x){m.textContent='Das ist keine gültige Startdatei.';return}
+      m.textContent='Verschlüssele ...';SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await deriveKey($('su-p1').value,SALT);enterApp();commit('Eingerichtet. Lösch die Startdatei jetzt von deinem Gerät.')}}
+}
+
+/* ---------- Navigation ---------- */
+function renderAll(){renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
+function go(id,anchor){const ids=['start','toepfe','rechnungen','vertraege','ziele','mehr'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;const d=b.dataset;
+  if(d.go){go(d.go,d.anchor);if(d.month){selMonth=+d.month;renderBills()}if(d.ct!==undefined)setTimeout(()=>openContract(+d.ct),60)}
+  else if(d.openCt!==undefined)openContract(+d.openCt);
+  else if(d.editCt!==undefined)editContract(+d.editCt);
+  else if(d.ctf!==undefined){selKat=selKat===d.ctf&&d.ctf?'':d.ctf;renderContracts();if(!b.classList.contains('fchip'))$('ct-all').scrollIntoView({block:'start'})}
+  else if(d.pot){if(d.pot==='giro'){go('toepfe');setTimeout(()=>$('giro-list').scrollIntoView({block:'center'}),30)}else{const p=pot(d.pot);go('toepfe');if(p&&p.art==='topf')setTimeout(()=>$('card-'+d.pot).scrollIntoView({block:'center'}),30);else setTimeout(()=>editPot(d.pot),30)}}
+  else if(d.editPot)editPot(d.editPot);
+  else if(d.editGiro!==undefined)editGiro(+d.editGiro);
+  else if(d.editInc!==undefined)editInc(+d.editInc);
+  else if(d.editBill!==undefined)editBill(+d.editBill);
+  else if(d.editGoal!==undefined)editGoal(+d.editGoal);
+  else if(d.take){const p=pot(d.take),old=p.da;p.da=Math.ceil(need(p.id)/5)*5;commit(`${p.n}: Dauerauftrag auf ${fmt(p.da)} geändert. Denk dran, ihn auch bei der Bank zu ändern.`)}
+  else if(d.month!==undefined){selMonth=selMonth===+d.month?0:+d.month;renderBills()}
+  else if(d.fpot!==undefined){selPot=d.fpot;renderBills()}});
+$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>editContract(null);$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
+$('proj').oninput=e=>{$('proj').dataset.v=e.target.value;renderGoals()};
+$('proj-ok').onclick=()=>{pot('proj').da=+$('proj').dataset.v;delete $('proj').dataset.v;commit('Betrag für Haus-Projekte gespeichert. Denk an den Dauerauftrag bei der Bank.')};
+$('proj-reset').onclick=()=>{delete $('proj').dataset.v;renderGoals()};
+boot();
+}
+</script>
+</body>
+</html>
