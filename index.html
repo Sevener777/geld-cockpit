@@ -168,6 +168,12 @@ details p+p{margin-top:8px}
 .zphoto{display:flex;gap:12px;align-items:center;border:2px dashed var(--line);border-radius:14px;padding:12px;cursor:pointer;color:var(--ink)}
 .donut{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;align-items:center}.donut svg{width:100%;max-width:200px}
 @media(max-width:600px){.donut{grid-template-columns:1fr;justify-items:center}.donut .list{width:100%}.quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mon{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.mt{display:grid;gap:4px;text-align:left;font:inherit;color:inherit;background:var(--pan);border:1px solid var(--line);border-top:6px solid var(--line);border-radius:16px;padding:12px 14px;cursor:pointer}
+.mt.ok{border-top-color:var(--grn)}.mt.warn{border-top-color:var(--amb);background:var(--ambbg)}.mt.bad{border-top-color:var(--red);background:var(--redbg)}
+.mt b{font-size:22px;letter-spacing:-.01em;line-height:1.2}.mt.ok b{color:var(--grn)}.mt.bad b{color:var(--red)}.mt.warn b{color:var(--amb)}
+.mtn{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700;color:var(--mut)}.mts{font-size:14px}
+.mtf{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--grn);margin-top:2px}.mtf.no{color:var(--amb)}.mtf .ico{width:22px;height:22px;background:none;color:inherit}.mtf .ico svg{width:16px;height:16px}
 button.status{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
 .stack2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media(max-width:760px){.stack2{grid-template-columns:1fr}}
@@ -181,7 +187,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795378672';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795379477';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
@@ -204,6 +210,8 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 <section id="v-start">
 <div id="st-status"></div>
 <div class="kpis" id="kpis"></div>
+<h2 id="mon-h">Energie im Blick</h2>
+<div class="mon" id="mon"></div>
 <div class="quick"><button data-act="go:newct"><span class="ico" data-i="plus"></span><span>Vertrag hinzufügen</span></button><button data-act="go:einlesen"><span class="ico" data-i="bank"></span><span>Auszug einlesen</span></button><button data-act="zl:read"><span class="ico" data-i="cam"></span><span>Zähler ablesen</span></button><button data-act="go:report"><span class="ico" data-i="print"></span><span>Bericht als PDF</span></button></div>
 <h2>Hinweise und Empfehlungen</h2>
 <div class="alerts" id="alerts"></div>
@@ -401,7 +409,7 @@ function alerts(){const A=[],T=today0();
   if(miss)A.push({l:'info',ic:'doc',t:`Bei ${miss} Verträgen fehlt die Laufzeit`,s:'Ohne Laufzeit kann das Cockpit nicht warnen.',a:'sub:termine'});
   const gd=pdDE(S.girokonto&&S.girokonto.datum);if(!gd||(T-gd)/864e5>35)A.push({l:'info',ic:'bank',t:'Kontoauszüge einlesen',s:gd?`Letzter Stand vom ${fd(gd)}.`:'Noch nichts eingelesen.',a:'go:konten'});
   const ZD=zDue();if(ZD.length&&zAll().length)A.push({l:'info',ic:'cam',t:`Zähler ablesen: ${ZD.map(m=>m.n).join(', ')}`,s:'Einmal im Monat, am besten zum Monatsende. Mit Foto als Nachweis.',a:'zl:read'});
-  zAll().forEach((m,i)=>{const s=zStats(m),v=zVerdict(m,s);if(v.c==='bad'||v.c==='warn')A.push({l:v.c,ic:m.typ==='tank'?'gauge':'trend',t:`${m.n}: ${m.typ==='tank'?'bald nachtanken':'Abgleich prüfen'}`,s:v.t,a:'zl:'+i});else if(s.cost&&s.ab)A.push({l:'ok',ic:'check',t:`${m.n}: Abschlag passt`,s:v.t,a:'zl:'+i})});
+  zAll().forEach((m,i)=>{const s=zStats(m),h=zHead(m,s);if(h.c==='bad'||h.c==='warn')A.push({l:h.c,ic:m.typ==='tank'?'gauge':'trend',t:`${m.n}: ${h.big}`,s:h.sub,a:'zl:'+i});else if(h.c==='ok'&&m.typ!=='einspeisung')A.push({l:'ok',ic:'check',t:`${m.n}: ${h.big}`,s:h.sub,a:'zl:'+i});if(s.L&&!zPhoto(s.L)&&s.age<40)A.push({l:'info',ic:'cam',t:`${m.n}: Foto-Nachweis fehlt`,s:`Die Ablesung vom ${fd(pd(s.L.d))} hat kein Foto. Für Streit mit dem Anbieter lieber nachholen.`,a:'zl:'+i})});
   ctAll().forEach((v,i)=>{if(v.st!=='gekuendigt'||!v.ende||v.nf)return;const d=pd(v.ende),days=Math.round((d-T)/864e5);if(days>=0&&days<=150)A.push({l:days<=45?'warn':'info',ic:'stop',t:`${v.n} endet am ${fd(d)}`,s:`Gekündigt. Ist der Anschluss geregelt? Noch ${days} Tage.`,a:'ct:'+i})});
   const ord={bad:0,warn:1,info:2,ok:3};return A.sort((a,b)=>ord[a.l]-ord[b.l])}
 function alertRow(x){return`<button class="al ${x.l}" data-act="${esc(x.a)}">${icon(x.ic,x.l)}<span class="t"><b>${esc(x.t)}</b><span>${esc(x.s)}</span></span><span class="chev">›</span></button>`}
@@ -469,7 +477,7 @@ function zBars(m,s,h){const K=[];for(let i=11;i>=0;i--)K.push(s.lastKey-i);const
   return`<div class="zbars" style="height:${h||90}px">${K.map((k,i)=>`<span title="${MONL[k%12]} ${Math.floor(k/12)}: ${nf(vals[i])} ${esc(m.u)}"><i class="pv" style="height:${prev[i]!=null?prev[i]/mx*100:0}%"></i><i style="height:${vals[i]/mx*100}%;background:${m.f||'var(--ink)'}"></i></span>`).join('')}</div><div class="zlab">${K.map(k=>`<span>${MON[k%12].slice(0,1)}</span>`).join('')}</div>`}
 function zDue(){const T=today0(),last=new Date(T.getFullYear(),T.getMonth()+1,0);return zAll().filter(m=>{const L=zLast(m);if(!L)return true;const age=(T-pd(L.d))/864e5;return age>35||(age>20&&(last-T)/864e5<=3)})}
 function renderZaehler(){if(!$('z-cards'))return;const Z=zAll();
-  $('z-cards').innerHTML=Z.length?Z.map((m,i)=>{const s=zStats(m),v=zVerdict(m,s),L=s.L;const due=!L||s.age>35;
+  $('z-cards').innerHTML=Z.length?Z.map((m,i)=>{const s=zStats(m),h=zHead(m,s),v={c:h.c,t:h.big+'. '+h.sub},L=s.L;const due=!L||s.age>35;
     return`<div class="card zc"><button class="zhead" data-zdet="${i}"><span class="nm"><span class="sw" style="background:${m.f||'var(--ink)'}"></span>${esc(m.n)}</span><span class="small mut">${ZTYP[m.typ]||''} ›</span></button>
     <button class="zbig" data-zdet="${i}"><b>${L?nf(L.v,m.typ==='tank'?0:1):'–'}</b> <span>${esc(m.u)}</span><span class="chip ${due?'warn':'ok'}">${L?(s.age<=0?'heute abgelesen':`vor ${s.age} Tagen abgelesen`):'noch nicht abgelesen'}</span></button>
     ${s.I.length?`<button class="zchart" data-zdet="${i}" aria-label="Verlauf ansehen">${zBars(m,s)}</button>`:''}
@@ -499,7 +507,8 @@ function zRead(i,chain){const m=zAll()[i];if(!m)return;const L=zLast(m),s=zStats
     t.innerHTML=`Verbrauch seit ${fd(pd(L.d))}: ${nf(dv)} ${esc(m.u)}, also ${nf(r,2)} ${esc(m.u)} am Tag.${w}`};
   $('zv').addEventListener('input',chk);$('zd').addEventListener('change',chk);setTimeout(()=>$('zv').focus(),60);
   $('zp').onchange=async e=>{const f=e.target.files[0];if(!f)return;photo=await imgShrink(f);$('zp-img').src=URL.createObjectURL(photo);$('zp-img').style.display='block';$('zp-t').innerHTML='<b>Foto ist dabei</b><span class="small mut" style="display:block">Tippen, um ein neues zu machen</span>'};
-  $('zok').onclick=async()=>{const v=val();if(!$('zv').value||isNaN(v)){$('zv-chk').innerHTML='<b style="color:var(--red)">Bitte den Zählerstand eintragen.</b>';return}
+  let warned=false;$('zok').onclick=async()=>{const v=val();if(!$('zv').value||isNaN(v)){$('zv-chk').innerHTML='<b style="color:var(--red)">Bitte den Zählerstand eintragen.</b>';return}
+    if(!photo&&!warned){warned=true;$('zv-chk').innerHTML='<b style="color:var(--amb)">Noch kein Foto.</b> Ohne Foto hast du keinen Nachweis gegenüber dem Anbieter. Oben „Foto vom Zähler machen“ tippen oder nochmal auf Speichern für ohne Foto.';$('zok').textContent='Ohne Foto speichern';return}
     const d=$('zd').value||iso(new Date());m.r=(m.r||[]).filter(x=>x.d!==d);const rd={d,v};
     if(!$('zfill').hidden&&+$('zfl').value){rd.fill=+$('zfl').value;const p=+String($('zfp').value).replace(',','.');if(p){rd.fp=p;m.preis=p}}
     m.r.push(rd);closeSheet();
@@ -510,12 +519,13 @@ function zDetail(i){const m=zAll()[i];if(!m)return;const s=zStats(m),v=zVerdict(
   const years={};s.I.forEach(x=>{const y=pd(x.b.d).getFullYear();years[y]=(years[y]||0)+x.use});
   const R=zSorted(m).reverse(),I=s.I.slice().reverse();
   $('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px"><span class="sw" style="background:${m.f};display:inline-block;margin-right:8px"></span>${esc(m.n)}</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
-  <p class="chip ${v.c}" style="white-space:normal">${esc(v.t)}</p>
+  <div class="mt ${zHead(m,s).c}" style="cursor:default"><b>${esc(zHead(m,s).big)}</b><span class="mts">${esc(zHead(m,s).sub)}</span></div>
   ${s.I.length?`<div><h3 style="margin-bottom:6px">Verbrauch pro Monat</h3><p class="small mut">Farbig dieses Jahr, grau dasselbe Monat im Vorjahr.</p>${zBars(m,s,140)}</div>`:''}
   ${Object.keys(years).length?`<div><h3 style="margin-bottom:6px">Pro Jahr</h3><div class="list">${Object.keys(years).sort().reverse().map(y=>`<div class="li"><span class="t"><b>${y}</b><span>${y==today0().getFullYear()?'bis jetzt':'abgelesen'}</span></span><span class="num">${nf(years[y],0)} ${esc(m.u)}${s.preis?`<br><span class="small mut">${fmt(years[y]*s.preis)}</span>`:''}</span></div>`).join('')}</div></div>`:''}
-  <div><h3 style="margin-bottom:6px">Ablesungen</h3><div class="list">${R.map(r=>{const x=I.find(z=>z.b===r);return`<div class="li" style="cursor:default"><span class="t"><b>${fd(pd(r.d))}</b><span>${x?(m.typ==='tank'&&x.fill?`nachgetankt ${nf(r.fill||x.fill,0)} ${m.u}`:`${nf(x.use)} ${esc(m.u)} in ${x.days} Tagen`):'Erste Ablesung'}</span></span><span class="num">${nf(r.v,3)}</span>${(r.docs||[]).length?`<button class="fchip" data-zph="${r.d}" aria-label="Foto ansehen">${icon('cam')}</button>`:''}<button class="fchip" data-zdel="${r.d}" aria-label="Ablesung löschen">×</button></div>`}).join('')||'<p class="li mut">Noch keine Ablesung.</p>'}</div></div>
-  <div class="row2"><button class="btn pri" id="zd-read">${icon('cam')} Ablesen</button><button class="btn ghost" id="zd-edit">Einstellungen</button></div>`;
-  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('zd-read').onclick=()=>zRead(i);$('zd-edit').onclick=()=>zEdit(i);
+  <div><h3 style="margin-bottom:6px">Ablesungen</h3><div class="list">${R.map(r=>{const x=I.find(z=>z.b===r);return`<div class="li" style="cursor:default"><span class="t"><b>${fd(pd(r.d))}</b><span>${x?(m.typ==='tank'&&x.fill?`nachgetankt ${nf(r.fill||x.fill,0)} ${m.u}`:`${nf(x.use)} ${esc(m.u)} in ${x.days} Tagen`):'Erste Ablesung'}</span></span><span class="num">${nf(r.v,3)}</span>${(r.docs||[]).length?`<button class="fchip" data-zph="${r.d}" aria-label="Foto ansehen" style="color:var(--grn)">${icon('cam')}</button>`:`<label class="fchip" style="color:var(--amb);cursor:pointer" aria-label="Foto nachreichen">+${icon('cam')}<input type="file" accept="image/*" capture="environment" data-zadd="${r.d}" style="display:none"></label>`}<button class="fchip" data-zdel="${r.d}" aria-label="Ablesung löschen">×</button></div>`}).join('')||'<p class="li mut">Noch keine Ablesung.</p>'}</div></div>
+  <div class="row2"><button class="btn pri" id="zd-read">${icon('cam')} Ablesen</button><button class="btn ghost" id="zd-proof">${icon('print')} Nachweis als PDF</button><button class="btn ghost" id="zd-edit">Einstellungen</button></div>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('zd-read').onclick=()=>zRead(i);$('zd-edit').onclick=()=>zEdit(i);$('zd-proof').onclick=()=>zProof(i);
+  $('sheet').querySelectorAll('[data-zadd]').forEach(x=>x.onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!TOKEN){toast('Fotos gehen nur mit dem Speichern bei GitHub.');return}const r=m.r.find(z=>z.d===x.dataset.zadd);let ph=await imgShrink(f);ph=new File([ph],`${m.n} ${fd(pd(r.d))}.jpg`,{type:ph.type});if(await docAdd(r,ph))zDetail(i)});
   $('sheet').querySelectorAll('[data-zph]').forEach(b=>b.onclick=()=>{const r=m.r.find(x=>x.d===b.dataset.zph);docOpen(r.docs[0])});
   $('sheet').querySelectorAll('[data-zdel]').forEach(b=>b.onclick=()=>toast(`Ablesung vom ${fd(pd(b.dataset.zdel))} löschen?`,'Löschen',()=>{const r=m.r.find(x=>x.d===b.dataset.zdel);m.r=m.r.filter(x=>x!==r);commit('Ablesung gelöscht');zDetail(i)}))}
 function zEdit(i){const isNew=i==null,m=isNew?{n:'',u:'kWh',typ:'verbrauch',preis:0,gp:0,f:'#5f9a9a',r:[]}:zAll()[i];
@@ -527,6 +537,30 @@ function zIcs(){const T=new Date(),e=new Date(T.getFullYear(),T.getMonth()+1,0),
 function zImport(L){S.zaehler=S.zaehler||[];let n=0;(Array.isArray(L)?L:[L]).forEach(x=>{if(!x||!x.n)return;const name=String(x.n).slice(0,40);let m=S.zaehler.find(z=>z.n.toLowerCase()===name.toLowerCase());
   if(!m){m={n:name,r:[]};S.zaehler.push(m)}m.u=String(x.u||m.u||'kWh').slice(0,8);m.typ=ZTYP[x.typ]?x.typ:(m.typ||'verbrauch');['preis','gp'].forEach(k=>{if(x[k]!=null)m[k]=+x[k]||0});['ct','rx'].forEach(k=>{if(x[k]!=null)m[k]=String(x[k]).slice(0,60)});if(/^#[0-9a-f]{6}$/i.test(x.f||''))m.f=x.f;m.f=m.f||'#5f9a9a';
   (x.r||[]).forEach(r=>{const d=Array.isArray(r)?r[0]:r.d,v=+(Array.isArray(r)?r[1]:r.v);if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||isNaN(v))return;const old=m.r.find(z=>z.d===d);if(old)old.v=v;else m.r.push({d,v});n++})});return n}
+function zOil(m,s){if(!s.L||s.year==null)return null;const mo={};Object.keys(s.byKey).forEach(k=>{const x=k%12;(mo[x]=mo[x]||[]).push(s.byKey[k])});
+  const av=x=>nsum(mo[x])/mo[x].length,hs=x=>x>=9||x<=3,known=Object.keys(mo).map(Number),sea=f=>{const L=known.filter(f);return L.length?nsum(L.map(av))/L.length:s.year/12};const hAvg=sea(hs),sAvg=sea(x=>!hs(x));const use=x=>mo[x]?av(x):hs(x)?Math.max(hAvg,s.year/12):sAvg;let lvl=s.L.v,d=pd(s.L.d),y=d.getFullYear(),mm=d.getMonth();const res=100;
+  const dim=(y,m)=>new Date(y,m+1,0).getDate();let frac=(dim(y,mm)-d.getDate())/dim(y,mm);let empty=null,apr=null;const T=today0();const aprY=T.getMonth()>3?T.getFullYear()+1:T.getFullYear();
+  for(let i=0;i<48;i++){lvl-=use(mm)*frac;frac=1;if(y===aprY&&mm===3)apr=lvl;if(lvl<=res&&!empty){empty=new Date(y,mm,15)}if(empty&&apr!=null)break;mm++;if(mm>11){mm=0;y++}}
+  return{empty,apr,aprY}}
+function zHead(m,s){const v=zVerdict(m,s);if(s.year==null)return{c:'neu',big:'Noch keine Prognose',sub:'Mindestens zwei Monate ablesen.',v};
+  if(m.typ==='tank'){const o=zOil(m,s);if(!o)return{c:'neu',big:'–',sub:v.t,v};const T=today0();
+    const c=o.empty&&o.empty<new Date(o.aprY,4,1)?'bad':o.apr!=null&&o.apr<300?'warn':'ok';
+    const order=o.empty?new Date(o.empty.getFullYear(),o.empty.getMonth()-1,1):null;
+    return{c,big:o.empty?`Reicht bis ${MON[o.empty.getMonth()]} ${o.empty.getFullYear()}`:'Reicht über 4 Jahre',sub:c==='bad'?`Kommt nicht über den Winter. Bis ${order&&order>T?MONL[order.getMonth()]:'sofort'} nachtanken.`:c==='warn'?`Ende April nur noch etwa ${nf(Math.max(o.apr,0),0)} Liter. Nachtanken einplanen.`:`Kommt sicher über den Winter. Ende April noch etwa ${nf(o.apr,0)} Liter.${order?` Nachtanken bis ${MONL[order.getMonth()]} ${order.getFullYear()}.`:''}`,v}}
+  if(m.typ==='einspeisung')return s.preis?{c:'ok',big:`+ ${fmt(s.year*s.preis)} im Jahr`,sub:`${nf(s.year,0)} kWh eingespeist.`,v}:{c:'neu',big:`${nf(s.year,0)} kWh im Jahr`,sub:'Vergütung je kWh eintragen, dann siehst du den Ertrag.',v};
+  if(s.cost&&s.ab){const d=s.ab*12-s.cost,neu=Math.ceil(s.cost/12/5)*5;return d>=-60?{c:'ok',big:`${d>=0?'+':'−'} ${fmt(Math.abs(d))} ${d>=0?'Guthaben':'Nachzahlung'}`,sub:`Abschlag ${fmt(s.ab)} passt. Verbrauch ${nf(s.year,0)} ${m.u} im Jahr.`,v}:{c:'bad',big:`− ${fmt(-d)} Nachzahlung`,sub:`Abschlag jetzt auf ${fmt(neu)} erhöhen oder ${fmt(-d)} zurücklegen.`,v}}
+  const B=zBills(m);if(s.cost&&B.length){const pl=nsum(B.map(r=>r.b)),d=pl-s.cost;return d>=-s.cost*0.1?{c:'ok',big:`Plan passt`,sub:`${fmt(s.cost)} erwartet, ${fmt(pl)} eingeplant.`,v}:{c:'warn',big:`${fmt(-d)} zu wenig geplant`,sub:`Erwartet ${fmt(s.cost)}, im Plan nur ${fmt(pl)}. Rechnung anpassen.`,v}}
+  return{c:v.c,big:s.cost?`${fmt(s.cost)} im Jahr`:`${nf(s.year,0)} ${m.u} im Jahr`,sub:v.t,v}}
+const zPhoto=r=>!!(r&&r.docs&&r.docs.length);
+function renderMon(){if(!$('mon'))return;const Z=zAll();if(!Z.length){$('mon').innerHTML='';$('mon-h').hidden=true;return}$('mon-h').hidden=false;
+  $('mon').innerHTML=Z.map((m,i)=>{const s=zStats(m),h=zHead(m,s);const ph=zPhoto(s.L);
+    return`<button class="mt ${h.c}" data-act="zl:${i}"><span class="mtn"><span class="sw" style="background:${m.f}"></span>${esc(m.n)}${m.typ==='tank'?' · Winter-Check':s.ab?' · Abschlag-Check':m.rx?' · Plan-Check':''}</span><b>${esc(h.big)}</b><span class="mts">${esc(h.sub)}</span><span class="mtf ${ph?'':'no'}">${icon('cam')}${s.L?(ph?`Foto-Nachweis vom ${fd(pd(s.L.d))}`:'Letzte Ablesung ohne Foto'):'Noch nicht abgelesen'}</span></button>`}).join('')}
+async function zProof(i){const m=zAll()[i];if(!m)return;const R=zSorted(m).reverse();closeSheet();toast('Nachweis wird erstellt ...');
+  const imgs={};for(const r of R.filter(zPhoto)){try{const d=r.docs[0];const g=await ghPath('GET','data/docs/'+d.id+'.enc',null,true);if(!g.ok)continue;const o=JSON.parse(await g.text());const k=await docKey();const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},k,unb64(o.ct));imgs[r.d]=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(new Blob([pt],{type:d.t}))})}catch(e){}}
+  const I=zIntervals(m);
+  $('report').innerHTML=`<div class="rhead"><b>Zählernachweis ${esc(m.n)}</b><span>erstellt am ${fd(new Date())}</span></div><p class="rnote">Ablesungen in ${esc(m.u)} mit Fotos, aufgenommen beim Ablesen. Dateiname und Datum des Fotos sind im verschlüsselten Speicher hinterlegt.</p><table><thead><tr><th>Datum</th><th>Zählerstand</th><th>Verbrauch seit davor</th><th>Foto</th></tr></thead><tbody>${R.map(r=>{const x=I.find(z=>z.b===r);return`<tr><td>${fd(pd(r.d))}</td><td><b>${nf(r.v,3)}</b></td><td>${x?(x.fill?`nachgetankt ${nf(x.fill,0)}`:nf(x.use)):'-'}</td><td>${imgs[r.d]?'ja':'nein'}</td></tr>`}).join('')}</tbody></table>${Object.keys(imgs).map(d=>`<div class="rcard" style="break-inside:avoid"><b>${fd(pd(d))}: ${nf(m.r.find(r=>r.d===d).v,3)} ${esc(m.u)}</b><br><img src="${imgs[d]}" style="max-width:100%;max-height:110mm;margin-top:4px"></div>`).join('')}`;
+  setTimeout(()=>window.print(),300)}
+
 /* Ausgaben-Kuchen */
 function renderDonut(){if(!$('donut'))return;const C=ctCost(),tot=sum(C)/12;const cats=Object.keys(KAT).filter(k=>k!=='ein').map(k=>({k,n:KAT[k][0],f:KAT[k][1],v:sum(C.filter(x=>x.k===k))/12})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
   if(!cats.length){$('donut').innerHTML='';return}const R=54,Cf=2*Math.PI*R;let off=0;
@@ -798,6 +832,8 @@ const HELP=[
  ['Was rechnet das Cockpit mit den Zählerständen?','Verbrauch pro Monat und Jahr, Hochrechnung auf zwölf Monate und die Kosten. Beim Strom vergleicht es mit dem Abschlag und sagt, ob eine Nachzahlung oder ein Guthaben kommt. Beim Heizöl zeigt es, wie lange der Tank noch reicht.'],
  ['Wie bekomme ich eine Erinnerung zum Ablesen?','Im Reiter Zähler auf „Erinnerung in den Kalender“ tippen und die Datei öffnen. Dann meldet sich dein Kalender jeden Monat am letzten Tag um 18 Uhr. Zusätzlich zeigt die Startseite einen Hinweis, wenn das Ablesen dran ist.'],
  ['Wie trage ich ein, dass ich einen Vertrag gekündigt habe?','Vertrag öffnen und „Als gekündigt markieren“ tippen, das Enddatum eintragen und die Kündigungsbestätigung als Foto oder PDF anhängen. Oder die Bestätigung im Claude-Projekt hochladen und „Bitte als Cockpit-Code“ schreiben. Das Cockpit warnt dann nicht mehr vor der Frist und erinnert dich vor dem Ende an den Anschlussvertrag.'],
+ ['Was zeigt „Energie im Blick“?','Für jeden Zähler eine Ampel mit der wichtigsten Zahl. Strom: kommt eine Nachzahlung oder ein Guthaben, und passt der Abschlag. Heizöl: bis wann der Tank reicht, gerechnet mit deinem Verbrauch Monat für Monat, also mit dem Winter. Wasser: reicht die Rechnung im Plan. Rot heißt sofort handeln, gelb bald.'],
+ ['Wie bekomme ich einen Nachweis für den Anbieter?','Beim Zähler auf „Verlauf“ und dann „Nachweis als PDF“ tippen. Das PDF enthält alle Ablesungen mit Datum und die Fotos. Fehlt bei einer Ablesung das Foto, kannst du es im Verlauf mit dem gelben Kamera-Knopf nachreichen.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
  ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
  ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Einstellungen, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
@@ -1056,7 +1092,7 @@ async function docDel(v,j){const d=v.docs[j];try{const g=await ghPath('GET','dat
   v.docs.splice(j,1);commit('Dokument gelöscht')}
 
 /* ---------- Navigation ---------- */
-function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();renderZaehler();renderDonut();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
+function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();renderZaehler();renderDonut();renderMon();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
 function go(id,anchor){const ids=['start','konten','toepfe','rechnungen','vertraege','zaehler','ziele','einstellungen','hilfe'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 document.addEventListener('click',e=>{const b=e.target.closest('button,a,circle[data-act]');if(!b)return;const d=b.dataset;
