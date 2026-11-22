@@ -201,7 +201,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795380533';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795380850';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
@@ -533,7 +533,7 @@ function zRead(i,chain){const m=zAll()[i];if(!m)return;const L=zLast(m),s=zStats
     if(!$('zfill').hidden&&+$('zfl').value){rd.fill=+$('zfl').value;const p=+String($('zfp').value).replace(',','.');if(p){rd.fp=p;m.preis=p}}
     m.r.push(rd);closeSheet();
     if(photo&&typeof docAdd==='function'&&TOKEN){photo=new File([photo],`${m.n} ${fd(pd(d))}.jpg`,{type:photo.type});await docAdd(rd,photo)}
-    else await commit(`${m.n}: ${nf(v,3)} ${m.u} gespeichert${photo?'. Foto nur mit GitHub-Speichern möglich':''}`);
+    else await commit(`${m.n}: ${nf(v,3)} ${m.u} gespeichert${photo?'. Das Foto konnte nicht gespeichert werden, weil auf diesem Gerät der GitHub-Zugang fehlt. Öffne das Cockpit einmal am Notebook und lade es hier neu':''}`);
     const nx=zDue().filter(x=>x!==m);if(chain&&nx.length)setTimeout(()=>zRead(zAll().indexOf(nx[0]),true),400)}}
 function zDetail(i){const m=zAll()[i];if(!m)return;const s=zStats(m),v=zVerdict(m,s);
   const years={};s.I.forEach(x=>{const y=pd(x.b.d).getFullYear();years[y]=(years[y]||0)+x.use});
@@ -545,7 +545,7 @@ function zDetail(i){const m=zAll()[i];if(!m)return;const s=zStats(m),v=zVerdict(
   <div><h3 style="margin-bottom:6px">Ablesungen</h3><div class="list">${R.map(r=>{const x=I.find(z=>z.b===r);return`<div class="li" style="cursor:default"><span class="t"><b>${fd(pd(r.d))}</b><span>${x?(m.typ==='tank'&&x.fill?`nachgetankt ${nf(r.fill||x.fill,0)} ${m.u}`:`${nf(x.use)} ${esc(m.u)} in ${x.days} Tagen`):'Erste Ablesung'}</span></span><span class="num">${nf(r.v,3)}</span>${(r.docs||[]).length?`<button class="fchip" data-zph="${r.d}" aria-label="Foto ansehen" style="color:var(--grn)">${icon('cam')}</button>`:`<label class="fchip" style="color:var(--amb);cursor:pointer" aria-label="Foto nachreichen">+${icon('cam')}<input type="file" accept="image/*" data-zadd="${r.d}" style="display:none"></label>`}<button class="fchip" data-zdel="${r.d}" aria-label="Ablesung löschen">×</button></div>`}).join('')||'<p class="li mut">Noch keine Ablesung.</p>'}</div></div>
   <div class="row2"><button class="btn pri" id="zd-read">${icon('cam')} Ablesen</button><button class="btn ghost" id="zd-proof">${icon('print')} Nachweis als PDF</button><button class="btn ghost" id="zd-edit">Einstellungen</button></div>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('zd-read').onclick=()=>zRead(i);$('zd-edit').onclick=()=>zEdit(i);$('zd-proof').onclick=()=>zProof(i);
-  $('sheet').querySelectorAll('[data-zadd]').forEach(x=>x.onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!TOKEN){toast('Fotos gehen nur mit dem Speichern bei GitHub.');return}const r=m.r.find(z=>z.d===x.dataset.zadd);let ph=await imgShrink(f);ph=new File([ph],`${m.n} ${fd(pd(r.d))}.jpg`,{type:ph.type});if(await docAdd(r,ph))zDetail(i)});
+  $('sheet').querySelectorAll('[data-zadd]').forEach(x=>x.onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!TOKEN){toast('Auf diesem Gerät fehlt noch der GitHub-Zugang. Öffne das Cockpit einmal am Notebook, danach hier neu laden.');return}const r=m.r.find(z=>z.d===x.dataset.zadd);let ph=await imgShrink(f);ph=new File([ph],`${m.n} ${fd(pd(r.d))}.jpg`,{type:ph.type});if(await docAdd(r,ph))zDetail(i)});
   $('sheet').querySelectorAll('[data-zph]').forEach(b=>b.onclick=()=>{const r=m.r.find(x=>x.d===b.dataset.zph);docOpen(r.docs[0])});
   $('sheet').querySelectorAll('[data-zdel]').forEach(b=>b.onclick=()=>toast(`Ablesung vom ${fd(pd(b.dataset.zdel))} löschen?`,'Löschen',()=>{const r=m.r.find(x=>x.d===b.dataset.zdel);m.r=m.r.filter(x=>x!==r);commit('Ablesung gelöscht');zDetail(i)}))}
 function zEdit(i){const isNew=i==null,m=isNew?{n:'',u:'kWh',typ:'verbrauch',preis:0,gp:0,f:'#5f9a9a',r:[]}:zAll()[i];
@@ -1037,8 +1037,8 @@ $('csv').onchange=e=>readFiles([...e.target.files]);
 {const dz=$('drop');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});dz.addEventListener('dragleave',()=>dz.classList.remove('over'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');readFiles([...e.dataTransfer.files])})}
 
 /* ---------- Sicherung ---------- */
-$('backup-file').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='cockpit-sicherung-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Sicherung gespeichert. Die Datei ist unverschlüsselt, leg sie sicher ab.')};
-$('backup-copy').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));toast('Sicherung kopiert. Füg sie in deine Notizen ein.')}catch(e){toast('Kopieren ging nicht. Versuch es noch einmal.')}};
+$('backup-file').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,(k,v)=>k==='tok'?undefined:v)],{type:'application/json'}));a.download='cockpit-sicherung-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Sicherung gespeichert. Die Datei ist unverschlüsselt, leg sie sicher ab.')};
+$('backup-copy').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S,(k,v)=>k==='tok'?undefined:v));toast('Sicherung kopiert. Füg sie in deine Notizen ein.')}catch(e){toast('Kopieren ging nicht. Versuch es noch einmal.')}};
 $('backup-load').onclick=()=>{$('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Sicherung einspielen</h3><p class="small mut">Füg hier den kopierten Text ein. Deine jetzigen Einstellungen werden ersetzt.</p><textarea id="bk" rows="6" aria-label="Sicherung"></textarea><div class="row2"><button class="btn pri" id="bk-ok">Einspielen</button><button class="btn ghost" id="s-x">Abbrechen</button></div><p class="small" id="bk-msg"></p>`;$('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;
   $('bk-ok').onclick=()=>{try{const o=JSON.parse($('bk').value);if(!o.toepfe||!o.rechnungen)throw 0;S=o;closeSheet();renderAll();commit('Sicherung eingespielt')}catch(e){$('bk-msg').textContent='Das ist keine gültige Sicherung.'}}};
 $('reset-imp').onclick=()=>{sheet('Eingelesenes zurücksetzen',[],()=>{S.monat=null;S.dateien=[];S.girokonto.seen={};S.toepfe.forEach(p=>{p.seen={}})},null,'Ja, zurücksetzen')};
@@ -1070,7 +1070,7 @@ async function commit(msg){
   toast('Speichere ...');
   saving=saving.then(()=>ghPut(env)).then(()=>{lsSet('gc-synced',String(env.ts));toast(msg||'Gespeichert');renderSync()}).catch(err=>{toast(String(err.message)==='token'?'Der GitHub-Schlüssel gilt nicht mehr. In den Einstellungen neu eintragen.':'Gespeichert auf diesem Gerät. GitHub war nicht erreichbar.','Nochmal',()=>commit(msg))});
 }
-async function saveToken(t){TOKEN=t.trim();if(TOKEN){lsSet('gc-tok',JSON.stringify(await enc({t:TOKEN})))}else lsDel('gc-tok')}
+async function saveToken(t){TOKEN=t.trim();if(S&&TOKEN)S.tok=TOKEN;if(TOKEN){lsSet('gc-tok',JSON.stringify(await enc({t:TOKEN})))}else lsDel('gc-tok')}
 function renderSync(){const el=$('sync');if(!el)return;const syn=+lsGet('gc-synced')||0;
   el.innerHTML=TOKEN?`<span class="chip ok">Speichern bei GitHub ist eingerichtet</span><p class="small mut">${syn?'Zuletzt abgeglichen am '+new Date(syn).toLocaleString('de-DE'):'Noch nicht abgeglichen'}. Projekt: ${GH.owner}/${GH.repo}</p><div class="row2"><button class="btn ghost" id="sync-now">Jetzt abgleichen</button><button class="btn ghost" id="tok-set">Schlüssel ändern</button></div>`
   :`<span class="chip warn">Nur auf diesem Gerät gespeichert</span><p class="small mut">Trag einmal deinen GitHub-Schlüssel ein. Er darf nur dieses eine Projekt ändern und wird verschlüsselt auf diesem Gerät abgelegt.</p><div class="row2"><button class="btn pri" id="tok-set">Schlüssel eintragen</button></div>`;
@@ -1102,7 +1102,7 @@ let idle;const lockNow=()=>{KEY=null;S=null;location.reload()};
 const resetIdle=()=>{clearTimeout(idle);idle=setTimeout(lockNow,15*60*1000)};
 ['click','keydown','touchstart','scroll'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));
 async function loadRemote(){try{const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;const j=await r.json();return j&&j.ct?j:null}catch(e){return null}}
-function enterApp(){document.body.classList.remove('locked');$('lock').hidden=true;renderAll();renderSync();renderFace();resetIdle();let start=location.hash.slice(1);if(!start)start=lsGet('gc-tab')||'';go(start||'start')}
+function enterApp(){(async()=>{try{if(!TOKEN&&S.tok){await saveToken(S.tok);renderSync();toast('Speichern bei GitHub ist auf diesem Gerät jetzt eingerichtet. Fotos gehen ab sofort.')}else if(TOKEN&&S.tok!==TOKEN){S.tok=TOKEN;await commit('Zugang für deine anderen Geräte verschlüsselt hinterlegt')}}catch(e){}})();document.body.classList.remove('locked');$('lock').hidden=true;renderAll();renderSync();renderFace();resetIdle();let start=location.hash.slice(1);if(!start)start=lsGet('gc-tab')||'';go(start||'start')}
 async function boot(){
   const local=JSON.parse(lsGet('gc-env')||'null'),remote=await loadRemote();
   const env=[local,remote].filter(Boolean).sort((a,b)=>b.ts-a.ts)[0];
@@ -1112,6 +1112,7 @@ async function boot(){
     const unlock=async pw=>{$('pw-ok').disabled=true;$('pw-msg').textContent='Entschlüssele ...';
       try{SALT=unb64(env.salt);KEY=await deriveKey(pw,SALT);S=await dec(env);
         const tk=JSON.parse(lsGet('gc-tok')||'null');if(tk){try{TOKEN=(await dec(tk)).t}catch(x){}}
+        if(!TOKEN&&!S.tok&&remote&&remote!==env){try{const R=await dec(remote,await deriveKey(pw,unb64(remote.salt)));if(R.tok)S.tok=R.tok}catch(x){}}
         if(TOKEN){try{const g=await ghGet();if(g&&g.ts>env.ts){const k2=await deriveKey(pw,unb64(g.salt));S=await dec(g,k2);SALT=unb64(g.salt);KEY=k2;lsSet('gc-env',JSON.stringify(g))}}catch(x){}}
         enterApp()}
       catch(err){KEY=null;$('pw-ok').disabled=false;$('pw-msg').textContent='Das Passwort stimmt nicht.';$('pw').select()}};
@@ -1133,7 +1134,7 @@ async function boot(){
 async function ghPath(method,path,body,raw){return fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}${method==='GET'?'?ref='+GH.branch+'&t='+Date.now():''}`,{method,cache:'no-store',headers:{'Authorization':'Bearer '+TOKEN,'Accept':raw?'application/vnd.github.raw+json':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},body:body?JSON.stringify(body):undefined})}
 async function docKey(){if(!S.dk)S.dk=b64(crypto.getRandomValues(new Uint8Array(32)));return crypto.subtle.importKey('raw',unb64(S.dk),'AES-GCM',false,['encrypt','decrypt'])}
 async function docAdd(v,file){
-  if(!TOKEN){toast('Für Dokumente zuerst in den Einstellungen das Speichern bei GitHub einrichten.');return false}
+  if(!TOKEN){toast('Auf diesem Gerät fehlt noch der GitHub-Zugang. Öffne das Cockpit einmal am Notebook, danach hier neu laden.');return false}
   if(file.size>6e6){toast('Die Datei ist größer als 6 MB. Bitte kleiner speichern oder als Foto aufnehmen.');return false}
   toast('Verschlüssele und lade hoch ...');
   try{const k=await docKey(),iv=crypto.getRandomValues(new Uint8Array(12)),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,await file.arrayBuffer());
