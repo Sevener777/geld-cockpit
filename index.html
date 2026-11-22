@@ -187,7 +187,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795379477';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795379606';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
@@ -325,7 +325,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 <h2>Sicherung</h2>
 <div class="pan" style="display:grid;gap:10px">
 <p class="small mut">Eine Sicherung ist unverschlüsselt. Bewahr sie sicher auf, zum Beispiel in einem Passwort-Manager. Damit kannst du alles wiederherstellen, auch wenn GitHub einmal weg ist.</p>
-<div class="row2"><button class="btn ghost" id="backup-copy">Sicherung kopieren</button><button class="btn ghost" id="backup-file">Als Datei speichern</button><button class="btn ghost" id="backup-load">Sicherung einspielen</button></div>
+<div class="row2"><button class="btn ghost" id="backup-copy">Sicherung kopieren</button><button class="btn ghost" id="backup-file">Als Datei speichern</button><button class="btn ghost" id="backup-load">Sicherung einspielen</button></div><div class="pan" style="margin-top:12px;display:grid;gap:10px"><b>Komplettes Backup auf deinen Rechner</b><p class="small mut" style="margin:0">Alle Daten, Fotos und Dokumente in einer Datei. Die Datei ist mit deinem Passwort verschlüsselt, also auch auf einem USB-Stick sicher. Am besten einmal im Monat.</p><p class="small" id="bk-last" style="margin:0"></p><div class="row2"><button class="btn pri" id="fullbk">Komplettes Backup herunterladen</button><label class="btn ghost" style="cursor:pointer">Backup einspielen<input type="file" id="fullrs" accept=".gcb,application/octet-stream,application/json" style="display:none"></label></div></div>
 </div>
 <h2>Persönliches</h2>
 <div class="pan"><label>Dein Nachname<input id="ownname"></label><p class="note">Überweisungen, in denen dein Name steht, zählen nicht als Ausgabe. Das sind Umbuchungen zwischen deinen eigenen Konten.</p></div>
@@ -407,6 +407,7 @@ function alerts(){const A=[],T=today0();
   ctAll().forEach((v,i)=>{(v.termine||[]).concat(v.foerderende?[{d:v.foerderende,t:'Förderung endet'}]:[]).forEach(x=>{const d=pd(x.d),days=Math.round((d-T)/864e5);if(days>=0&&days<=400)A.push({l:days<=90?'warn':'info',ic:'cal',t:`${v.n}: ${x.t}`,s:`Am ${fd(d)}, in ${days} Tagen.`,a:'ct:'+i})})});
   const miss=ctAll().filter(v=>!v.pf&&!v.ein&&!v.ende&&!(v.k==='abo'&&v.rh==='monat'&&!v.frist)&&!v.ohneEnde).length;
   if(miss)A.push({l:'info',ic:'doc',t:`Bei ${miss} Verträgen fehlt die Laufzeit`,s:'Ohne Laufzeit kann das Cockpit nicht warnen.',a:'sub:termine'});
+  if(typeof fullBackup==='function'){let lb=0;try{lb=+localStorage.getItem('gc-bk')||0}catch(e){}const age=lb?Math.round((Date.now()-lb)/864e5):null;if(age==null||age>31)A.push({l:'info',ic:'shield',t:'Komplettes Backup machen',s:age==null?'Noch kein Backup auf diesem Gerät. Einmal im Monat sichern, mit allen Fotos.':`Letztes Backup vor ${age} Tagen.`,a:'go:einstellungen'});if($('bk-last'))$('bk-last').textContent=lb?`Letztes Backup auf diesem Gerät: ${fd(new Date(lb))}`:'Auf diesem Gerät noch kein Backup gemacht.'}
   const gd=pdDE(S.girokonto&&S.girokonto.datum);if(!gd||(T-gd)/864e5>35)A.push({l:'info',ic:'bank',t:'Kontoauszüge einlesen',s:gd?`Letzter Stand vom ${fd(gd)}.`:'Noch nichts eingelesen.',a:'go:konten'});
   const ZD=zDue();if(ZD.length&&zAll().length)A.push({l:'info',ic:'cam',t:`Zähler ablesen: ${ZD.map(m=>m.n).join(', ')}`,s:'Einmal im Monat, am besten zum Monatsende. Mit Foto als Nachweis.',a:'zl:read'});
   zAll().forEach((m,i)=>{const s=zStats(m),h=zHead(m,s);if(h.c==='bad'||h.c==='warn')A.push({l:h.c,ic:m.typ==='tank'?'gauge':'trend',t:`${m.n}: ${h.big}`,s:h.sub,a:'zl:'+i});else if(h.c==='ok'&&m.typ!=='einspeisung')A.push({l:'ok',ic:'check',t:`${m.n}: ${h.big}`,s:h.sub,a:'zl:'+i});if(s.L&&!zPhoto(s.L)&&s.age<40)A.push({l:'info',ic:'cam',t:`${m.n}: Foto-Nachweis fehlt`,s:`Die Ablesung vom ${fd(pd(s.L.d))} hat kein Foto. Für Streit mit dem Anbieter lieber nachholen.`,a:'zl:'+i})});
@@ -834,6 +835,7 @@ const HELP=[
  ['Wie trage ich ein, dass ich einen Vertrag gekündigt habe?','Vertrag öffnen und „Als gekündigt markieren“ tippen, das Enddatum eintragen und die Kündigungsbestätigung als Foto oder PDF anhängen. Oder die Bestätigung im Claude-Projekt hochladen und „Bitte als Cockpit-Code“ schreiben. Das Cockpit warnt dann nicht mehr vor der Frist und erinnert dich vor dem Ende an den Anschlussvertrag.'],
  ['Was zeigt „Energie im Blick“?','Für jeden Zähler eine Ampel mit der wichtigsten Zahl. Strom: kommt eine Nachzahlung oder ein Guthaben, und passt der Abschlag. Heizöl: bis wann der Tank reicht, gerechnet mit deinem Verbrauch Monat für Monat, also mit dem Winter. Wasser: reicht die Rechnung im Plan. Rot heißt sofort handeln, gelb bald.'],
  ['Wie bekomme ich einen Nachweis für den Anbieter?','Beim Zähler auf „Verlauf“ und dann „Nachweis als PDF“ tippen. Das PDF enthält alle Ablesungen mit Datum und die Fotos. Fehlt bei einer Ablesung das Foto, kannst du es im Verlauf mit dem gelben Kamera-Knopf nachreichen.'],
+ ['Wie mache ich ein komplettes Backup auf meinen Rechner?','Einstellungen, Bereich Sicherung, „Komplettes Backup herunterladen“. Es entsteht eine Datei mit allen Daten, Fotos und Dokumenten, verschlüsselt mit deinem Passwort. Leg sie auf deinen Rechner oder einen USB-Stick. Zum Wiederherstellen „Backup einspielen“ wählen und das Passwort eingeben, das beim Erstellen galt. Das Cockpit erinnert dich, wenn das letzte Backup älter als einen Monat ist.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
  ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
  ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Einstellungen, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
@@ -1090,6 +1092,22 @@ async function docOpen(d){const w=window.open('','_blank');
   catch(e){if(w)w.close();toast('Das Dokument konnte nicht geöffnet werden.')}}
 async function docDel(v,j){const d=v.docs[j];try{const g=await ghPath('GET','data/docs/'+d.id+'.enc');if(g.ok){const sha=(await g.json()).sha;await ghPath('DELETE','data/docs/'+d.id+'.enc',{message:'Dokument entfernt',sha,branch:GH.branch})}}catch(e){}
   v.docs.splice(j,1);commit('Dokument gelöscht')}
+/* ---------- Komplettes Backup (verschlüsselt, mit Fotos und Dokumenten) ---------- */
+function allDocs(){const L=[];(S.vertraege||[]).forEach(v=>(v.docs||[]).forEach(d=>L.push(d)));(S.zaehler||[]).forEach(m=>(m.r||[]).forEach(r=>(r.docs||[]).forEach(d=>L.push(d))));return L}
+async function fullBackup(){const D=allDocs(),docs={};let miss=0;toast(`Backup wird erstellt ... 0 von ${D.length} Dateien`);
+  for(let j=0;j<D.length;j++){try{const r=await ghPath('GET','data/docs/'+D[j].id+'.enc',null,true);if(r.ok)docs[D[j].id]=await r.text();else miss++}catch(e){miss++}toast(`Backup wird erstellt ... ${j+1} von ${D.length} Dateien`)}
+  const out={type:'gc-komplett',v:1,erstellt:new Date().toISOString(),env:await envelope(),docs};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/octet-stream'}));a.download='geld-cockpit-backup-'+new Date().toISOString().slice(0,10)+'.gcb';document.body.appendChild(a);a.click();a.remove();
+  try{localStorage.setItem('gc-bk',String(Date.now()))}catch(e){}
+  toast(`Backup gespeichert: Daten und ${Object.keys(docs).length} Fotos und Dokumente, alles verschlüsselt.${miss?` ${miss} Dateien fehlten.`:''} Leg die Datei auf deinen Rechner oder einen USB-Stick.`);renderAll()}
+function fullRestore(file){const rd=new FileReader();rd.onload=()=>{let o;try{o=JSON.parse(rd.result);if(o.type!=='gc-komplett'||!o.env)throw 0}catch(e){toast('Das ist keine Backup-Datei vom Geld-Cockpit.');return}
+  $('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Backup einspielen</h3><p class="small mut">Backup vom ${fd(new Date(o.erstellt))}. Gib das Passwort ein, das beim Erstellen galt. Deine jetzigen Daten werden ersetzt.</p><label>Passwort<input id="rb-pw" type="password" autocomplete="current-password"></label><p id="rb-msg" class="small" aria-live="polite"></p><div class="row2"><button class="btn pri" id="rb-ok">Einspielen</button><button class="btn ghost" id="s-x">Abbrechen</button></div>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;
+  $('rb-ok').onclick=async()=>{$('rb-msg').textContent='Entschlüssele ...';let S2;try{const k=await deriveKey($('rb-pw').value,unb64(o.env.salt));S2=await dec(o.env,k)}catch(e){$('rb-msg').textContent='Passwort passt nicht zu diesem Backup.';return}
+    const ids=Object.keys(o.docs||{});let n=0;for(const id of ids){try{const g=await ghPath('GET','data/docs/'+id+'.enc');if(g.status===404){const r=await ghPath('PUT','data/docs/'+id+'.enc',{message:'Dokument',content:b64(te.encode(o.docs[id])),branch:GH.branch});if(r.ok)n++}}catch(e){}$('rb-msg').textContent=`Dateien prüfen ... ${ids.indexOf(id)+1} von ${ids.length}`}
+    S=S2;closeSheet();await commit(`Backup eingespielt${n?`, ${n} Dateien wiederhergestellt`:''}`)}};rd.readAsText(file)}
+document.addEventListener('click',e=>{const b=e.target.closest('#fullbk');if(b){if(!TOKEN){toast('Für das komplette Backup zuerst das Speichern bei GitHub einrichten.');return}fullBackup()}});
+document.addEventListener('change',e=>{if(e.target.id==='fullrs'&&e.target.files[0]){fullRestore(e.target.files[0]);e.target.value=''}});
 
 /* ---------- Navigation ---------- */
 function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();renderZaehler();renderDonut();renderMon();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
