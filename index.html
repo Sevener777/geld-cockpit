@@ -31,7 +31,8 @@ body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:max(18px,env(safe-area-inset-top))}
 .brand{font-weight:800;font-size:20px;letter-spacing:-.01em}
 .brand small{display:block;font-weight:400;font-size:13px;color:var(--mut);letter-spacing:0}
-.icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--pan);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.icon[aria-current=page]{background:var(--ink);color:var(--bg)}
+.icon{text-decoration:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--pan);color:var(--ink);display:grid;place-items:center;cursor:pointer}
 .icon svg,nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 nav{display:flex;gap:6px;margin-top:14px;border-bottom:2px solid var(--ink)}
 nav a{display:flex;align-items:center;gap:6px;padding:10px 14px;min-height:44px;color:var(--ink);text-decoration:none;font-weight:700;border-radius:10px 10px 0 0}
@@ -119,6 +120,11 @@ details p+p{margin-top:8px}
 .neu{background:var(--soft);color:var(--mut)}
 .li .t span.chip.ok{color:var(--grn)}.li .t span.chip.warn{color:var(--amb)}.li .t span.chip.bad{color:var(--red)}.li .t span.chip.neu{color:var(--mut)}
 #start-fristen h2{margin-top:0}#start-fristen{margin-bottom:20px}
+.seg{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:6px;margin:14px 0 4px}
+@media(max-width:600px){.seg{grid-template-columns:1fr 1fr}}
+.seg button{flex:none;font:inherit;font-weight:700;font-size:15px;white-space:nowrap;border:1px solid var(--line);background:var(--pan);color:var(--ink);border-radius:999px;padding:9px 14px;min-height:44px;cursor:pointer}
+.seg button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+[data-subv]{display:none}[data-subv].on{display:block}
 .stack2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media(max-width:760px){.stack2{grid-template-columns:1fr}}
 @media(max-width:600px){
@@ -137,15 +143,15 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 <div class="wrap">
 <header>
 <div class="brand">Geld-Cockpit<small id="stamp"></small></div>
-<button class="icon" id="open-search" aria-label="Suchen"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+<div class="row2" style="gap:8px;flex-wrap:nowrap"><button class="icon" id="open-search" aria-label="Suchen" title="Suchen"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button><a class="icon" href="#hilfe" id="t-hilfe" aria-label="Hilfe" title="Hilfe"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg></a><a class="icon" href="#einstellungen" id="t-einstellungen" aria-label="Einstellungen" title="Einstellungen"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a></div>
 </header>
 <nav aria-label="Bereiche">
 <a href="#start" id="t-start"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+<a href="#konten" id="t-konten"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>Konten</a>
 <a href="#toepfe" id="t-toepfe"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM4 7l8 6 8-6"/></svg>Töpfe</a>
 <a href="#rechnungen" id="t-rechnungen"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Rechnungen</a>
 <a href="#vertraege" id="t-vertraege"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Verträge</a>
 <a href="#ziele" id="t-ziele"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Ziele</a>
-<a href="#mehr" id="t-mehr"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Mehr</a>
 </nav>
 </div>
 
@@ -192,25 +198,34 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
 <section id="v-vertraege">
 <h1>Deine Verträge</h1>
-<p class="mut">Alles, was regelmäßig Geld kostet, an einem Ort. Mit Kündigungsfrist, damit dich kein Termin überrascht. Tipp auf einen Vertrag, um ihn zu ändern.</p>
+<p class="mut">Alles, was regelmäßig Geld kostet, an einem Ort. Mit Kündigungsfrist, damit dich kein Termin überrascht.</p>
+<div class="seg" role="tablist" id="ct-seg"><button role="tab" data-sub="uebersicht">Übersicht</button><button role="tab" data-sub="alle">Alle Verträge</button><button role="tab" data-sub="termine">Termine</button><button role="tab" data-sub="versicherungen">Versicherungen</button></div>
+<div data-subv="uebersicht">
 <div class="pan hero" id="ct-hero" style="margin-top:14px"></div>
 <div id="ct-soon-wrap"><h2>Fristen in den nächsten drei Monaten</h2><div class="list" id="ct-soon"></div></div>
+<h2>Wofür das Geld geht</h2>
+<div class="pan"><div class="split" id="ct-split" aria-label="Kosten nach Bereich"></div><div class="res" id="ct-cats"></div></div>
+</div>
+<div data-subv="termine">
 <h2 id="tl-h">Alle Termine und Laufzeiten</h2>
 <p class="mut small">Kündigungsfristen, Vertragsenden, Preisgarantien und große Rechnungen in einer Zeitleiste. Hol sie dir mit Erinnerung in deinen Handy-Kalender.</p>
 <div class="row2" style="margin:12px 0"><button class="btn pri" id="ics">In meinen Kalender übernehmen</button></div>
 <div class="list" id="tl-list"></div>
 <div class="row2" style="margin-top:8px"><button class="btn ghost" id="tl-more"></button></div>
 <div id="tl-miss"></div>
+</div>
+<div data-subv="versicherungen">
 <h2 id="ins-h">Versicherungen und Energie auf einen Blick</h2>
 <p class="mut small">Was abgedeckt ist, was fehlt, und ein Rechner, um Angebote abzugleichen.</p>
 <div class="cards" id="ins-cards" style="margin-top:12px"></div>
-<h2>Wofür das Geld geht</h2>
-<div class="pan"><div class="split" id="ct-split" aria-label="Kosten nach Bereich"></div><div class="res" id="ct-cats"></div></div>
+</div>
+<div data-subv="alle">
 <h2 id="ct-all">Alle Verträge</h2>
 <div class="row2" style="justify-content:space-between"><div class="filters" id="ct-filters" style="margin:0"></div><label class="row2" style="gap:6px;font-size:14px">Sortieren<select id="ct-sort" class="sel-sort"><option value="frist">nach Frist</option><option value="kosten">nach Kosten</option><option value="name">nach Name</option></select></label></div>
 <div class="list" id="ct-list" style="margin-top:12px"></div>
 <div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-ct">+ Vertrag hinzufügen</button><span class="small mut" id="ct-sum"></span></div>
 <p class="note">Die Verträge sind deine Übersicht. Geplant wird das Geld weiter bei Töpfe und Rechnungen. So zählt nichts doppelt.</p>
+</div>
 </section>
 
 <section id="v-ziele">
@@ -226,26 +241,43 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 <div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-goal">+ Ziel hinzufügen</button></div>
 </section>
 
-<section id="v-mehr">
-<h1 id="einlesen">Kontoauszüge einlesen</h1>
-<p class="mut">Einmal im Monat: CSV-Dateien deiner Konten auswählen. Kontostände, Ampeln und „noch frei“ aktualisieren sich dann von selbst. Die Dateien bleiben auf deinem Gerät.</p>
-<label class="drop" id="drop" for="csv" style="margin-top:14px"><b>CSV-Dateien auswählen</b><span class="small mut">Mehrere auf einmal gehen auch</span><input id="csv" type="file" accept=".csv,.txt,text/csv" multiple></label>
-<div id="preview"></div>
-<h2>Meine Konten</h2>
+<section id="v-konten">
+<h1>Deine Konten</h1>
+<p class="mut">Hier siehst du, was auf welchem Konto liegt. Einmal im Monat liest du die Kontoauszüge ein, dann aktualisiert sich alles von selbst.</p>
+<h2>Kontostände</h2>
 <div class="list" id="acct-list"></div>
-<div class="row2" style="margin-top:10px"><button class="btn ghost" id="reset-imp">Eingelesenes zurücksetzen</button></div>
-<p class="note">Setzt den Monat und die Doppelt-Prüfung zurück, damit du Dateien neu einlesen kannst. Kontostände und deine Planung bleiben.</p>
-<h2>Hilfe</h2>
-<div id="help"></div>
+<h2 id="einlesen">Kontoauszüge einlesen</h2>
+<p class="mut small">CSV-Dateien deiner Konten auswählen. Die Dateien bleiben auf deinem Gerät und werden nicht hochgeladen.</p>
+<label class="drop" id="drop" for="csv" style="margin-top:12px"><b>CSV-Dateien auswählen</b><span class="small mut">Mehrere auf einmal gehen auch</span><input id="csv" type="file" accept=".csv,.txt,text/csv" multiple></label>
+<div id="preview"></div>
+<details style="margin-top:12px"><summary>Wo finde ich die CSV-Datei bei meiner Bank?</summary><p>ING: im Browser das Konto öffnen, ganz unten auf „Exportieren“.</p><p>C24: auf der Check24-Webseite die Umsätze als CSV exportieren.</p><p>SPARDA: im Online-Banking beim Kredit die Umsätze als CSV exportieren.</p></details>
+</section>
+
+<section id="v-einstellungen">
+<h1>Einstellungen</h1>
+<p class="mut">Alles rund um Speichern, Sicherheit und deine Daten an einem Ort.</p>
+<h2>Speichern</h2>
+<div class="pan" style="display:grid;gap:10px"><div id="sync"></div></div>
+<h2>Sicherheit</h2>
+<div class="pan" style="display:grid;gap:12px"><div id="face"></div><hr style="border:0;border-top:1px solid var(--line);width:100%"><p class="small mut">Deine Daten liegen nur verschlüsselt bei GitHub (AES-256). Nach 15 Minuten ohne Bedienung sperrt sich das Cockpit.</p><div class="row2"><button class="btn ghost" id="lock-now">Jetzt sperren</button><button class="btn ghost" id="pw-change">Passwort ändern</button></div></div>
 <h2>Sicherung</h2>
 <div class="pan" style="display:grid;gap:10px">
 <p class="small mut">Eine Sicherung ist unverschlüsselt. Bewahr sie sicher auf, zum Beispiel in einem Passwort-Manager. Damit kannst du alles wiederherstellen, auch wenn GitHub einmal weg ist.</p>
 <div class="row2"><button class="btn ghost" id="backup-copy">Sicherung kopieren</button><button class="btn ghost" id="backup-file">Als Datei speichern</button><button class="btn ghost" id="backup-load">Sicherung einspielen</button></div>
 </div>
-<h2>Speichern und Sicherheit</h2>
-<div class="pan" style="display:grid;gap:10px"><div id="sync"></div><hr style="border:0;border-top:1px solid var(--line);width:100%"><p class="small mut">Deine Daten liegen nur verschlüsselt bei GitHub (AES-256). Nach 15 Minuten ohne Bedienung sperrt sich das Cockpit.</p><div class="row2"><button class="btn ghost" id="lock-now">Jetzt sperren</button><button class="btn ghost" id="pw-change">Passwort ändern</button></div></div>
-<h2>Einstellungen</h2>
-<div class="pan"><label>Dein Nachname<input id="ownname"></label><p class="note">Überweisungen, in denen dein Name steht, zählen nicht als Ausgabe. Das sind deine eigenen Töpfe.</p></div>
+<h2>Persönliches</h2>
+<div class="pan"><label>Dein Nachname<input id="ownname"></label><p class="note">Überweisungen, in denen dein Name steht, zählen nicht als Ausgabe. Das sind Umbuchungen zwischen deinen eigenen Konten.</p></div>
+<h2>Kontoauszüge</h2>
+<div class="pan" style="display:grid;gap:10px"><p class="small mut">Setzt den Monat und die Doppelt-Prüfung zurück, damit du Dateien neu einlesen kannst. Kontostände und deine Planung bleiben.</p><div class="row2"><button class="btn ghost" id="reset-imp">Eingelesenes zurücksetzen</button></div></div>
+<h2>App auf dem Handy</h2>
+<div class="pan"><p class="small">iPhone: Seite in Safari öffnen, „Teilen“ und dann „Zum Home-Bildschirm“. Android: in Chrome die drei Punkte und „Zum Startbildschirm hinzufügen“.</p></div>
+</section>
+
+<section id="v-hilfe">
+<h1>Hilfe</h1>
+<p class="mut">Antworten auf die häufigsten Fragen. Tipp auf eine Frage, um sie aufzuklappen.</p>
+<input id="help-q" type="search" placeholder="Frage suchen, z. B. Frist, Topf, Passwort" aria-label="Hilfe durchsuchen" style="margin:14px 0">
+<div id="help"></div>
 </section>
 </main>
 
@@ -289,11 +321,11 @@ function renderStart(){
     ${hol>=20?`<p class="chip warn">Darin stecken ${fmt(M.gross)} große Rechnungen. Hol dir noch bis zu ${fmt(hol)} aus dem passenden Topf zurück.</p>`:''}
     <p class="small mut">Stand ${M.bis}. Überweisungen an deine eigenen Konten zählen nicht als Ausgabe.</p>
     <details style="margin:4px 0 0;background:var(--soft)"><summary>Wofür ging das Geld?</summary>${M.top.map(t=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span>${esc(t.n)}</span><span class="num">${fmt(t.b)}</span></div>`).join('')}</details>
-    <div class="row2"><button class="btn ghost" data-go="mehr" data-anchor="einlesen">Neuen Auszug einlesen</button></div>`}
+    <div class="row2"><button class="btn ghost" data-go="konten" data-anchor="einlesen">Neuen Auszug einlesen</button></div>`}
   else{h=`<p class="lab">Dein Wochengeld zum Leben</p><div class="big" style="${leben<0?'color:var(--red)':''}">${fmt(leben/4.35)}</div>
     <p>Das bleibt nach allen Daueraufträgen und festen Abbuchungen. Bisher hast du für den Alltag etwa <b>${fmt(S.alltag/4.35)} pro Woche</b> ausgegeben.</p>
     <p class="small mut">Lies deinen Kontoauszug ein, dann siehst du hier jeden Tag, was im Monat noch frei ist.</p>
-    <div class="row2"><button class="btn pri" data-go="mehr" data-anchor="einlesen">Kontoauszug einlesen</button></div>`}
+    <div class="row2"><button class="btn pri" data-go="konten" data-anchor="einlesen">Kontoauszug einlesen</button></div>`}
   $('hero').innerHTML=h;
   $('start-tiles').innerHTML=pots().map(p=>{const st=status(p);return`<button class="tile" data-pot="${p.id}"><span class="nm"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</span><span class="amt">${fmt(p.stand)}</span><span class="chip ${st.c}">${esc(st.t)}</span></button>`}).join('');
   const soon=[];for(let i=1;i<=3;i++){const m=(cm-1+i)%12+1;S.rechnungen.filter(r=>+r.m===m&&+r.b>=100).forEach(r=>soon.push({...r,i}))}
@@ -339,6 +371,9 @@ function renderBills(){
 const KAT={haus:['Versicherungen Haus','#7a8f6a'],auto:['Auto','#b07a4f'],vors:['Vorsorge','#6b7fa8'],kredit:['Hauskredit','#8c6d8f'],energie:['Wohnen und Gebühren','#5f9a9a'],abo:['Telefon, Internet, Abos','#a89a5b'],verein:['Vereine','#9a6b6b'],hund:['Hund','#7d7a72'],ein:['Einnahmen','#2f6b4f']};
 const VERS=['haus','auto','vors'];
 const PORT={wohngebaeude:[['Check24','https://www.check24.de/wohngebaeudeversicherung/'],['Verivox','https://www.verivox.de/wohngebaeudeversicherung/']],hausrat:[['Check24','https://www.check24.de/hausratversicherung/'],['Verivox','https://www.verivox.de/hausratversicherung/']],haftpflicht:[['Check24','https://www.check24.de/haftpflichtversicherung/'],['Verivox','https://www.verivox.de/haftpflichtversicherung/']],kfz:[['Check24','https://www.check24.de/kfz-versicherung/'],['HUK24','https://www.huk24.de/']],strom:[['Check24','https://www.check24.de/strom/'],['Verivox','https://www.verivox.de/strom/']],dsl:[['Check24','https://www.check24.de/dsl/']],handy:[['Check24','https://www.check24.de/handytarife/']]};
+const PORTALS=[[/\bbgv\b/i,'Mein BGV','https://www.bgv.de/privatkunden/mein-bgv/'],[/huk24/i,'HUK24','https://www.huk24.de/'],[/huk/i,'Meine HUK','https://www.huk.de/login'],[/württembergische|wuerttembergische/i,'Kundenportal Württembergische','https://www.wuerttembergische.de/kundenportal'],[/eprimo/i,'mein eprimo','https://www.eprimo.de/mein-eprimo'],[/syna/i,'Syna Einspeiser','https://www.syna.de/digitale-einspeiseangebote'],[/amazon|prime/i,'Prime verwalten','https://www.amazon.de/gp/primecentral'],[/apple/i,'Apple-Account','https://account.apple.com'],[/lidl connect/i,'LIDL Connect','https://www.lidl-connect.de'],[/sparda/i,'SPARDA-Bank','https://www.sparda-bw.de'],[/\bing\b/i,'ING Banking','https://banking.ing.de'],[/rundfunk|ard zdf/i,'Rundfunkbeitrag','https://www.rundfunkbeitrag.de'],[/gemeinde lobbach/i,'Gemeinde Lobbach','https://www.lobbach.de'],[/avr/i,'AVR Kommunal','https://www.avr-kommunal.de'],[/bundeskasse|kfz-steuer/i,'Zoll (Kfz-Steuer)','https://www.zoll.de']];
+function portal(v){if(v.url)return{n:'Kundenportal',u:v.url};const s=(v.a||'')+' '+(v.n||'');for(const[re,n,u]of PORTALS)if(re.test(s))return{n,u};return null}
+const portalBtn=(v,cls)=>{const p=portal(v);return p?`<a class="btn ${cls||'ghost'}" href="${esc(p.u)}" target="_blank" rel="noopener noreferrer">${esc(p.n)} öffnen ↗</a>`:''};
 const ICON={1:['✓','var(--grn)','Abgedeckt'],2:['!','var(--amb)','Eingeschränkt'],0:['✗','var(--red)','Fehlt oder Achtung']};
 const covCount=v=>{const c={0:0,1:0,2:0};(v.cov||[]).forEach(x=>c[x[1]]++);return c};
 function renderIns(){
@@ -348,7 +383,7 @@ function renderIns(){
     <div class="row2" style="gap:6px"><span class="chip ok">${c[1]} abgedeckt</span>${c[2]?`<span class="chip warn">${c[2]} eingeschränkt</span>`:''}${c[0]?`<span class="chip bad">${c[0]} Achtung</span>`:''}</div>
     ${warn?`<p class="small"><b style="color:${ICON[warn[1]][1]}">${ICON[warn[1]][0]}</b> ${esc(warn[0])}</p>`:''}
     <p class="small mut">${esc(f.t)}</p>
-    <div class="row2"><button class="btn ghost" data-open-ct="${i}">${v.must&&v.must.length?'Ansehen und vergleichen':'Ansehen'}</button></div></div>`}).join('');
+    <div class="row2"><button class="btn ghost" data-open-ct="${i}">${v.must&&v.must.length?'Ansehen und vergleichen':'Ansehen'}</button>${portalBtn(v)}</div></div>`}).join('');
 }
 function openContract(i){
   const v=ctAll()[i];if(!v)return;const f=frist(v),c=covCount(v),k=KAT[v.k]||['',''];
@@ -359,6 +394,7 @@ function openContract(i){
   const offers=(v.angebote||[]).map((o,j)=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span>${esc(o.a||'Angebot')} <span class="small mut">${esc(o.d)}, ${o.n} von ${o.of} Punkten</span></span><span class="row2" style="gap:6px"><b class="num" style="color:${o.p<v.b?'var(--grn)':'var(--red)'}">${fmt(o.p)}</b><button class="fchip" data-del-off="${j}" aria-label="Angebot löschen">×</button></span></div>`).join('');
   $('sheet').innerHTML=`<div class="row2" style="justify-content:space-between;align-items:start"><h3 id="sheet-title" style="font-size:20px;max-width:75%">${esc(v.n)}<span class="small mut" style="display:block;font-weight:400">${esc([v.a,v.nr].filter(Boolean).join(' · '))}</span></h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
   <div class="pan" style="display:grid;gap:6px;padding:14px"><div class="row2" style="justify-content:space-between"><span class="mut">${v.ein?'Einnahme im Jahr':'Kosten im Jahr'}</span><b class="num" style="font-size:22px">${v.b?fmt(v.b):'fehlt'}</b></div><div class="row2" style="justify-content:space-between"><span class="mut">Im Monat</span><span class="num">${fmt(v.b/12)}</span></div><span class="chip ${v.foerderende?'warn':f.c}">${esc(f.t)}</span>${f.e&&f.d?`<span class="small mut">Verlängert sich sonst am ${fd(f.e)}.</span>`:''}</div>
+  ${portal(v)?`<div class="row2">${portalBtn(v,'pri')}</div>`:''}
   ${v.tipp?`<p class="small" style="background:var(--soft);border-radius:10px;padding:10px 12px">${esc(v.tipp)}</p>`:''}
   ${cov?`<div><h3 style="margin-bottom:4px">Das ist abgedeckt</h3><p class="small mut">${c[1]} abgedeckt${c[2]?`, ${c[2]} eingeschränkt`:''}${c[0]?`, ${c[0]} Achtung`:''}</p>${cov}</div>`:''}
   ${must.length||isStrom?`<div style="display:grid;gap:10px"><h3>Besseres Angebot prüfen</h3><p class="small mut">Hol dir ein Angebot, zum Beispiel über die Links unten. Hake ab, was es auch bietet. Billiger ist es nur, wenn alles drin ist.</p>
@@ -369,7 +405,7 @@ function openContract(i){
    <div class="row2"><button class="btn pri" id="of-save">Angebot merken</button></div>
    ${offers?`<div><p class="small mut">Gemerkte Angebote</p>${offers}</div>`:''}
    ${ports?`<div class="row2">${ports}</div>`:''}</div>`:''}
-  <div class="row2"><button class="btn ghost" id="ct-edit">Bearbeiten</button></div>`;
+  <div class="row2">${portalBtn(v)}<button class="btn ghost" id="ct-edit">Bearbeiten</button></div>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ct-edit').onclick=()=>editContract(i);
   if(!$('of-res'))return;
   const price=()=>{if(isStrom){const ap=+String($('of-ap').value).replace(',','.'),gp=+String($('of-gp').value).replace(',','.'),kwh=+$('of-kwh').value||0;return ap?kwh*ap/100+gp*12:0}return +String($('of-p').value).replace(',','.')||0};
@@ -406,7 +442,9 @@ const ctAll=()=>(S.vertraege||[]);
 const ctCost=()=>ctAll().filter(v=>!v.ein);
 function payer(v){if(v.wo==='giro')return'Girokonto';const p=pot(v.wo);return p?(p.art==='topf'?'Topf '+p.n:'Dauerauftrag '+p.n):''}
 function ctRow(v,i){const f=frist(v),st=STX[v.st]||STX.ok,k=KAT[v.k]||['Sonstiges','#999'];
-  return`<button class="li" data-open-ct="${i}"><span class="sw" style="background:${k[1]}"></span><span class="t"><b style="font-weight:600">${esc(v.n)}</b><span>${esc([v.a,RH[v.rh],payer(v)].filter(Boolean).join(' · '))}</span><span class="chips"><span class="chip ${f.c}">${esc(f.t)}</span>${v.pf||v.ein?'':`<span class="chip ${st[0]}">${st[1]}</span>`}${v.cov&&v.cov.some(x=>x[1]===0)?`<span class="chip bad">${v.cov.filter(x=>x[1]===0).length} Achtung</span>`:''}</span></span><span class="num" style="${v.ein?'color:var(--grn)':''}">${v.b?(v.ein?'+ ':'')+fmt(v.b):'?'}<br><span class="small mut" style="font-weight:400">${v.b?fmt(v.b/12)+' im Monat':'Betrag fehlt'}</span></span></button>`}
+  return`<button class="li" data-open-ct="${i}"><span class="sw" style="background:${k[1]}"></span><span class="t"><b style="font-weight:600">${esc(v.n)}</b><span>${esc([v.a,RH[v.rh],payer(v)].filter(Boolean).join(' · '))}${portal(v)?' · ↗ Portal':''}</span><span class="chips"><span class="chip ${f.c}">${esc(f.t)}</span>${v.pf||v.ein?'':`<span class="chip ${st[0]}">${st[1]}</span>`}${v.cov&&v.cov.some(x=>x[1]===0)?`<span class="chip bad">${v.cov.filter(x=>x[1]===0).length} Achtung</span>`:''}</span></span><span class="num" style="${v.ein?'color:var(--grn)':''}">${v.b?(v.ein?'+ ':'')+fmt(v.b):'?'}<br><span class="small mut" style="font-weight:400">${v.b?fmt(v.b/12)+' im Monat':'Betrag fehlt'}</span></span></button>`}
+let ctSub='uebersicht';
+function showSub(s){ctSub=s;document.querySelectorAll('#ct-seg [data-sub]').forEach(b=>b.setAttribute('aria-selected',b.dataset.sub===s?'true':'false'));document.querySelectorAll('[data-subv]').forEach(d=>d.classList.toggle('on',d.dataset.subv===s))}
 function renderContracts(){
   const A=ctAll(),C=ctCost(),tot=sum(C),F=A.map((v,i)=>({v,i,f:frist(v)}));
   const urgent=F.filter(x=>x.f.lvl===3),soon=F.filter(x=>x.f.lvl>=2).sort((a,b)=>a.f.d-b.f.d),chk=A.filter(v=>v.st!=='ok'&&!v.pf),miss=A.filter(v=>!v.b);
@@ -424,7 +462,7 @@ function renderContracts(){
   L.sort(ctSort==='kosten'?(a,b)=>b.v.b-a.v.b:ctSort==='name'?(a,b)=>a.v.n.localeCompare(b.v.n,'de'):(a,b)=>(a.f.d?0:1)-(b.f.d?0:1)||(a.f.d&&b.f.d?a.f.d-b.f.d:0)||b.v.b-a.v.b);
   $('ct-list').innerHTML=L.map(x=>ctRow(x.v,x.i)).join('')||`<p class="li mut">Kein Vertrag in dieser Auswahl.</p>`;
   $('ct-sum').textContent=selKat?`${L.length} von ${A.length}, zusammen ${fmt(sum(L.map(x=>x.v).filter(v=>!v.ein)))} Kosten im Jahr`:'';
-  renderIns();renderTimeline();
+  renderIns();renderTimeline();showSub(ctSub);
   const sf=F.filter(x=>x.f.lvl===3).sort((a,b)=>a.f.d-b.f.d);
   const nx=allDates().filter(x=>x.k!=='rech'&&x.k!=='ende').slice(0,3);
   $('start-fristen').innerHTML=sf.length?`<h2>Kündigungsfristen, bald handeln</h2><div class="list">${sf.map(x=>`<button class="li" data-go="vertraege" data-ct="${x.i}"><span class="sw" style="background:var(--red)"></span><span class="t">${esc(x.v.n)}<span>${esc(x.f.t)}</span></span><span class="num">${fmt(x.v.b)}</span></button>`).join('')}</div>`:(nx.length?`<h2>Nächste Termine</h2><div class="list">${nx.map(x=>`<button class="li" data-go="vertraege" data-ct="${x.i}"><span class="sw" style="background:var(--amb)"></span><span class="t">${esc(x.t)}<span>${esc(x.s)}</span></span><span class="num small">${fd(x.d)}</span></button>`).join('')}</div>`:'');
@@ -435,10 +473,10 @@ function editContract(i){const v=i==null?{n:'',a:'',k:selKat&&KAT[selKat]?selKat
   const fields=[];
   if(f&&f.d)fields.push({type:'info',v:`${f.t}. Der Vertrag verlängert sich sonst am ${fd(f.e)}.`});
   if(v.tipp)fields.push({type:'info',v:v.tipp,cls:'tip'});
-  fields.push({l:'Vertrag',v:v.n},{l:'Anbieter',v:v.a},{l:'Bereich',v:v.k,type:'select',opts:Object.entries(KAT).map(([k,x])=>[k,x[0]])},{l:'Kosten im Jahr in €',v:v.b,type:'number',hint:'Bei monatlicher Zahlung: Monatsbetrag mal 12.'},{l:'Zahlweise',v:v.rh,type:'select',opts:Object.entries(RH)},{l:'Bezahlt aus',v:v.wo,type:'select',opts:woOpts});
+  fields.push({l:'Vertrag',v:v.n},{l:'Anbieter',v:v.a},{l:'Bereich',v:v.k,type:'select',opts:Object.entries(KAT).map(([k,x])=>[k,x[0]])},{l:'Kosten im Jahr in €',v:v.b,type:'number',hint:'Bei monatlicher Zahlung: Monatsbetrag mal 12.'},{l:'Zahlweise',v:v.rh,type:'select',opts:Object.entries(RH)},{l:'Bezahlt aus',v:v.wo,type:'select',opts:woOpts},{l:'Link zum Kundenportal',v:v.url||'',type:'url',hint:portal({a:v.a,n:v.n})?'Leer lassen, dann nimmt das Cockpit '+portal({a:v.a,n:v.n}).n+'.':'Zum Beispiel die Anmeldeseite des Anbieters.'});
   if(!v.pf)fields.push({l:'Läuft bis (Ende des Vertragsjahres)',v:v.ende,type:'date',hint:'Steht in der Police oder auf der Beitragsrechnung. Leer lassen, wenn unbekannt.'},{l:'Kündigungsfrist',v:String(v.frist||0),type:'select',opts:[['0','Jederzeit'],['1','1 Monat vor Ablauf'],['3','3 Monate vor Ablauf']]},{l:'Was ist zu tun?',v:v.st,type:'select',opts:[['ok','Passt so'],['pruefen','Prüfen oder vergleichen'],['kuendigen','Kündigen']]});
   fields.push({l:'Weiterer Termin (z. B. Preisgarantie endet)',v:(v.termine&&v.termine[0]||{}).d||'',type:'date'},{l:'Was passiert an diesem Termin?',v:(v.termine&&v.termine[0]||{}).t||''},{l:'Notiz',v:v.tipp,type:'area'});
-  sheet(i==null?'Neuer Vertrag':v.n,fields,vals=>{const q=vals.filter(x=>x!==null);const o={n:q[0]||'Vertrag',a:q[1],k:q[2],b:q[3],rh:q[4],wo:q[5]};let j=6;if(!v.pf){o.ende=q[j++];o.frist=+q[j++];o.st=q[j++]}o.termine=q[j]?[{d:q[j],t:q[j+1]||'Termin'}].concat((v.termine||[]).slice(1)):(v.termine||[]).slice(1);o.tipp=q[j+2];if(i==null){S.vertraege=S.vertraege||[];S.vertraege.push(o)}else Object.assign(v,o)},i==null?null:()=>S.vertraege.splice(i,1));
+  sheet(i==null?'Neuer Vertrag':v.n,fields,vals=>{const q=vals.filter(x=>x!==null);const o={n:q[0]||'Vertrag',a:q[1],k:q[2],b:q[3],rh:q[4],wo:q[5],url:/^https:\/\//.test(q[6]||'')?q[6].trim():''};let j=7;if(!v.pf){o.ende=q[j++];o.frist=+q[j++];o.st=q[j++]}o.termine=q[j]?[{d:q[j],t:q[j+1]||'Termin'}].concat((v.termine||[]).slice(1)):(v.termine||[]).slice(1);o.tipp=q[j+2];if(i==null){S.vertraege=S.vertraege||[];S.vertraege.push(o)}else Object.assign(v,o)},i==null?null:()=>S.vertraege.splice(i,1));
 }
 
 /* ---------- Termine und Laufzeiten ---------- */
@@ -484,30 +522,33 @@ function renderGoals(){
     return`<div class="card"><div class="row2" style="justify-content:space-between"><h3>${esc(g.n)}</h3><span class="num">${b?fmt(b):''}</span></div><div class="bar"><i style="width:${pct}%"></i></div><span class="chip ${c}">${esc(txt)}</span>${g.wunsch?`<p class="small mut">Wunschtermin ${MONL[+g.wunsch.split('-')[1]-1]} ${g.wunsch.split('-')[0]}</p>`:''}<div class="row2"><button class="btn ghost" data-edit-goal="${i}">Bearbeiten</button></div></div>`}).join('');
 }
 
-/* ---------- Mehr ---------- */
+/* ---------- Konten, Einstellungen, Hilfe ---------- */
 const HELP=[
  ['Was ist ein Topf?','Ein eigenes Konto für eine Sorte Rechnungen, zum Beispiel ein ING Extra-Konto „Auto“. Jeden Monat geht per Dauerauftrag ein fester Betrag hinein. Kommt die Rechnung, zahlst du sie aus dem Topf.'],
  ['Welche Rechnung gehört in einen Topf?','Alles, was seltener als monatlich kommt: Heizöl, Wasser, Versicherungen, Kfz-Steuer. Was jeden Monat abgebucht wird, wie Strom oder Handy, bleibt auf dem Girokonto.'],
  ['Was bedeutet die rote Linie?','Die Linie zeigt den Kontostand des Topfs in den nächsten zwölf Monaten. Wird sie rot, reicht das Geld in diesem Monat nicht. Dann den Dauerauftrag erhöhen oder rechtzeitig nachlegen.'],
  ['Was heißt „noch frei“?','Dein Einkommen minus alle Daueraufträge minus das, was du diesen Monat vom Girokonto ausgegeben hast, plus das, was du dir aus deinen Töpfen zurückgeholt hast. Feste Abbuchungen, die noch kommen, sind schon abgezogen.'],
  ['Was zählt als Ausgabe?','Alles, was vom Girokonto an andere abgeht, auch große Rechnungen wie Heizöl. Holst du dir Geld aus einem Topf zurück, wird das gegengerechnet. Überweisungen an deine eigenen Konten zählen nicht als Ausgabe.'],
- ['Wie lese ich Kontoauszüge ein?','ING: im Browser das Konto öffnen, ganz unten auf „Exportieren“. C24: auf der Check24-Webseite die Umsätze als CSV exportieren. SPARDA: im Online-Banking beim Kredit die Umsätze als CSV exportieren. Dann hier alle Dateien auf einmal auswählen.'],
+ ['Wie lese ich Kontoauszüge ein?','Im Reiter Konten auf „CSV-Dateien auswählen“ tippen. ING: im Browser das Konto öffnen, ganz unten auf „Exportieren“. C24: auf der Check24-Webseite die Umsätze als CSV exportieren. SPARDA: im Online-Banking beim Kredit die Umsätze als CSV exportieren. Alle Dateien kannst du auf einmal auswählen.'],
  ['Was passiert mit meinen Daten?','Alles wird auf deinem Gerät mit deinem Passwort verschlüsselt (AES-256) und erst dann bei GitHub gespeichert. Dort liegt nur Zeichensalat. Die CSV-Dateien werden nur auf deinem Gerät gelesen. Gespeichert werden Kontostände, Monatssummen und unlesbare Prüfnummern der Buchungen, keine einzelnen Buchungen. Ohne dein Passwort kommt niemand an die Daten, auch Claude nicht.'],
  ['Was passiert, wenn ich eine Datei zweimal einlese?','Nichts Schlimmes. Das Cockpit erkennt die gleiche Datei und überspringt sie. Überschneiden sich zwei Auszüge, zählt jede Buchung nur einmal. Eine ältere Datei überschreibt nie einen neueren Kontostand.'],
  ['Was zeigt der Bereich Verträge?','Alle Verträge und festen Abgaben mit ihren Kosten im Jahr und im Monat. Die Ampel zeigt, bis wann du kündigen musst: Rot heißt, die Frist endet in den nächsten sechs Wochen. Gelb heißt, in den nächsten drei Monaten. Rote Fristen stehen auch auf der Startseite.'],
  ['Wie bekomme ich die Fristen in meinen Kalender?','Bei Verträge auf „In meinen Kalender übernehmen“ tippen und die Datei öffnen. Jede Kündigungsfrist kommt mit Erinnerung sechs Wochen, eine Woche und einen Tag vorher. Nach neuen Verträgen den Export einfach wiederholen.'],
  ['Wie vergleiche ich ein Angebot?','Bei Verträge auf „Ansehen und vergleichen“ tippen. Dort steht, was dein Vertrag abdeckt und was ein neues Angebot mindestens bieten muss. Angebot holen, zum Beispiel über Check24 oder Verivox, Preis eintragen und abhaken, was es bietet. Das Cockpit rechnet aus, was du sparst, und sagt dir, bis wann du kündigen musst. Mit „Angebot merken“ bleibt es gespeichert.'],
+ ['Wie komme ich schnell zum Kundenportal eines Anbieters?','Bei Verträge einen Vertrag antippen. Oben steht ein Knopf, zum Beispiel „Mein BGV öffnen“. Er führt direkt zur Anmeldeseite. Fehlt der Knopf, trag den Link unter Bearbeiten bei „Link zum Kundenportal“ ein.'],
+ ['Wo finde ich was?','Start: was noch frei ist und was bald fällig wird. Konten: Kontostände und Kontoauszüge einlesen. Töpfe: Daueraufträge und Rücklagen. Rechnungen: alles, was seltener als monatlich kommt. Verträge: Kosten, Fristen, Versicherungen und Termine. Ziele: wofür du sparst. Oben rechts: Suche, Hilfe und Einstellungen.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
  ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
- ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Mehr, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
- ['Wie richte ich ein zweites Gerät ein?','Seite auf dem Gerät öffnen, Passwort eingeben. Zum Speichern einmal unter Mehr den GitHub-Schlüssel eintragen.'],
+ ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Einstellungen, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
+ ['Wie richte ich ein zweites Gerät ein?','Seite auf dem Gerät öffnen, Passwort eingeben. Zum Speichern einmal in den Einstellungen den GitHub-Schlüssel eintragen. Face ID richtest du auf jedem Gerät einzeln in den Einstellungen ein.'],
  ['Wie kommt die App auf den Home-Bildschirm?','Die Seite auf dem Handy in Safari oder Chrome öffnen, auf „Teilen“ und dann „Zum Home-Bildschirm“ tippen.'],
  ['Steuer: Was bringt mir mehr Netto?','Prüf deine Steuerklasse: Als Alleinverdiener kann Klasse III jeden Monat mehr Netto bringen statt einer großen Erstattung später. Trag außerdem die Pendlerpauschale ein: seit 2026 38 Cent pro Kilometer der einfachen Strecke.']];
+function renderHelp(){const q=($('help-q').value||'').trim().toLowerCase();const L=HELP.map((h,i)=>({h,i})).filter(x=>!q||(x.h[0]+' '+x.h[1]).toLowerCase().includes(q));$('help').innerHTML=L.map(({h:[f,a],i})=>`<details id="help-${i}"><summary>${esc(f)}</summary><p>${esc(a)}</p></details>`).join('')||'<p class="mut">Keine passende Frage gefunden.</p>'}
 function renderMehr(){
   $('ownname').value=S.eigenname||'';
   const acc=[{id:'girokonto',n:'ING Girokonto',bank:'ING',a:S.girokonto}].concat(S.toepfe.filter(p=>p.art==='topf'||p.id==='hund'||p.id==='kredit').map(p=>({id:p.id,n:p.n,bank:p.bank,a:p,f:p.f})));
   $('acct-list').innerHTML=acc.map(x=>`<div class="li" style="cursor:default"><span class="sw" style="background:${x.f||'#94a3a8'}"></span><span class="t">${esc(x.n)}<span>${esc(x.bank)}${x.a.iban4?`, IBAN …${esc(x.a.iban4)}`:''}, ${x.a.datum?`Stand ${x.a.datum}`:'noch nicht eingelesen'}</span></span><span class="num">${x.a.stand!=null&&x.a.stand!==''?fmt(x.a.stand):'-'}</span></div>`).join('');
-  $('help').innerHTML=HELP.map(([q,a],i)=>`<details id="help-${i}"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
+  renderHelp();
 }
 
 /* ---------- Dialog ---------- */
@@ -540,7 +581,7 @@ function openSearch(){
     S.giro.forEach((g,i)=>{if(g.n.toLowerCase().includes(t))R.push({l:g.n,s:`Abbuchung, ${fmt(g.b)} im Monat`,a:()=>{closeSheet();go('toepfe');setTimeout(()=>editGiro(i),80)}})});
     ctAll().forEach((v,i)=>{if((v.n+' '+v.a+' '+(KAT[v.k]||[''])[0]).toLowerCase().includes(t))R.push({l:v.n,s:`Vertrag, ${v.a?v.a+', ':''}${v.b?fmt(v.b)+' im Jahr':'Betrag fehlt'}`,a:()=>{closeSheet();go('vertraege');setTimeout(()=>openContract(i),80)}})});
     S.ziele.forEach((g,i)=>{if(g.n.toLowerCase().includes(t))R.push({l:g.n,s:'Ziel',a:()=>{closeSheet();go('ziele');setTimeout(()=>editGoal(i),80)}})});
-    HELP.forEach(([h,a],i)=>{if((h+' '+a).toLowerCase().includes(t))R.push({l:h,s:'Hilfe',a:()=>{closeSheet();go('mehr');setTimeout(()=>{const d=$('help-'+i);d.open=true;d.scrollIntoView({block:'center'})},80)}})});
+    HELP.forEach(([h,a],i)=>{if((h+' '+a).toLowerCase().includes(t))R.push({l:h,s:'Hilfe',a:()=>{closeSheet();go('hilfe');setTimeout(()=>{const d=$('help-'+i);d.open=true;d.scrollIntoView({block:'center'})},80)}})});
     $('q-res').innerHTML=R.length?R.slice(0,20).map((r,i)=>`<button class="li" data-r="${i}"><span></span><span class="t">${esc(r.l)}<span>${esc(r.s)}</span></span><span>›</span></button>`).join(''):`<p class="li mut">Nichts gefunden.</p>`;
     $('q-res').querySelectorAll('[data-r]').forEach(b=>b.onclick=R[+b.dataset.r].a)};
   q.oninput=run;
@@ -669,9 +710,9 @@ async function commit(msg){
   renderAll();if(!KEY)return;
   S.gespeichert=fd(new Date());lsSet('gc-tab',location.hash.slice(1));
   const env=await envelope();lsSet('gc-env',JSON.stringify(env));
-  if(!TOKEN){toast((msg?msg+'. ':'')+'Auf diesem Gerät gespeichert. Richte unter Mehr das Speichern bei GitHub ein, dann haben alle Geräte denselben Stand.');return}
+  if(!TOKEN){toast((msg?msg.replace(/\.$/,'')+'. ':'')+'Auf diesem Gerät gespeichert. Richte in den Einstellungen (Zahnrad oben rechts) das Speichern bei GitHub ein, dann haben alle Geräte denselben Stand.');return}
   toast('Speichere ...');
-  saving=saving.then(()=>ghPut(env)).then(()=>{lsSet('gc-synced',String(env.ts));toast(msg||'Gespeichert');renderSync()}).catch(err=>{toast(String(err.message)==='token'?'Der GitHub-Schlüssel gilt nicht mehr. Unter Mehr neu eintragen.':'Gespeichert auf diesem Gerät. GitHub war nicht erreichbar.','Nochmal',()=>commit(msg))});
+  saving=saving.then(()=>ghPut(env)).then(()=>{lsSet('gc-synced',String(env.ts));toast(msg||'Gespeichert');renderSync()}).catch(err=>{toast(String(err.message)==='token'?'Der GitHub-Schlüssel gilt nicht mehr. In den Einstellungen neu eintragen.':'Gespeichert auf diesem Gerät. GitHub war nicht erreichbar.','Nochmal',()=>commit(msg))});
 }
 async function saveToken(t){TOKEN=t.trim();if(TOKEN){lsSet('gc-tok',JSON.stringify(await enc({t:TOKEN})))}else lsDel('gc-tok')}
 function renderSync(){const el=$('sync');if(!el)return;const syn=+lsGet('gc-synced')||0;
@@ -680,26 +721,49 @@ function renderSync(){const el=$('sync');if(!el)return;const syn=+lsGet('gc-sync
   $('tok-set').onclick=()=>sheet('GitHub-Schlüssel',[{type:'info',v:'Auf github.com: Settings, Developer settings, Personal access tokens, Fine-grained tokens. Nur das Projekt geld-cockpit auswählen und bei Contents „Read and write“ erlauben.'},{l:'Schlüssel (beginnt mit github_pat_)',v:'',type:'password'}],async v=>{await saveToken(v[1]||'');try{const r=await ghGet();if(r&&r.ts>(+lsGet('gc-synced')||0)&&r.ts>JSON.parse(lsGet('gc-env')||'{}').ts){S=await dec(r);renderAll()}}catch(e){toast('Mit diesem Schlüssel klappt der Zugriff nicht. Bitte prüfen.');return}commit('Schlüssel gespeichert')},null,'Speichern');
   if($('sync-now'))$('sync-now').onclick=async()=>{try{const r=await ghGet();if(r&&r.ts>JSON.parse(lsGet('gc-env')||'{}').ts){S=await dec(r);lsSet('gc-env',JSON.stringify(r));lsSet('gc-synced',String(r.ts));renderAll();toast('Neuer Stand von GitHub geladen')}else commit('Abgeglichen')}catch(e){toast('GitHub war nicht erreichbar.')}};
 }
-function changePw(){sheet('Passwort ändern',[{l:'Neues Passwort (mindestens 10 Zeichen)',v:'',type:'password'},{l:'Noch einmal',v:'',type:'password'}],async v=>{if(v[0].length<10||v[0]!==v[1]){toast('Die Passwörter sind zu kurz oder nicht gleich. Nichts geändert.');return}SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await deriveKey(v[0],SALT);if(TOKEN)await saveToken(TOKEN);commit('Passwort geändert')},null,'Ändern')}
+function changePw(){sheet('Passwort ändern',[{l:'Neues Passwort (mindestens 10 Zeichen)',v:'',type:'password'},{l:'Noch einmal',v:'',type:'password'}],async v=>{if(v[0].length<10||v[0]!==v[1]){toast('Die Passwörter sind zu kurz oder nicht gleich. Nichts geändert.');return}SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await deriveKey(v[0],SALT);if(TOKEN)await saveToken(TOKEN);lsDel('gc-pk');renderFace();commit('Passwort geändert. Richte Face ID bei Bedarf neu ein.')},null,'Ändern')}
+/* ---------- Face ID (Passkey mit PRF) ---------- */
+const pkOk=()=>!!(window.PublicKeyCredential&&navigator.credentials&&window.isSecureContext);
+const rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+async function prfKey(out){const base=await crypto.subtle.importKey('raw',out,'HKDF',false,['deriveKey']);return crypto.subtle.deriveKey({name:'HKDF',hash:'SHA-256',salt:new Uint8Array(32),info:te.encode('geld-cockpit-faceid')},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function pkPrf(rawId,salt){const a=await navigator.credentials.get({publicKey:{challenge:rnd(32),rpId:location.hostname,allowCredentials:[{type:'public-key',id:rawId}],userVerification:'required',timeout:60000,extensions:{prf:{eval:{first:salt}}}}});const r=a.getClientExtensionResults();if(!r.prf||!r.prf.results||!r.prf.results.first)throw new Error('noprf');return r.prf.results.first}
+async function pkSetup(pw){
+  const salt=rnd(32);
+  const cred=await navigator.credentials.create({publicKey:{challenge:rnd(32),rp:{name:'Geld-Cockpit',id:location.hostname},user:{id:rnd(16),name:'Geld-Cockpit',displayName:'Geld-Cockpit'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',residentKey:'preferred',userVerification:'required'},timeout:60000,extensions:{prf:{eval:{first:salt}}}}});
+  const ext=cred.getClientExtensionResults();if(ext.prf&&ext.prf.enabled===false)throw new Error('noprf');
+  let out=ext.prf&&ext.prf.results&&ext.prf.results.first;if(!out)out=await pkPrf(cred.rawId,salt);
+  const k=await prfKey(out),iv=rnd(12),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(pw));
+  lsSet('gc-pk',JSON.stringify({id:b64(cred.rawId),salt:b64(salt),iv:b64(iv),ct:b64(ct)}))}
+async function pkUnlock(){const o=JSON.parse(lsGet('gc-pk')||'null');if(!o)throw new Error('none');const out=await pkPrf(unb64(o.id),unb64(o.salt));const k=await prfKey(out);return tdec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},k,unb64(o.ct)))}
+function renderFace(){const el=$('face');if(!el)return;
+  if(!pkOk()){el.innerHTML='<p class="small mut">Dieses Gerät oder dieser Browser unterstützt Face ID für Webseiten nicht.</p>';return}
+  const on=!!lsGet('gc-pk');
+  el.innerHTML=on?`<span class="chip ok">Face ID ist auf diesem Gerät eingerichtet</span><div class="row2" style="margin-top:8px"><button class="btn ghost" id="face-off">Face ID ausschalten</button></div>`:`<b>Face ID</b><p class="small mut">Entsperren mit Face ID oder Fingerabdruck statt Passwort. Das Passwort bleibt verschlüsselt auf diesem Gerät und wird nur mit deinem Gesicht entschlüsselt.</p><div class="row2" style="margin-top:8px"><button class="btn pri" id="face-on">Face ID einrichten</button></div>`;
+  if($('face-off'))$('face-off').onclick=()=>{lsDel('gc-pk');renderFace();toast('Face ID ist ausgeschaltet.')};
+  if($('face-on'))$('face-on').onclick=()=>sheet('Face ID einrichten',[{type:'info',v:'Gib zur Bestätigung einmal dein Cockpit-Passwort ein. Danach fragt das iPhone nach Face ID.'},{l:'Passwort',v:'',type:'password'}],async v=>{const pw=v[1]||'';try{const k=await deriveKey(pw,SALT);await dec(JSON.parse(lsGet('gc-env')),k)}catch(e){toast('Das Passwort stimmt nicht.');return}try{await pkSetup(pw);renderFace();toast('Face ID ist eingerichtet. Beim nächsten Öffnen reicht dein Gesicht.')}catch(e){toast(String(e.message)==='noprf'?'Dein iPhone unterstützt das noch nicht. Bitte iOS aktualisieren (ab iOS 18).':'Face ID wurde abgebrochen.')}},null,'Weiter')}
 /* ---------- Sperre ---------- */
 let idle;const lockNow=()=>{KEY=null;S=null;location.reload()};
 const resetIdle=()=>{clearTimeout(idle);idle=setTimeout(lockNow,15*60*1000)};
 ['click','keydown','touchstart','scroll'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));
 async function loadRemote(){try{const r=await fetch(GH.path+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;const j=await r.json();return j&&j.ct?j:null}catch(e){return null}}
-function enterApp(){document.body.classList.remove('locked');$('lock').hidden=true;renderAll();renderSync();resetIdle();let start=location.hash.slice(1);if(!start)start=lsGet('gc-tab')||'';go(start||'start')}
+function enterApp(){document.body.classList.remove('locked');$('lock').hidden=true;renderAll();renderSync();renderFace();resetIdle();let start=location.hash.slice(1);if(!start)start=lsGet('gc-tab')||'';go(start||'start')}
 async function boot(){
   const local=JSON.parse(lsGet('gc-env')||'null'),remote=await loadRemote();
   const env=[local,remote].filter(Boolean).sort((a,b)=>b.ts-a.ts)[0];
   const L=$('lock-box');
-  if(env){L.innerHTML=`<h1>Geld-Cockpit</h1><p class="mut">Gesperrt. Gib dein Passwort ein. Auf dem iPhone kannst du es speichern und danach mit Face ID entsperren.</p><form id="lk" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>Passwort<input id="pw" type="password" autocomplete="current-password" required></label><button class="btn pri full" id="pw-ok">Entsperren</button><p class="small" id="pw-msg" aria-live="polite"></p></form>`;
-    $('pw').focus();
-    $('lk').onsubmit=async e=>{e.preventDefault();$('pw-ok').disabled=true;$('pw-msg').textContent='Entschlüssele ...';
-      try{SALT=unb64(env.salt);KEY=await deriveKey($('pw').value,SALT);S=await dec(env);
+  if(env){const face=!!lsGet('gc-pk')&&pkOk();
+    L.innerHTML=`<h1>Geld-Cockpit</h1><p class="mut">Gesperrt.</p>${face?`<button class="btn pri full" id="face-go" style="margin-top:14px">Mit Face ID entsperren</button><p class="small mut" style="margin-top:12px;text-align:center">oder mit Passwort</p>`:''}<form id="lk" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>Passwort<input id="pw" type="password" autocomplete="current-password" required></label><button class="btn ${face?'ghost':'pri'} full" id="pw-ok">Entsperren</button><p class="small" id="pw-msg" aria-live="polite"></p></form>`;
+    const unlock=async pw=>{$('pw-ok').disabled=true;$('pw-msg').textContent='Entschlüssele ...';
+      try{SALT=unb64(env.salt);KEY=await deriveKey(pw,SALT);S=await dec(env);
         const tk=JSON.parse(lsGet('gc-tok')||'null');if(tk){try{TOKEN=(await dec(tk)).t}catch(x){}}
-        if(TOKEN){try{const g=await ghGet();if(g&&g.ts>env.ts){S=await dec(g,await deriveKey($('pw').value,unb64(g.salt)));lsSet('gc-env',JSON.stringify(g))}}catch(x){}}
+        if(TOKEN){try{const g=await ghGet();if(g&&g.ts>env.ts){const k2=await deriveKey(pw,unb64(g.salt));S=await dec(g,k2);SALT=unb64(g.salt);KEY=k2;lsSet('gc-env',JSON.stringify(g))}}catch(x){}}
         enterApp()}
-      catch(err){KEY=null;$('pw-ok').disabled=false;$('pw-msg').textContent='Das Passwort stimmt nicht.';$('pw').select()}}}
-  else{L.innerHTML=`<h1>Geld-Cockpit einrichten</h1><p class="mut">Einmalig: Startdatei auswählen und ein Passwort festlegen. Ab dann sind deine Daten nur mit diesem Passwort lesbar.</p>
+      catch(err){KEY=null;$('pw-ok').disabled=false;$('pw-msg').textContent='Das Passwort stimmt nicht.';$('pw').select()}};
+    if(face)$('face-go').onclick=async()=>{try{await unlock(await pkUnlock())}catch(e){$('pw-msg').textContent='Face ID hat nicht geklappt. Bitte das Passwort eingeben.'}};
+    else $('pw').focus();
+    $('lk').onsubmit=e=>{e.preventDefault();unlock($('pw').value)}}
+
+  else{L.innerHTML=`<h1>Geld-Cockpit einrichten</h1><p class="pan small" style="margin:12px 0">Schon auf einem anderen Gerät eingerichtet? Dann dort in den Einstellungen auf „Jetzt abgleichen“ tippen und diese Seite neu laden. Hier musst du nichts tun.</p><p class="mut">Nur beim allerersten Mal: Startdatei auswählen und ein Passwort festlegen.</p>
     <form id="su" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>1. Startdatei (cockpit-start.json)<input id="su-f" type="file" accept=".json,application/json" required></label>
     <label>2. Passwort (mindestens 10 Zeichen)<input id="su-p1" type="password" autocomplete="new-password" minlength="10" required></label><label>Passwort noch einmal<input id="su-p2" type="password" autocomplete="new-password" required></label>
     <p class="small mut">Schreib dir das Passwort auf und leg es sicher ab. Ohne Passwort kommt niemand an die Daten, auch du nicht.</p><button class="btn pri full" id="su-ok">Einrichten</button><p class="small" id="su-msg" aria-live="polite"></p></form>`;
@@ -711,13 +775,14 @@ async function boot(){
 
 /* ---------- Navigation ---------- */
 function renderAll(){renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
-function go(id,anchor){const ids=['start','toepfe','rechnungen','vertraege','ziele','mehr'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
+function go(id,anchor){const ids=['start','konten','toepfe','rechnungen','vertraege','ziele','einstellungen','hilfe'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;const d=b.dataset;
   if(d.go){go(d.go,d.anchor);if(d.month){selMonth=+d.month;renderBills()}if(d.ct!==undefined)setTimeout(()=>openContract(+d.ct),60)}
   else if(d.openCt!==undefined)openContract(+d.openCt);
   else if(d.editCt!==undefined)editContract(+d.editCt);
-  else if(d.ctf!==undefined){selKat=selKat===d.ctf&&d.ctf?'':d.ctf;renderContracts();if(!b.classList.contains('fchip'))$('ct-all').scrollIntoView({block:'start'})}
+  else if(d.sub){showSub(d.sub);window.scrollTo(0,0)}
+  else if(d.ctf!==undefined){selKat=selKat===d.ctf&&d.ctf?'':d.ctf;renderContracts();if(!b.classList.contains('fchip')){showSub('alle');$('ct-all').scrollIntoView({block:'start'})}}
   else if(d.pot){if(d.pot==='giro'){go('toepfe');setTimeout(()=>$('giro-list').scrollIntoView({block:'center'}),30)}else{const p=pot(d.pot);go('toepfe');if(p&&p.art==='topf')setTimeout(()=>$('card-'+d.pot).scrollIntoView({block:'center'}),30);else setTimeout(()=>editPot(d.pot),30)}}
   else if(d.editPot)editPot(d.editPot);
   else if(d.editGiro!==undefined)editGiro(+d.editGiro);
@@ -727,7 +792,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b
   else if(d.take){const p=pot(d.take),old=p.da;p.da=Math.ceil(need(p.id)/5)*5;commit(`${p.n}: Dauerauftrag auf ${fmt(p.da)} geändert. Denk dran, ihn auch bei der Bank zu ändern.`)}
   else if(d.month!==undefined){selMonth=selMonth===+d.month?0:+d.month;renderBills()}
   else if(d.fpot!==undefined){selPot=d.fpot;renderBills()}});
-$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>editContract(null);$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
+$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>editContract(null);$('help-q').oninput=renderHelp;$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
 $('proj').oninput=e=>{$('proj').dataset.v=e.target.value;renderGoals()};
 $('proj-ok').onclick=()=>{pot('proj').da=+$('proj').dataset.v;delete $('proj').dataset.v;commit('Betrag für Haus-Projekte gespeichert. Denk an den Dauerauftrag bei der Bank.')};
 $('proj-reset').onclick=()=>{delete $('proj').dataset.v;renderGoals()};
