@@ -169,7 +169,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-</head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795370233';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
@@ -571,7 +571,13 @@ function ctAdd(){$('sheet').innerHTML=`<div class="row2" style="justify-content:
   <details><summary>So geht es mit Claude</summary><p class="small">1. Öffne in Claude das Projekt „Geld-Cockpit“. 2. Lade den Vertrag als PDF oder Foto hoch und schreib „Bitte als Cockpit-Code“. 3. Kopiere den Code und füge ihn hier ein. Das Dokument selbst hängst du danach am Vertrag an, dann liegt es verschlüsselt bei dir.</p></details>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ca-self').onclick=()=>editContract(null);
   $('ca-code').onclick=()=>{$('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Code von Claude einfügen</h3><textarea id="cc" rows="7" placeholder='{"n":"Hausrat","a":"…"}' aria-label="Code"></textarea><p class="small" id="cc-msg"></p><div class="row2"><button class="btn pri" id="cc-ok">Übernehmen</button><button class="btn ghost" id="s-x">Abbrechen</button></div>`;$('s-x').onclick=closeSheet;
-    $('cc-ok').onclick=()=>{try{let o=JSON.parse($('cc').value.trim().replace(/^```(json)?|```$/g,''));if(o.vertraege)o=o.vertraege;const L=(Array.isArray(o)?o:[o]).map(normCt);if(!L.length)throw 0;S.vertraege=S.vertraege||[];L.forEach(x=>S.vertraege.push(x));closeSheet();go('vertraege');showSub('alle');commit(L.length===1?`${L[0].n} hinzugefügt`:`${L.length} Verträge hinzugefügt`);setTimeout(()=>openContract(S.vertraege.length-1),300)}catch(e){$('cc-msg').textContent='Der Code ist nicht lesbar. Bitte vollständig kopieren.'}}}}
+    $('cc-ok').onclick=()=>{try{let o=JSON.parse($('cc').value.trim().replace(/^```(json)?|```$/g,''));if(o.vertraege)o=o.vertraege;const R=Array.isArray(o)?o:[o];if(!R.length)throw 0;S.vertraege=S.vertraege||[];const msg=[];let last=-1;
+      R.forEach(x=>{const c=normCt(x);let i=-1;
+        if(x.ers){const re=new RegExp(String(x.ers).slice(0,80),'i');const hits=S.vertraege.map((v,j)=>[v,j]).filter(([v])=>v.k===c.k&&re.test(v.n+' '+v.a));if(hits.length)i=hits[0][1];
+          if(+x.rb>0){const rr=S.rechnungen.filter(r=>re.test(r.n));if(rr.length){rr.forEach(r=>{if(+r.b!==+x.rb)r.alt=+r.b;r.b=+x.rb;if(x.rm)r.m=+x.rm});msg.push('Rechnung angepasst')}}}
+        if(i>=0){const v=S.vertraege[i];c.docs=v.docs;if(!c.url&&v.url)c.url=v.url;if(+v.b!==c.b)c.alt=+v.b;S.vertraege[i]=c;last=i;msg.unshift(`${c.n} aktualisiert`)}
+        else{S.vertraege.push(c);last=S.vertraege.length-1;msg.unshift(`${c.n} hinzugefügt`)}});
+      closeSheet();go('vertraege');showSub('alle');commit(msg.join(', '));setTimeout(()=>openContract(last),300)}catch(e){$('cc-msg').textContent='Der Code ist nicht lesbar. Bitte vollständig kopieren.'}}}}
 function normCt(x){if(!x||!x.n)throw 0;const num=v=>+String(v??0).replace(',','.')||0;const o={n:String(x.n).slice(0,80),a:String(x.a||'').slice(0,60),k:KAT[x.k]?x.k:'haus',b:num(x.b),rh:RH[x.rh]?x.rh:'jahr',wo:x.wo&&(x.wo==='giro'||pot(x.wo))?x.wo:'giro',ende:/^\d{4}-\d{2}-\d{2}$/.test(x.ende||'')?x.ende:'',frist:[0,1,3].includes(+x.frist)?+x.frist:1,st:STX[x.st]?x.st:'pruefen',tipp:String(x.tipp||'').slice(0,600)};
   if(Array.isArray(x.cov))o.cov=x.cov.slice(0,20).map(c=>[String(c[0]).slice(0,120),[0,1,2].includes(+c[1])?+c[1]:1,String(c[2]||'').slice(0,200)]);
   if(Array.isArray(x.must))o.must=x.must.slice(0,12).map(m=>String(m).slice(0,120));
