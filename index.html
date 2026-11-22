@@ -144,7 +144,7 @@ details p+p{margin-top:8px}
 .dbadge{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--soft);font-size:11px;text-transform:uppercase;line-height:1}
 .dbadge b{font-size:18px}.dbadge.bad{background:var(--redbg);color:var(--red)}
 .bar.thin{height:8px;display:block}
-.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
 .quick button{display:grid;justify-items:center;gap:6px;padding:12px 6px;border-radius:14px;border:1px solid var(--line);background:var(--pan);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center}
 .gauge{display:grid;gap:6px;background:var(--soft);border-radius:12px;padding:10px 12px}
 .gauge .row2{justify-content:space-between;font-size:14px}
@@ -157,11 +157,23 @@ details p+p{margin-top:8px}
  .rbar{display:block;width:120px;height:8px;background:#eee}.rbar i{display:block;height:100%;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .rlist li.bad b{color:#b8321b}.rlist li.warn b{color:#9a6400}.rnote{font-size:9pt;color:#555}.rcard{break-inside:avoid;border:1px solid #ccc;border-radius:6px;padding:6px 8px;margin:6px 0}.rcard ul{margin:4px 0;padding-left:18px}.m0{color:#b8321b}.m2{color:#9a6400}.m1{color:#2f6b4f}
  @page{margin:14mm}}
+.zc{gap:12px}.zhead,.zbig,.zchart,.zverd{font:inherit;color:inherit;background:none;border:0;padding:0;text-align:left;cursor:pointer;width:100%}
+.zhead{display:flex;justify-content:space-between;align-items:center}.zhead .nm{display:flex;gap:8px;align-items:center;font-weight:800;font-size:18px}
+.zbig{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px}.zbig b{font-size:30px;letter-spacing:-.02em}.zbig .chip{font-size:12.5px;margin-left:auto}
+.zbars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end}.zbars span{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center}
+.zbars i{display:block;width:70%;border-radius:4px 4px 0 0;min-height:2px}.zbars i.pv{position:absolute;bottom:0;width:90%;background:var(--line);opacity:.7}.zbars i:not(.pv){position:relative}
+.zlab{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));font-size:10.5px;color:var(--mut);text-align:center;margin-top:3px}
+.zfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}.zfacts span{background:var(--soft);border-radius:10px;padding:8px 10px;display:grid}.zfacts small{color:var(--mut);font-size:12px}.zfacts b{font-size:16px}
+.zverd{white-space:normal;font-size:13.5px;line-height:1.35;padding:6px 10px;width:fit-content;border-radius:12px}
+.zphoto{display:flex;gap:12px;align-items:center;border:2px dashed var(--line);border-radius:14px;padding:12px;cursor:pointer;color:var(--ink)}
+.donut{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;align-items:center}.donut svg{width:100%;max-width:200px}
+@media(max-width:600px){.donut{grid-template-columns:1fr;justify-items:center}.donut .list{width:100%}.quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+button.status{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
 .stack2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media(max-width:760px){.stack2{grid-template-columns:1fr}}
 @media(max-width:600px){
-nav{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;border:0;border-top:1px solid var(--line);background:var(--pan);display:grid;grid-template-columns:repeat(6,1fr);padding:4px 2px max(6px,env(safe-area-inset-bottom))}
-nav a{flex-direction:column;gap:2px;font-size:10.5px;letter-spacing:-.01em;padding:6px 0;border-radius:12px;min-height:56px;justify-content:center}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;border:0;border-top:1px solid var(--line);background:var(--pan);display:grid;grid-template-columns:repeat(7,1fr);padding:4px 2px max(6px,env(safe-area-inset-bottom))}
+nav a{flex-direction:column;gap:2px;font-size:9.6px;letter-spacing:-.01em;padding:6px 0;border-radius:12px;min-height:56px;justify-content:center}
 nav svg{width:24px;height:24px}
 main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
@@ -169,7 +181,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795370233';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795378672';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
@@ -180,9 +192,10 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 <nav aria-label="Bereiche">
 <a href="#start" id="t-start"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
 <a href="#konten" id="t-konten"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>Konten</a>
-<a href="#toepfe" id="t-toepfe"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM4 7l8 6 8-6"/></svg>Töpfe</a>
+<a href="#toepfe" id="t-toepfe"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg>Töpfe</a>
 <a href="#rechnungen" id="t-rechnungen"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Rechnungen</a>
 <a href="#vertraege" id="t-vertraege"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Verträge</a>
+<a href="#zaehler" id="t-zaehler"><svg viewBox="0 0 24 24"><path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/><path d="M3 20h18"/></svg>Zähler</a>
 <a href="#ziele" id="t-ziele"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Ziele</a>
 </nav>
 </div>
@@ -191,13 +204,15 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 <section id="v-start">
 <div id="st-status"></div>
 <div class="kpis" id="kpis"></div>
-<div class="quick"><button data-act="go:newct"><span class="ico" data-i="plus"></span><span>Vertrag hinzufügen</span></button><button data-act="go:einlesen"><span class="ico" data-i="bank"></span><span>Auszug einlesen</span></button><button data-act="go:report"><span class="ico" data-i="print"></span><span>Bericht als PDF</span></button></div>
+<div class="quick"><button data-act="go:newct"><span class="ico" data-i="plus"></span><span>Vertrag hinzufügen</span></button><button data-act="go:einlesen"><span class="ico" data-i="bank"></span><span>Auszug einlesen</span></button><button data-act="zl:read"><span class="ico" data-i="cam"></span><span>Zähler ablesen</span></button><button data-act="go:report"><span class="ico" data-i="print"></span><span>Bericht als PDF</span></button></div>
 <h2>Hinweise und Empfehlungen</h2>
 <div class="alerts" id="alerts"></div>
 <h2>Die nächsten 90 Tage</h2>
 <div class="list" id="strip"></div>
 <h2>Deine Töpfe</h2>
 <div class="tiles" id="start-tiles"></div>
+<h2>Wofür deine Verträge kosten</h2>
+<div id="donut"></div>
 <div id="hero" hidden></div><div id="start-fristen" hidden></div>
 </section>
 
@@ -257,6 +272,14 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 <div class="row2" style="margin-top:10px"><button class="btn ghost" id="add-ct">+ Vertrag hinzufügen</button><span class="small mut" id="ct-sum"></span></div>
 <p class="note">Die Verträge sind deine Übersicht. Geplant wird das Geld weiter bei Töpfe und Rechnungen. So zählt nichts doppelt.</p>
 </div>
+</section>
+
+<section id="v-zaehler">
+<h1>Zähler</h1>
+<p class="mut">Einmal im Monat ablesen, Foto als Nachweis. Das Cockpit rechnet Verbrauch und Kosten hoch und vergleicht mit Abschlag und Plan.</p>
+<div id="z-due" style="margin-top:12px"></div>
+<div class="cards" id="z-cards" style="margin-top:12px"></div>
+<div class="row2" style="margin-top:14px"><button class="btn ghost" id="z-ics">Erinnerung in den Kalender</button><button class="btn ghost" id="z-add">+ Zähler hinzufügen</button></div>
 </section>
 
 <section id="v-ziele">
@@ -357,7 +380,10 @@ const IC={
  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
  plus:'<path d="M12 5v14M5 12h14"/>',
  print:'<path d="M6 9V3h12v6M6 17H4v-6h16v6h-2M7 14h10v7H7z"/>',
- upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>'};
+ upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
+ cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+ gauge:'<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/>',
+ stop:'<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>'};
 const icon=(k,c)=>`<span class="ico ${c||''}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]||IC.check}</svg></span>`;
 function alerts(){const A=[],T=today0();
   ctAll().forEach((v,i)=>{const f=frist(v);if(f.d&&!v.pf&&!v.ein&&f.lvl>=2)A.push({l:f.lvl===3?'bad':'warn',ic:'clock',t:`${v.n}: kündigen bis ${fd(f.d)}`,s:`Noch ${f.days} Tage. ${v.st==='ok'?'Verlängert sich sonst automatisch.':'Vorher Angebot prüfen.'}`,a:'ct:'+i})});
@@ -374,6 +400,9 @@ function alerts(){const A=[],T=today0();
   const miss=ctAll().filter(v=>!v.pf&&!v.ein&&!v.ende&&!(v.k==='abo'&&v.rh==='monat'&&!v.frist)&&!v.ohneEnde).length;
   if(miss)A.push({l:'info',ic:'doc',t:`Bei ${miss} Verträgen fehlt die Laufzeit`,s:'Ohne Laufzeit kann das Cockpit nicht warnen.',a:'sub:termine'});
   const gd=pdDE(S.girokonto&&S.girokonto.datum);if(!gd||(T-gd)/864e5>35)A.push({l:'info',ic:'bank',t:'Kontoauszüge einlesen',s:gd?`Letzter Stand vom ${fd(gd)}.`:'Noch nichts eingelesen.',a:'go:konten'});
+  const ZD=zDue();if(ZD.length&&zAll().length)A.push({l:'info',ic:'cam',t:`Zähler ablesen: ${ZD.map(m=>m.n).join(', ')}`,s:'Einmal im Monat, am besten zum Monatsende. Mit Foto als Nachweis.',a:'zl:read'});
+  zAll().forEach((m,i)=>{const s=zStats(m),v=zVerdict(m,s);if(v.c==='bad'||v.c==='warn')A.push({l:v.c,ic:m.typ==='tank'?'gauge':'trend',t:`${m.n}: ${m.typ==='tank'?'bald nachtanken':'Abgleich prüfen'}`,s:v.t,a:'zl:'+i});else if(s.cost&&s.ab)A.push({l:'ok',ic:'check',t:`${m.n}: Abschlag passt`,s:v.t,a:'zl:'+i})});
+  ctAll().forEach((v,i)=>{if(v.st!=='gekuendigt'||!v.ende||v.nf)return;const d=pd(v.ende),days=Math.round((d-T)/864e5);if(days>=0&&days<=150)A.push({l:days<=45?'warn':'info',ic:'stop',t:`${v.n} endet am ${fd(d)}`,s:`Gekündigt. Ist der Anschluss geregelt? Noch ${days} Tage.`,a:'ct:'+i})});
   const ord={bad:0,warn:1,info:2,ok:3};return A.sort((a,b)=>ord[a.l]-ord[b.l])}
 function alertRow(x){return`<button class="al ${x.l}" data-act="${esc(x.a)}">${icon(x.ic,x.l)}<span class="t"><b>${esc(x.t)}</b><span>${esc(x.s)}</span></span><span class="chev">›</span></button>`}
 function doAct(a){const[k,v]=a.split(/:(.*)/s);
@@ -381,12 +410,15 @@ function doAct(a){const[k,v]=a.split(/:(.*)/s);
   else if(k==='pot'){go('toepfe');setTimeout(()=>{const el=$('card-'+v);if(el)el.scrollIntoView({block:'center'})},60)}
   else if(k==='bill'){selMonth=+v;go('rechnungen');renderBills()}
   else if(k==='sub'){go('vertraege');showSub(v)}
-  else if(k==='go')go(v)}
+  else if(k==='go')go(v)
+  else if(k==='kat'){selKat=v;go('vertraege');showSub('alle');renderContracts()}
+  else if(k==='zl'){if(v==='read'){const D=zDue();go('zaehler');if(zAll().length)setTimeout(()=>zRead(zAll().indexOf(D[0]||zAll()[0]),true),80)}else{go('zaehler');setTimeout(()=>zDetail(+v),80)}}
+  else if(k==='al'){alAll=true;renderStart();setTimeout(()=>$('alerts').scrollIntoView({block:'start',behavior:'smooth'}),30)}}
 let alAll=false;
 function renderStart(){
   const A=alerts(),nb=A.filter(x=>x.l==='bad').length,nw=A.filter(x=>x.l==='warn').length;
   const lvl=nb?'bad':nw?'warn':'ok';
-  $('st-status').innerHTML=`<div class="status ${lvl}">${icon(nb?'alert':nw?'trend':'check',lvl)}<div><b>${nb?`${nb} ${nb===1?'Warnung':'Warnungen'}`:nw?`${nw} ${nw===1?'Empfehlung':'Empfehlungen'}`:'Alles im grünen Bereich'}</b><span>${nb||nw?'Tipp unten auf einen Hinweis.':'Keine Frist und keine Lücke in Sicht.'}</span></div></div>`;
+  $('st-status').innerHTML=`<button class="status ${lvl}" data-act="al:all">${icon(nb?'alert':nw?'trend':'check',lvl)}<div><b>${nb?`${nb} ${nb===1?'Warnung':'Warnungen'}`:nw?`${nw} ${nw===1?'Empfehlung':'Empfehlungen'}`:'Alles im grünen Bereich'}</b><span>${nb||nw?'Tipp hier, dann siehst du alle.':'Keine Frist und keine Lücke in Sicht.'}</span></div><span class="chev" style="margin-left:auto">›</span></button>`;
   const plan=inc()-da(),leben=plan-fix(),M=S.monat;let frei=leben/4.35,lab='Frei pro Woche',sub='nach allen festen Kosten';
   if(M&&M.zurueck!==undefined){const dim=new Date(M.jahr,M.mon,0).getDate(),left=Math.max(dim-M.tage,1),f=plan-(M.ausgaben-M.zurueck)-fixOffen(M);frei=f;lab=`Noch frei im ${MONL[M.mon-1]}`;sub=`${fmt(f/left)} pro Tag, Stand ${M.bis}`}
   const rl=sum(pots().filter(p=>p.id!=='proj'),'stand'),nbill=nextBill(),ct=sum(ctCost())/12;
@@ -400,6 +432,107 @@ function renderStart(){
   $('start-tiles').innerHTML=pots().map(p=>{const st=status(p),r=rec(p),pct=p.ziel?Math.min((+p.stand||0)/p.ziel*100,100):(r?Math.min(p.da/r*100,100):100);return`<button class="tile" data-act="pot:${p.id}"><span class="nm"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</span><span class="amt">${fmt(p.stand)}</span><span class="bar thin"><i class="${st.c==='bad'?'r':st.c==='warn'?'a':''}" style="width:${pct}%"></i></span><span class="chip ${st.c}">${esc(st.t)}</span></button>`}).join('');
   if($('hero'))$('hero').innerHTML='';
 }
+
+/* ---------- Zähler ---------- */
+const nsum=a=>a.reduce((x,y)=>x+(+y||0),0);
+const ZTYP={verbrauch:'Verbrauch',einspeisung:'Einspeisung',tank:'Tank'};
+const zAll=()=>(S.zaehler||[]);
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const nf=(v,dg)=>new Intl.NumberFormat('de-DE',{maximumFractionDigits:dg??(Math.abs(v)<100?1:0)}).format(v||0);
+function zSorted(m){return(m.r||[]).slice().sort((a,b)=>a.d<b.d?-1:1)}
+function zLast(m){const r=zSorted(m);return r[r.length-1]}
+function zIntervals(m){const r=zSorted(m),out=[];for(let i=1;i<r.length;i++){const a=r[i-1],b=r[i],dv=b.v-a.v;let use=dv,fill=0;
+  if(m.typ==='tank'){use=dv<0?-dv:0;fill=dv>0?dv:0}else if(dv<0)use=0;
+  const end=pd(b.d),mk=new Date(end);mk.setDate(mk.getDate()-3);out.push({a,b,use,fill,days:Math.max(Math.round((end-pd(a.d))/864e5),1),key:mk.getFullYear()*12+mk.getMonth()})}return out}
+function zStats(m){const I=zIntervals(m),L=zLast(m);if(!L)return{I,L:null};
+  const end=pd(L.d),from=new Date(end);from.setDate(from.getDate()-366);
+  const W=I.filter(x=>pd(x.a.d)>=from);const days=nsum(W.map(x=>x.days)),use=nsum(W.map(x=>x.use));
+  const year=days>=60?use/days*365:null;const ct=zContract(m);
+  const preis=m.typ!=='einspeisung'&&ct&&+ct.ap?ct.ap/100:+m.preis||0,gp=m.typ!=='einspeisung'&&ct&&+ct.gp?+ct.gp:+m.gp||0;
+  const cost=year!=null&&preis?year*preis+gp*12:null;
+  const ab=ct&&ct.rh==='monat'&&m.typ!=='einspeisung'?+ct.b/12:(+m.ab||0);
+  const byKey={};I.forEach(x=>{byKey[x.key]=(byKey[x.key]||0)+x.use});
+  const lastKey=I.length?I[I.length-1].key:0;
+  const age=Math.round((today0()-end)/864e5);
+  return{I,L,year,days,cost,preis,gp,ab,byKey,lastKey,age,ct}}
+function zContract(m){if(!m.ct)return null;let re;try{re=new RegExp(m.ct,'i')}catch(e){return null}const L=ctAll().filter(v=>re.test(v.n+' '+v.a));return L.find(v=>v.st!=='gekuendigt')||L[0]||null}
+function zBills(m){if(!m.rx)return[];let re;try{re=new RegExp(m.rx,'i')}catch(e){return[]}return S.rechnungen.filter(r=>re.test(r.n))}
+function zVerdict(m,s){
+  if(s.year==null)return{c:'neu',t:'Noch zu wenig Ablesungen für eine Hochrechnung.'};
+  if(m.typ==='einspeisung')return s.preis?{c:'ok',t:`Bringt etwa ${fmt(s.year*s.preis)} im Jahr.`}:{c:'neu',t:'Trag die Vergütung je kWh ein, dann rechnet das Cockpit den Ertrag aus.'};
+  if(m.typ==='tank'){const mon=s.year/12,left=mon?s.L.v/mon:99;const c=left<2?'bad':left<4?'warn':'ok';
+    return{c,t:`Reicht noch etwa ${nf(left,1)} Monate. Im Winter schneller.${s.cost?` Verbrauch kostet rund ${fmt(s.cost)} im Jahr.`:''}`}}
+  if(s.cost&&s.ab){const d=s.ab*12-s.cost;return Math.abs(d)<60?{c:'ok',t:`Abschlag passt. Rund ${fmt(Math.abs(d))} ${d>=0?'Guthaben':'Nachzahlung'} zu erwarten.`}:d>0?{c:'ok',t:`Etwa ${fmt(d)} Guthaben zu erwarten. Abschlag könnte auf ${fmt(Math.ceil(s.cost/12/5)*5)} sinken.`}:{c:'bad',t:`Etwa ${fmt(-d)} Nachzahlung zu erwarten. Abschlag besser auf ${fmt(Math.ceil(s.cost/12/5)*5)} erhöhen.`}}
+  const B=zBills(m);if(s.cost&&B.length){const pl=sum(B);const d=pl-s.cost;return Math.abs(d)<s.cost*0.1?{c:'ok',t:`Passt zur Rechnung im Plan (${fmt(pl)}).`}:d>0?{c:'ok',t:`Im Plan stehen ${fmt(pl)}, der Verbrauch spricht für ${fmt(s.cost)}.`}:{c:'warn',t:`Im Plan stehen nur ${fmt(pl)}, der Verbrauch spricht für ${fmt(s.cost)}. Rechnung anpassen.`}}
+  return s.cost?{c:'ok',t:`Kostet rund ${fmt(s.cost)} im Jahr.`}:{c:'neu',t:'Trag den Preis je Einheit ein, dann siehst du die Kosten.'}}
+function zBars(m,s,h){const K=[];for(let i=11;i>=0;i--)K.push(s.lastKey-i);const vals=K.map(k=>s.byKey[k]||0),prev=K.map(k=>s.byKey[k-12]),mx=Math.max(...vals,...prev.map(v=>v||0),1);
+  return`<div class="zbars" style="height:${h||90}px">${K.map((k,i)=>`<span title="${MONL[k%12]} ${Math.floor(k/12)}: ${nf(vals[i])} ${esc(m.u)}"><i class="pv" style="height:${prev[i]!=null?prev[i]/mx*100:0}%"></i><i style="height:${vals[i]/mx*100}%;background:${m.f||'var(--ink)'}"></i></span>`).join('')}</div><div class="zlab">${K.map(k=>`<span>${MON[k%12].slice(0,1)}</span>`).join('')}</div>`}
+function zDue(){const T=today0(),last=new Date(T.getFullYear(),T.getMonth()+1,0);return zAll().filter(m=>{const L=zLast(m);if(!L)return true;const age=(T-pd(L.d))/864e5;return age>35||(age>20&&(last-T)/864e5<=3)})}
+function renderZaehler(){if(!$('z-cards'))return;const Z=zAll();
+  $('z-cards').innerHTML=Z.length?Z.map((m,i)=>{const s=zStats(m),v=zVerdict(m,s),L=s.L;const due=!L||s.age>35;
+    return`<div class="card zc"><button class="zhead" data-zdet="${i}"><span class="nm"><span class="sw" style="background:${m.f||'var(--ink)'}"></span>${esc(m.n)}</span><span class="small mut">${ZTYP[m.typ]||''} ›</span></button>
+    <button class="zbig" data-zdet="${i}"><b>${L?nf(L.v,m.typ==='tank'?0:1):'–'}</b> <span>${esc(m.u)}</span><span class="chip ${due?'warn':'ok'}">${L?(s.age<=0?'heute abgelesen':`vor ${s.age} Tagen abgelesen`):'noch nicht abgelesen'}</span></button>
+    ${s.I.length?`<button class="zchart" data-zdet="${i}" aria-label="Verlauf ansehen">${zBars(m,s)}</button>`:''}
+    <div class="zfacts">${s.year!=null?`<span><small>${m.typ==='tank'?'Verbrauch im Jahr':m.typ==='einspeisung'?'Einspeisung im Jahr':'Hochrechnung Jahr'}</small><b>${nf(s.year,0)} ${esc(m.u)}</b></span>`:''}${s.cost?`<span><small>${m.typ==='einspeisung'?'Ertrag':'Kosten'} im Jahr</small><b>${fmt(s.cost)}</b></span>`:''}${s.ab?`<span><small>Abschlag</small><b>${fmt(s.ab)}/Monat</b></span>`:''}</div>
+    <button class="chip ${v.c} zverd" data-zdet="${i}">${esc(v.t)}</button>
+    <div class="row2"><button class="btn pri" data-zread="${i}">${icon('cam')} Ablesen</button><button class="btn ghost" data-zdet="${i}">Verlauf</button></div></div>`}).join(''):'<p class="mut">Noch keine Zähler. Tipp auf „Zähler hinzufügen“.</p>';
+  const D=zDue();$('z-due').innerHTML=D.length&&Z.length?`<button class="al warn" data-zread="${Z.indexOf(D[0])}">${icon('cam','warn')}<span class="t"><b>Ablesen ist dran: ${esc(D.map(m=>m.n).join(', '))}</b><span>Tipp hier und fang mit ${esc(D[0].n)} an. Danach geht es mit dem nächsten Zähler weiter.</span></span><span class="chev">›</span></button>`:'';
+}
+async function imgShrink(f){if(!/^image\//.test(f.type)||f.size<700e3)return f;try{const bmp=await createImageBitmap(f),sc=Math.min(1,1600/Math.max(bmp.width,bmp.height)),c=document.createElement('canvas');c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.82));return b?new File([b],(f.name||'foto').replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'}):f}catch(e){return f}}
+function zRead(i,chain){const m=zAll()[i];if(!m)return;const L=zLast(m),s=zStats(m),avg=s.I.length?nsum(s.I.slice(-6).map(x=>x.use/x.days))/Math.min(s.I.length,6):0;let photo=null;
+  $('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px"><span class="sw" style="background:${m.f};display:inline-block;margin-right:8px"></span>${esc(m.n)} ablesen</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
+  <label class="zphoto">${icon('cam')}<span id="zp-t"><b>Foto vom Zähler machen</b><span class="small mut" style="display:block">Als Nachweis, wird verschlüsselt gespeichert</span></span><input type="file" id="zp" accept="image/*" capture="environment" style="display:none"></label>
+  <img id="zp-img" alt="Foto vom Zähler" style="display:none;width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:var(--soft)">
+  <label>Zählerstand in ${esc(m.u)}<input id="zv" type="text" inputmode="decimal" autocomplete="off" placeholder="${L?nf(L.v,3):'z. B. 12345'}" style="font-size:28px;font-weight:800;letter-spacing:.02em"></label>
+  <p class="small mut" style="margin-top:-6px">Zahl abtippen oder lange ins Feld drücken und „Text scannen“ wählen. Dann erkennt das iPhone die Ziffern mit der Kamera.</p>
+  <p id="zv-chk" class="small" aria-live="polite"></p>
+  <label>Datum<input id="zd" type="date" value="${iso(new Date())}"></label>
+  <div id="zfill" hidden><label>Nachgetankte Liter<input id="zfl" type="number" inputmode="decimal"></label><label>Preis je Liter in €<input id="zfp" type="number" inputmode="decimal" step="any" value="${m.preis||''}"></label></div>
+  <div class="row2"><button class="btn pri" id="zok">${chain&&zDue().length>1?'Speichern und weiter':'Speichern'}</button><button class="btn ghost" id="zx">Abbrechen</button></div>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=$('zx').onclick=closeSheet;
+  const val=()=>+String($('zv').value).trim().replace(/\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');
+  const chk=()=>{const v=val();const t=$('zv-chk');$('zfill').hidden=true;if(!$('zv').value||isNaN(v)){t.textContent='';return}
+    if(!L){t.textContent='Erste Ablesung.';return}const days=Math.max((pd($('zd').value)-pd(L.d))/864e5,1),dv=v-L.v;
+    if(m.typ==='tank'){if(dv>0){$('zfill').hidden=false;$('zfl').value=Math.round(dv);t.innerHTML=`<b style="color:var(--grn)">Nachgetankt?</b> Der Stand ist ${nf(dv,0)} ${esc(m.u)} höher als zuletzt.`}else t.textContent=`Verbrauch seit ${fd(pd(L.d))}: ${nf(-dv,0)} ${m.u}, also ${nf(-dv/days,1)} ${m.u} am Tag.`;return}
+    if(dv<0){t.innerHTML=`<b style="color:var(--red)">Kleiner als zuletzt (${nf(L.v,1)}).</b> Bitte Ziffern prüfen.`;return}
+    const r=dv/days;let w='';if(avg&&r>avg*1.8)w=' <b style="color:var(--amb)">Deutlich mehr als sonst.</b>';else if(avg&&r<avg*.4)w=' <b style="color:var(--amb)">Deutlich weniger als sonst. Richtig abgelesen?</b>';
+    t.innerHTML=`Verbrauch seit ${fd(pd(L.d))}: ${nf(dv)} ${esc(m.u)}, also ${nf(r,2)} ${esc(m.u)} am Tag.${w}`};
+  $('zv').addEventListener('input',chk);$('zd').addEventListener('change',chk);setTimeout(()=>$('zv').focus(),60);
+  $('zp').onchange=async e=>{const f=e.target.files[0];if(!f)return;photo=await imgShrink(f);$('zp-img').src=URL.createObjectURL(photo);$('zp-img').style.display='block';$('zp-t').innerHTML='<b>Foto ist dabei</b><span class="small mut" style="display:block">Tippen, um ein neues zu machen</span>'};
+  $('zok').onclick=async()=>{const v=val();if(!$('zv').value||isNaN(v)){$('zv-chk').innerHTML='<b style="color:var(--red)">Bitte den Zählerstand eintragen.</b>';return}
+    const d=$('zd').value||iso(new Date());m.r=(m.r||[]).filter(x=>x.d!==d);const rd={d,v};
+    if(!$('zfill').hidden&&+$('zfl').value){rd.fill=+$('zfl').value;const p=+String($('zfp').value).replace(',','.');if(p){rd.fp=p;m.preis=p}}
+    m.r.push(rd);closeSheet();
+    if(photo&&typeof docAdd==='function'&&TOKEN){photo=new File([photo],`${m.n} ${fd(pd(d))}.jpg`,{type:photo.type});await docAdd(rd,photo)}
+    else await commit(`${m.n}: ${nf(v,3)} ${m.u} gespeichert${photo?'. Foto nur mit GitHub-Speichern möglich':''}`);
+    const nx=zDue().filter(x=>x!==m);if(chain&&nx.length)setTimeout(()=>zRead(zAll().indexOf(nx[0]),true),400)}}
+function zDetail(i){const m=zAll()[i];if(!m)return;const s=zStats(m),v=zVerdict(m,s);
+  const years={};s.I.forEach(x=>{const y=pd(x.b.d).getFullYear();years[y]=(years[y]||0)+x.use});
+  const R=zSorted(m).reverse(),I=s.I.slice().reverse();
+  $('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px"><span class="sw" style="background:${m.f};display:inline-block;margin-right:8px"></span>${esc(m.n)}</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
+  <p class="chip ${v.c}" style="white-space:normal">${esc(v.t)}</p>
+  ${s.I.length?`<div><h3 style="margin-bottom:6px">Verbrauch pro Monat</h3><p class="small mut">Farbig dieses Jahr, grau dasselbe Monat im Vorjahr.</p>${zBars(m,s,140)}</div>`:''}
+  ${Object.keys(years).length?`<div><h3 style="margin-bottom:6px">Pro Jahr</h3><div class="list">${Object.keys(years).sort().reverse().map(y=>`<div class="li"><span class="t"><b>${y}</b><span>${y==today0().getFullYear()?'bis jetzt':'abgelesen'}</span></span><span class="num">${nf(years[y],0)} ${esc(m.u)}${s.preis?`<br><span class="small mut">${fmt(years[y]*s.preis)}</span>`:''}</span></div>`).join('')}</div></div>`:''}
+  <div><h3 style="margin-bottom:6px">Ablesungen</h3><div class="list">${R.map(r=>{const x=I.find(z=>z.b===r);return`<div class="li" style="cursor:default"><span class="t"><b>${fd(pd(r.d))}</b><span>${x?(m.typ==='tank'&&x.fill?`nachgetankt ${nf(r.fill||x.fill,0)} ${m.u}`:`${nf(x.use)} ${esc(m.u)} in ${x.days} Tagen`):'Erste Ablesung'}</span></span><span class="num">${nf(r.v,3)}</span>${(r.docs||[]).length?`<button class="fchip" data-zph="${r.d}" aria-label="Foto ansehen">${icon('cam')}</button>`:''}<button class="fchip" data-zdel="${r.d}" aria-label="Ablesung löschen">×</button></div>`}).join('')||'<p class="li mut">Noch keine Ablesung.</p>'}</div></div>
+  <div class="row2"><button class="btn pri" id="zd-read">${icon('cam')} Ablesen</button><button class="btn ghost" id="zd-edit">Einstellungen</button></div>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('zd-read').onclick=()=>zRead(i);$('zd-edit').onclick=()=>zEdit(i);
+  $('sheet').querySelectorAll('[data-zph]').forEach(b=>b.onclick=()=>{const r=m.r.find(x=>x.d===b.dataset.zph);docOpen(r.docs[0])});
+  $('sheet').querySelectorAll('[data-zdel]').forEach(b=>b.onclick=()=>toast(`Ablesung vom ${fd(pd(b.dataset.zdel))} löschen?`,'Löschen',()=>{const r=m.r.find(x=>x.d===b.dataset.zdel);m.r=m.r.filter(x=>x!==r);commit('Ablesung gelöscht');zDetail(i)}))}
+function zEdit(i){const isNew=i==null,m=isNew?{n:'',u:'kWh',typ:'verbrauch',preis:0,gp:0,f:'#5f9a9a',r:[]}:zAll()[i];
+  sheet(isNew?'Zähler hinzufügen':m.n,[{l:'Name',v:m.n},{l:'Art',type:'select',v:m.typ,opts:Object.entries(ZTYP)},{l:'Einheit',v:m.u,hint:'z. B. kWh, m³ oder Liter'},{l:m.typ==='einspeisung'?'Vergütung je Einheit in €':'Preis je Einheit in €',type:'number',v:m.preis,hint:'Strom: steht der Arbeitspreis im Vertrag, nimmt das Cockpit den.'},{l:'Grundpreis € im Monat',type:'number',v:m.gp},{l:'Vertrag (Suchwort)',v:m.ct||'',hint:'z. B. eprimo. Dann vergleicht das Cockpit mit dem Abschlag.'},{l:'Rechnung im Plan (Suchwort)',v:m.rx||'',hint:'z. B. Wasser oder Heizöl. Dann vergleicht das Cockpit mit der Rechnung.'}],
+  v=>{Object.assign(m,{n:v[0]||'Zähler',typ:v[1],u:v[2]||'kWh',preis:v[3],gp:v[4],ct:v[5].trim(),rx:v[6].trim()});if(isNew){S.zaehler=S.zaehler||[];S.zaehler.push(m)}},isNew?null:()=>{S.zaehler.splice(i,1)})}
+function zIcs(){const T=new Date(),e=new Date(T.getFullYear(),T.getMonth()+1,0),p=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Geld-Cockpit//DE','BEGIN:VEVENT',`UID:gc-zaehler@geld-cockpit`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').slice(0,15)}Z`,`DTSTART:${p(e)}T180000`,`DTEND:${p(e)}T181500`,'RRULE:FREQ=MONTHLY;BYMONTHDAY=-1','SUMMARY:Zähler ablesen','DESCRIPTION:Geld-Cockpit öffnen\\, Zähler antippen\\, Foto machen und Stand eintragen.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Zähler ablesen','TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='zaehler-erinnerung.ics';document.body.appendChild(a);a.click();a.remove();toast('Öffne die Datei und tipp auf „Hinzufügen“. Dann erinnert dich dein Kalender am Monatsende um 18 Uhr.')}
+function zImport(L){S.zaehler=S.zaehler||[];let n=0;(Array.isArray(L)?L:[L]).forEach(x=>{if(!x||!x.n)return;const name=String(x.n).slice(0,40);let m=S.zaehler.find(z=>z.n.toLowerCase()===name.toLowerCase());
+  if(!m){m={n:name,r:[]};S.zaehler.push(m)}m.u=String(x.u||m.u||'kWh').slice(0,8);m.typ=ZTYP[x.typ]?x.typ:(m.typ||'verbrauch');['preis','gp'].forEach(k=>{if(x[k]!=null)m[k]=+x[k]||0});['ct','rx'].forEach(k=>{if(x[k]!=null)m[k]=String(x[k]).slice(0,60)});if(/^#[0-9a-f]{6}$/i.test(x.f||''))m.f=x.f;m.f=m.f||'#5f9a9a';
+  (x.r||[]).forEach(r=>{const d=Array.isArray(r)?r[0]:r.d,v=+(Array.isArray(r)?r[1]:r.v);if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||isNaN(v))return;const old=m.r.find(z=>z.d===d);if(old)old.v=v;else m.r.push({d,v});n++})});return n}
+/* Ausgaben-Kuchen */
+function renderDonut(){if(!$('donut'))return;const C=ctCost(),tot=sum(C)/12;const cats=Object.keys(KAT).filter(k=>k!=='ein').map(k=>({k,n:KAT[k][0],f:KAT[k][1],v:sum(C.filter(x=>x.k===k))/12})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
+  if(!cats.length){$('donut').innerHTML='';return}const R=54,Cf=2*Math.PI*R;let off=0;
+  const segs=cats.map(c=>{const l=c.v/tot*Cf,s=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${c.f}" stroke-width="26" stroke-dasharray="${Math.max(l-1.5,0.5)} ${Cf}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)" data-act="kat:${c.k}" style="cursor:pointer"><title>${esc(c.n)}: ${fmt(c.v)}</title></circle>`;off+=l;return s}).join('');
+  $('donut').innerHTML=`<div class="donut"><svg viewBox="0 0 140 140" role="img" aria-label="Verträge nach Bereich">${segs}<text x="70" y="66" text-anchor="middle" font-size="11" fill="currentColor" opacity=".6">im Monat</text><text x="70" y="84" text-anchor="middle" font-size="19" font-weight="800" fill="currentColor">${fmt(tot)}</text></svg><div class="list">${cats.map(c=>`<button class="li" data-act="kat:${c.k}"><span class="sw" style="background:${c.f}"></span><span class="t">${esc(c.n)}<span>${Math.round(c.v/tot*100)} %</span></span><span class="num">${fmt(c.v)}</span><span class="chev">›</span></button>`).join('')}</div></div>`}
+function markCancel(i){const v=ctAll()[i],f=frist(v);sheet('Als gekündigt markieren',[{type:'info',v:'Dann warnt das Cockpit nicht mehr vor der Kündigungsfrist, erinnert dich aber an das Vertragsende. Die Kündigungsbestätigung kannst du danach als Foto oder PDF anhängen.'},{l:'Vertrag endet am',type:'date',v:f.e?iso(new Date(f.e.getTime()-864e5)):(v.ende||'')}],x=>{v.st='gekuendigt';if(x[1])v.ende=x[1];v.nf=false})}
 
 /* ---------- Berichte als PDF ---------- */
 const RTYPES=[['jahr','Jahresbericht','Alles auf einen Blick: Kosten, Töpfe, Rechnungen, Verträge, Fristen'],['vertraege','Vertragsübersicht','Alle Verträge mit Kosten und Kündigungsfristen'],['fristen','Fristen und Termine','Die nächsten 24 Monate, zum Ausdrucken oder Abheften'],['versicherungen','Versicherungen','Was abgedeckt ist und was fehlt']];
@@ -500,8 +633,8 @@ function openContract(i){
    ${offers?`<div><p class="small mut">Gemerkte Angebote</p>${offers}</div>`:''}
    ${ports?`<div class="row2">${ports}</div>`:''}</div>`:''}
   ${typeof docAdd==='function'?`<div><h3>Dokumente</h3><p class="small mut">Police, Rechnung oder Foto. Wird verschlüsselt gespeichert.</p>${(v.docs||[]).map((d,j)=>`<div class="row2" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:8px 0;flex-wrap:nowrap"><button class="fchip" data-doc-open="${j}" style="text-align:left;overflow:hidden;text-overflow:ellipsis">${esc(d.n)}</button><span class="small mut" style="white-space:nowrap">${esc(d.d)}</span><button class="fchip" data-doc-del="${j}" aria-label="Dokument löschen">×</button></div>`).join('')}<label class="btn ghost" style="margin-top:8px">${icon('upload')} Dokument anhängen<input type="file" id="doc-in" accept="application/pdf,image/*" style="display:none"></label></div>`:''}
-  <div class="row2">${portalBtn(v)}<button class="btn ghost" id="ct-edit">Bearbeiten</button></div>`;
-  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ct-edit').onclick=()=>editContract(i);
+  <div class="row2">${portalBtn(v)}<button class="btn ghost" id="ct-edit">Bearbeiten</button>${v.pf||v.ein?'':v.st==='gekuendigt'?`<button class="btn ghost" id="ct-nf">${v.nf?'Anschluss doch offen':'Anschluss ist geregelt'}</button>`:`<button class="btn ghost" id="ct-cancel">Als gekündigt markieren</button>`}</div>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ct-edit').onclick=()=>editContract(i);if($('ct-cancel'))$('ct-cancel').onclick=()=>markCancel(i);if($('ct-nf'))$('ct-nf').onclick=()=>{v.nf=!v.nf;commit(v.nf?'Anschluss geregelt, Hinweis ausgeblendet':'Hinweis wieder an');openContract(i)};
   if($('doc-in'))$('doc-in').onchange=async e=>{const f=e.target.files[0];if(f&&await docAdd(v,f))openContract(i)};
   $('sheet').querySelectorAll('[data-doc-open]').forEach(b=>b.onclick=()=>docOpen(v.docs[+b.dataset.docOpen]));
   $('sheet').querySelectorAll('[data-doc-del]').forEach(b=>b.onclick=()=>toast(`${v.docs[+b.dataset.docDel].n} löschen?`,'Löschen',()=>{docDel(v,+b.dataset.docDel);openContract(i)}));
@@ -521,12 +654,13 @@ function openContract(i){
   $('sheet').querySelectorAll('[data-del-off]').forEach(b=>b.onclick=()=>{v.angebote.splice(+b.dataset.delOff,1);commit('Angebot gelöscht');openContract(i)});
 }
 const RH={monat:'monatlich',quartal:'vierteljährlich',jahr:'jährlich'};
-const STX={ok:['ok','Passt'],pruefen:['warn','Prüfen'],kuendigen:['bad','Kündigen']};
+const STX={ok:['ok','Passt'],pruefen:['warn','Prüfen'],kuendigen:['bad','Kündigen'],gekuendigt:['neu','Gekündigt']};
 let selKat='',ctSort='frist';
 const today0=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
 const pd=s=>{const[y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d||1)};
 function frist(v){
   if(v.pf)return{lvl:0,c:'neu',t:'Pflicht, nicht kündbar'};
+  if(v.st==='gekuendigt')return{lvl:0,c:'neu',t:v.ende?`Gekündigt, endet am ${fd(pd(v.ende))}`:'Gekündigt'};
   if(v.foerderende){const d=pd(v.foerderende),y=Math.round((d-today0())/864e5/365*10)/10;return{lvl:0,c:'warn',t:`Förderung endet am ${fd(d)} (in ${String(y).replace('.',',')} Jahren)`}}
   if(!v.ende)return v.rh==='monat'&&!v.frist&&v.k==='abo'?{lvl:0,c:'neu',t:'Monatlich kündbar'}:{lvl:0,c:'neu',t:'Kein Termin hinterlegt'};
   const T=today0();let e=pd(v.ende);while(e<=T)e.setFullYear(e.getFullYear()+1);
@@ -571,18 +705,18 @@ function ctAdd(){$('sheet').innerHTML=`<div class="row2" style="justify-content:
   <details><summary>So geht es mit Claude</summary><p class="small">1. Öffne in Claude das Projekt „Geld-Cockpit“. 2. Lade den Vertrag als PDF oder Foto hoch und schreib „Bitte als Cockpit-Code“. 3. Kopiere den Code und füge ihn hier ein. Das Dokument selbst hängst du danach am Vertrag an, dann liegt es verschlüsselt bei dir.</p></details>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ca-self').onclick=()=>editContract(null);
   $('ca-code').onclick=()=>{$('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Code von Claude einfügen</h3><textarea id="cc" rows="7" placeholder='{"n":"Hausrat","a":"…"}' aria-label="Code"></textarea><p class="small" id="cc-msg"></p><div class="row2"><button class="btn pri" id="cc-ok">Übernehmen</button><button class="btn ghost" id="s-x">Abbrechen</button></div>`;$('s-x').onclick=closeSheet;
-    $('cc-ok').onclick=()=>{try{let o=JSON.parse($('cc').value.trim().replace(/^```(json)?|```$/g,''));if(o.vertraege)o=o.vertraege;const R=Array.isArray(o)?o:[o];if(!R.length)throw 0;S.vertraege=S.vertraege||[];const msg=[];let last=-1;
+    $('cc-ok').onclick=()=>{try{let o=JSON.parse($('cc').value.trim().replace(/^```(json)?|```$/g,''));let R=Array.isArray(o)?o:o.vertraege||o.zaehler?(o.vertraege||[]):[o];const ZL=Array.isArray(o)?[]:o.zaehler||[];if(!R.length&&!ZL.length)throw 0;S.vertraege=S.vertraege||[];const msg=[];let last=-1;if(ZL.length){const n=zImport(ZL);msg.push(`${n} Zählerstände übernommen`)}
       R.forEach(x=>{const c=normCt(x);let i=-1;
         if(x.ers){const re=new RegExp(String(x.ers).slice(0,80),'i');const hits=S.vertraege.map((v,j)=>[v,j]).filter(([v])=>v.k===c.k&&re.test(v.n+' '+v.a));if(hits.length)i=hits[0][1];
           if(+x.rb>0){const rr=S.rechnungen.filter(r=>re.test(r.n));if(rr.length){rr.forEach(r=>{if(+r.b!==+x.rb)r.alt=+r.b;r.b=+x.rb;if(x.rm)r.m=+x.rm});msg.push('Rechnung angepasst')}}}
         if(i>=0){const v=S.vertraege[i];c.docs=v.docs;if(!c.url&&v.url)c.url=v.url;if(+v.b!==c.b)c.alt=+v.b;S.vertraege[i]=c;last=i;msg.unshift(`${c.n} aktualisiert`)}
         else{S.vertraege.push(c);last=S.vertraege.length-1;msg.unshift(`${c.n} hinzugefügt`)}});
-      closeSheet();go('vertraege');showSub('alle');commit(msg.join(', '));setTimeout(()=>openContract(last),300)}catch(e){$('cc-msg').textContent='Der Code ist nicht lesbar. Bitte vollständig kopieren.'}}}}
+      closeSheet();if(last>=0){go('vertraege');showSub('alle');setTimeout(()=>openContract(last),300)}else go('zaehler');commit(msg.join(', '))}catch(e){$('cc-msg').textContent='Der Code ist nicht lesbar. Bitte vollständig kopieren.'}}}}
 function normCt(x){if(!x||!x.n)throw 0;const num=v=>+String(v??0).replace(',','.')||0;const o={n:String(x.n).slice(0,80),a:String(x.a||'').slice(0,60),k:KAT[x.k]?x.k:'haus',b:num(x.b),rh:RH[x.rh]?x.rh:'jahr',wo:x.wo&&(x.wo==='giro'||pot(x.wo))?x.wo:'giro',ende:/^\d{4}-\d{2}-\d{2}$/.test(x.ende||'')?x.ende:'',frist:[0,1,3].includes(+x.frist)?+x.frist:1,st:STX[x.st]?x.st:'pruefen',tipp:String(x.tipp||'').slice(0,600)};
   if(Array.isArray(x.cov))o.cov=x.cov.slice(0,20).map(c=>[String(c[0]).slice(0,120),[0,1,2].includes(+c[1])?+c[1]:1,String(c[2]||'').slice(0,200)]);
   if(Array.isArray(x.must))o.must=x.must.slice(0,12).map(m=>String(m).slice(0,120));
   if(Array.isArray(x.termine))o.termine=x.termine.filter(z=>/^\d{4}-\d{2}-\d{2}$/.test(z.d||'')).slice(0,5).map(z=>({d:z.d,t:String(z.t||'Termin').slice(0,60)}));
-  if(/^https:\/\//.test(x.url||''))o.url=x.url;if(PORT[x.port])o.port=x.port;return o}
+  if(/^https:\/\//.test(x.url||''))o.url=x.url;if(PORT[x.port])o.port=x.port;['ap','gp','kwh'].forEach(k=>{if(x[k]!=null)o[k]=num(x[k])});if(x.nf)o.nf=true;return o}
 function editContract(i){const v=i==null?{n:'',a:'',k:selKat&&KAT[selKat]?selKat:'haus',b:0,rh:'jahr',wo:'giro',ende:'',frist:1,st:'ok',tipp:''}:ctAll()[i];
   const f=i==null?null:frist(v);
   const woOpts=[['giro','Girokonto']].concat(S.toepfe.map(p=>[p.id,(p.art==='topf'?'Topf ':'Dauerauftrag ')+p.n]));
@@ -590,7 +724,7 @@ function editContract(i){const v=i==null?{n:'',a:'',k:selKat&&KAT[selKat]?selKat
   if(f&&f.d)fields.push({type:'info',v:`${f.t}. Der Vertrag verlängert sich sonst am ${fd(f.e)}.`});
   if(v.tipp)fields.push({type:'info',v:v.tipp,cls:'tip'});
   fields.push({l:'Vertrag',v:v.n},{l:'Anbieter',v:v.a},{l:'Bereich',v:v.k,type:'select',opts:Object.entries(KAT).map(([k,x])=>[k,x[0]])},{l:'Kosten im Jahr in €',v:v.b,type:'number',hint:'Bei monatlicher Zahlung: Monatsbetrag mal 12.'},{l:'Zahlweise',v:v.rh,type:'select',opts:Object.entries(RH)},{l:'Bezahlt aus',v:v.wo,type:'select',opts:woOpts},{l:'Link zum Kundenportal',v:v.url||'',type:'url',hint:portal({a:v.a,n:v.n})?'Leer lassen, dann nimmt das Cockpit '+portal({a:v.a,n:v.n}).n+'.':'Zum Beispiel die Anmeldeseite des Anbieters.'});
-  if(!v.pf)fields.push({l:'Läuft bis (Ende des Vertragsjahres)',v:v.ende,type:'date',hint:'Steht in der Police oder auf der Beitragsrechnung. Leer lassen, wenn unbekannt.'},{l:'Kündigungsfrist',v:String(v.frist||0),type:'select',opts:[['0','Jederzeit'],['1','1 Monat vor Ablauf'],['3','3 Monate vor Ablauf']]},{l:'Was ist zu tun?',v:v.st,type:'select',opts:[['ok','Passt so'],['pruefen','Prüfen oder vergleichen'],['kuendigen','Kündigen']]});
+  if(!v.pf)fields.push({l:'Läuft bis (Ende des Vertragsjahres)',v:v.ende,type:'date',hint:'Steht in der Police oder auf der Beitragsrechnung. Leer lassen, wenn unbekannt.'},{l:'Kündigungsfrist',v:String(v.frist||0),type:'select',opts:[['0','Jederzeit'],['1','1 Monat vor Ablauf'],['3','3 Monate vor Ablauf']]},{l:'Was ist zu tun?',v:v.st,type:'select',opts:[['ok','Passt so'],['pruefen','Prüfen oder vergleichen'],['kuendigen','Kündigen'],['gekuendigt','Ist gekündigt (Läuft bis = letzter Tag)']]});
   fields.push({l:'Weiterer Termin (z. B. Preisgarantie endet)',v:(v.termine&&v.termine[0]||{}).d||'',type:'date'},{l:'Was passiert an diesem Termin?',v:(v.termine&&v.termine[0]||{}).t||''},{l:'Notiz',v:v.tipp,type:'area'});
   sheet(i==null?'Neuer Vertrag':v.n,fields,vals=>{const q=vals.filter(x=>x!==null);const o={n:q[0]||'Vertrag',a:q[1],k:q[2],b:q[3],rh:q[4],wo:q[5],url:/^https:\/\//.test(q[6]||'')?q[6].trim():''};let j=7;if(!v.pf){o.ende=q[j++];o.frist=+q[j++];o.st=q[j++]}o.termine=q[j]?[{d:q[j],t:q[j+1]||'Termin'}].concat((v.termine||[]).slice(1)):(v.termine||[]).slice(1);o.tipp=q[j+2];if(i==null){S.vertraege=S.vertraege||[];S.vertraege.push(o)}else Object.assign(v,o)},i==null?null:()=>S.vertraege.splice(i,1));
 }
@@ -599,6 +733,7 @@ function editContract(i){const v=i==null?{n:'',a:'',k:selKat&&KAT[selKat]?selKat
 function allDates(){const T=today0(),out=[];
   ctAll().forEach((v,i)=>{const f=frist(v);
     if(f.d&&!v.pf&&!v.ein){out.push({d:f.d,i,v,t:`Letzter Tag zum Kündigen: ${v.n}`,s:`${v.a||''}${v.frist?`, Frist ${v.frist} ${v.frist==1?'Monat':'Monate'}`:''}`,k:'kuend'});out.push({d:new Date(f.e.getTime()-864e5),i,v,t:`Vertragsjahr endet: ${v.n}`,s:`Verlängert sich am ${fd(f.e)} um ein Jahr`,k:'ende'})}
+    if(v.st==='gekuendigt'&&v.ende){const d=pd(v.ende);if(d>=T)out.push({d,i,v,t:`Vertrag endet: ${v.n}`,s:v.nf?'Anschluss ist geregelt':'Gekündigt. Anschluss klären',k:'info'})}
     (v.termine||[]).forEach(x=>{const d=pd(x.d);if(d>=T)out.push({d,i,v,t:`${x.t}: ${v.n}`,s:v.a||'',k:'info'})});
     if(v.foerderende){const d=pd(v.foerderende);if(d>=T)out.push({d,i,v,t:`Förderung endet: ${v.n}`,s:'Danach deutlich weniger Einnahmen',k:'info'})}});
   S.rechnungen.forEach(r=>{if(+r.b<300)return;const y=+r.m>=cm?cy:cy+1;const d=new Date(y,r.m-1,1);out.push({d,t:`Große Rechnung: ${r.n}`,s:`${fmt(r.b)} aus Topf ${(pot(r.t)||{}).n||''}`,k:'rech'})});
@@ -658,6 +793,11 @@ const HELP=[
  ['Woran erkenne ich steigende Kosten?','Änderst du den Betrag einer Rechnung, merkt sich das Cockpit den alten Wert. Steigt eine Rechnung um mehr als 8 %, erscheint auf der Startseite ein Hinweis.'],
  ['Wie lade ich einen neuen Vertrag hoch?','„Vertrag hinzufügen“ auf der Startseite oder bei Verträge. Entweder selbst eintragen oder den Vertrag in Claude auswerten lassen und den Code einfügen. Das PDF oder Foto hängst du danach am Vertrag unter „Dokument anhängen“ an. Es wird verschlüsselt gespeichert.'],
  ['Wie erstelle ich einen Bericht als PDF?','„Bericht als PDF“ auf der Startseite. Zur Wahl stehen Jahresbericht, Vertragsübersicht, Fristen und Versicherungen. Im Druckfenster „Als PDF sichern“ wählen oder direkt teilen.'],
+ ['Wie lese ich meine Zähler ab?','Im Reiter Zähler oder auf der Startseite „Zähler ablesen“ tippen. Foto machen, Stand eintragen, speichern. Danach öffnet sich gleich der nächste Zähler. Das Foto wird verschlüsselt gespeichert und dient als Nachweis.'],
+ ['Erkennt das Cockpit den Zählerstand vom Foto?','Das iPhone kann das selbst: Lange ins Feld für den Zählerstand drücken, „Text scannen“ wählen und die Kamera auf die Ziffern halten. Die Zahl landet direkt im Feld. Das passiert auf dem iPhone, nichts geht an fremde Server. Das Cockpit prüft danach, ob der Wert zum bisherigen Verbrauch passt.'],
+ ['Was rechnet das Cockpit mit den Zählerständen?','Verbrauch pro Monat und Jahr, Hochrechnung auf zwölf Monate und die Kosten. Beim Strom vergleicht es mit dem Abschlag und sagt, ob eine Nachzahlung oder ein Guthaben kommt. Beim Heizöl zeigt es, wie lange der Tank noch reicht.'],
+ ['Wie bekomme ich eine Erinnerung zum Ablesen?','Im Reiter Zähler auf „Erinnerung in den Kalender“ tippen und die Datei öffnen. Dann meldet sich dein Kalender jeden Monat am letzten Tag um 18 Uhr. Zusätzlich zeigt die Startseite einen Hinweis, wenn das Ablesen dran ist.'],
+ ['Wie trage ich ein, dass ich einen Vertrag gekündigt habe?','Vertrag öffnen und „Als gekündigt markieren“ tippen, das Enddatum eintragen und die Kündigungsbestätigung als Foto oder PDF anhängen. Oder die Bestätigung im Claude-Projekt hochladen und „Bitte als Cockpit-Code“ schreiben. Das Cockpit warnt dann nicht mehr vor der Frist und erinnert dich vor dem Ende an den Anschlussvertrag.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
  ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
  ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Einstellungen, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
@@ -916,11 +1056,13 @@ async function docDel(v,j){const d=v.docs[j];try{const g=await ghPath('GET','dat
   v.docs.splice(j,1);commit('Dokument gelöscht')}
 
 /* ---------- Navigation ---------- */
-function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
-function go(id,anchor){const ids=['start','konten','toepfe','rechnungen','vertraege','ziele','einstellungen','hilfe'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
+function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();renderZaehler();renderDonut();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
+function go(id,anchor){const ids=['start','konten','toepfe','rechnungen','vertraege','zaehler','ziele','einstellungen','hilfe'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
-document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;const d=b.dataset;
+document.addEventListener('click',e=>{const b=e.target.closest('button,a,circle[data-act]');if(!b)return;const d=b.dataset;
   if(d.act){const a=d.act;if(a==='go:newct')ctAdd();else if(a==='go:einlesen')go('konten','einlesen');else if(a==='go:report')openReports();else doAct(a);return}
+  if(d.zread!==undefined){zRead(+d.zread,true);return}
+  if(d.zdet!==undefined){zDetail(+d.zdet);return}
   if(d.go){go(d.go,d.anchor);if(d.month){selMonth=+d.month;renderBills()}if(d.ct!==undefined)setTimeout(()=>openContract(+d.ct),60)}
   else if(d.openCt!==undefined)openContract(+d.openCt);
   else if(d.editCt!==undefined)editContract(+d.editCt);
@@ -935,7 +1077,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b
   else if(d.take){const p=pot(d.take),old=p.da;p.da=rec(p);commit(`${p.n}: Dauerauftrag auf ${fmt(p.da)} geändert. Denk dran, ihn auch bei der Bank zu ändern.`)}
   else if(d.month!==undefined){selMonth=selMonth===+d.month?0:+d.month;renderBills()}
   else if(d.fpot!==undefined){selPot=d.fpot;renderBills()}});
-$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>ctAdd();$('help-q').oninput=renderHelp;$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
+$('z-ics').onclick=zIcs;$('z-add').onclick=()=>zEdit(null);$('add-giro').onclick=()=>editGiro(null);$('add-ct').onclick=()=>ctAdd();$('help-q').oninput=renderHelp;$('ics').onclick=icsExport;$('tl-more').onclick=()=>{tlAll=!tlAll;renderTimeline()};$('ct-sort').onchange=e=>{ctSort=e.target.value;renderContracts()};$('add-bill').onclick=()=>editBill(null);$('add-goal').onclick=()=>editGoal(null);
 $('proj').oninput=e=>{$('proj').dataset.v=e.target.value;renderGoals()};
 $('proj-ok').onclick=()=>{pot('proj').da=+$('proj').dataset.v;delete $('proj').dataset.v;commit('Betrag für Haus-Projekte gespeichert. Denk an den Dauerauftrag bei der Bank.')};
 $('proj-reset').onclick=()=>{delete $('proj').dataset.v;renderGoals()};
