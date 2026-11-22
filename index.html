@@ -187,7 +187,7 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795379606';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795379935';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
@@ -456,14 +456,17 @@ function zIntervals(m){const r=zSorted(m),out=[];for(let i=1;i<r.length;i++){con
 function zStats(m){const I=zIntervals(m),L=zLast(m);if(!L)return{I,L:null};
   const end=pd(L.d),from=new Date(end);from.setDate(from.getDate()-366);
   const W=I.filter(x=>pd(x.a.d)>=from);const days=nsum(W.map(x=>x.days)),use=nsum(W.map(x=>x.use));
-  const year=days>=60?use/days*365:null;const ct=zContract(m);
+  let year=days>=60?use/days*365:null;const ct=zContract(m);
   const preis=m.typ!=='einspeisung'&&ct&&+ct.ap?ct.ap/100:+m.preis||0,gp=m.typ!=='einspeisung'&&ct&&+ct.gp?+ct.gp:+m.gp||0;
   const cost=year!=null&&preis?year*preis+gp*12:null;
   const ab=ct&&ct.rh==='monat'&&m.typ!=='einspeisung'?+ct.b/12:(+m.ab||0);
   const byKey={};I.forEach(x=>{byKey[x.key]=(byKey[x.key]||0)+x.use});
   const lastKey=I.length?I[I.length-1].key:0;
   const age=Math.round((today0()-end)/864e5);
-  return{I,L,year,days,cost,preis,gp,ab,byKey,lastKey,age,ct}}
+  const s0={I,L,year,days,cost,preis,gp,ab,byKey,lastKey,age,ct,trend:1};
+  if(m.typ==='tank'){const M=zModel(m,s0);if(M){s0.year=M.year;s0.cost=preis?M.year*preis:null}}
+  else if(year!=null){const tr=Math.max(zTrend(m,s0),1);if(tr!==1){s0.trend=tr;s0.year=year*tr;s0.cost=preis?s0.year*preis+gp*12:null}}
+  return s0}
 function zContract(m){if(!m.ct)return null;let re;try{re=new RegExp(m.ct,'i')}catch(e){return null}const L=ctAll().filter(v=>re.test(v.n+' '+v.a));return L.find(v=>v.st!=='gekuendigt')||L[0]||null}
 function zBills(m){if(!m.rx)return[];let re;try{re=new RegExp(m.rx,'i')}catch(e){return[]}return S.rechnungen.filter(r=>re.test(r.n))}
 function zVerdict(m,s){
@@ -538,18 +541,27 @@ function zIcs(){const T=new Date(),e=new Date(T.getFullYear(),T.getMonth()+1,0),
 function zImport(L){S.zaehler=S.zaehler||[];let n=0;(Array.isArray(L)?L:[L]).forEach(x=>{if(!x||!x.n)return;const name=String(x.n).slice(0,40);let m=S.zaehler.find(z=>z.n.toLowerCase()===name.toLowerCase());
   if(!m){m={n:name,r:[]};S.zaehler.push(m)}m.u=String(x.u||m.u||'kWh').slice(0,8);m.typ=ZTYP[x.typ]?x.typ:(m.typ||'verbrauch');['preis','gp'].forEach(k=>{if(x[k]!=null)m[k]=+x[k]||0});['ct','rx'].forEach(k=>{if(x[k]!=null)m[k]=String(x[k]).slice(0,60)});if(/^#[0-9a-f]{6}$/i.test(x.f||''))m.f=x.f;m.f=m.f||'#5f9a9a';
   (x.r||[]).forEach(r=>{const d=Array.isArray(r)?r[0]:r.d,v=+(Array.isArray(r)?r[1]:r.v);if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||isNaN(v))return;const old=m.r.find(z=>z.d===d);if(old)old.v=v;else m.r.push({d,v});n++})});return n}
-function zOil(m,s){if(!s.L||s.year==null)return null;const mo={};Object.keys(s.byKey).forEach(k=>{const x=k%12;(mo[x]=mo[x]||[]).push(s.byKey[k])});
-  const av=x=>nsum(mo[x])/mo[x].length,hs=x=>x>=9||x<=3,known=Object.keys(mo).map(Number),sea=f=>{const L=known.filter(f);return L.length?nsum(L.map(av))/L.length:s.year/12};const hAvg=sea(hs),sAvg=sea(x=>!hs(x));const use=x=>mo[x]?av(x):hs(x)?Math.max(hAvg,s.year/12):sAvg;let lvl=s.L.v,d=pd(s.L.d),y=d.getFullYear(),mm=d.getMonth();const res=100;
+const HGT=[.17,.15,.13,.09,.04,.01,.005,.005,.03,.08,.13,.16],KALT=1.2,OILRES=300;
+function zMonthly(s){const mo={};Object.keys(s.byKey).forEach(k=>{const x=+k%12;(mo[x]=mo[x]||[]).push(s.byKey[k])});const o={};Object.keys(mo).forEach(x=>o[x]=nsum(mo[x])/mo[x].length);return o}
+function zModel(m,s){const o=zMonthly(s),ks=Object.keys(o).map(Number);if(ks.length<3)return null;
+  const sum3=[5,6,7].filter(x=>o[x]!=null);const base=sum3.length?Math.min(...sum3.map(x=>o[x])):Math.min(...ks.map(x=>o[x]));
+  const H2=ks.filter(x=>HGT[x]>=.03);const num=nsum(H2.map(x=>Math.max(o[x]-base,0)*HGT[x])),den=nsum(H2.map(x=>HGT[x]*HGT[x]));const H=den?num/den:0;
+  return{base,H,use:(x,f)=>base+HGT[x]*H*(f||1),year:12*base+H,known:ks.length}}
+function zTrend(m,s){const K=Object.keys(s.byKey).map(Number).sort((a,b)=>a-b);if(K.length<15)return 1;const last=K.slice(-3);const now=nsum(last.map(k=>s.byKey[k])),prev=nsum(last.map(k=>s.byKey[k-12]||0));if(!prev||last.some(k=>s.byKey[k-12]==null))return 1;return Math.min(Math.max(now/prev,.7),1.5)}
+function zOil(m,s){if(!s.L)return null;const M=zModel(m,s);if(!M)return null;let lvl=s.L.v,d=pd(s.L.d),y=d.getFullYear(),mm=d.getMonth();
   const dim=(y,m)=>new Date(y,m+1,0).getDate();let frac=(dim(y,mm)-d.getDate())/dim(y,mm);let empty=null,apr=null;const T=today0();const aprY=T.getMonth()>3?T.getFullYear()+1:T.getFullYear();
-  for(let i=0;i<48;i++){lvl-=use(mm)*frac;frac=1;if(y===aprY&&mm===3)apr=lvl;if(lvl<=res&&!empty){empty=new Date(y,mm,15)}if(empty&&apr!=null)break;mm++;if(mm>11){mm=0;y++}}
-  return{empty,apr,aprY}}
+  for(let i=0;i<48;i++){const u=M.use(mm,KALT)*frac,before=lvl;lvl-=u;if(y===aprY&&mm===3)apr=lvl;if(lvl<=OILRES&&!empty){const start=frac<1?d.getDate():0,day=Math.min(dim(y,mm),Math.max(1,Math.round(start+(before-OILRES)/Math.max(u,1)*(dim(y,mm)-start))));empty=new Date(y,mm,day)}frac=1;if(empty&&apr!=null)break;mm++;if(mm>11){mm=0;y++}}
+  const winter=nsum([10,11,0,1,2,3].map(x=>M.use(x,KALT)));return{empty,apr,aprY,M,winter}}
+const zTrTxt=s=>s.trend!==1?`, Trend der letzten 3 Monate ${s.trend>1?'+':'−'}${Math.round(Math.abs(s.trend-1)*100)} % zum Vorjahr eingerechnet`:'';
 function zHead(m,s){const v=zVerdict(m,s);if(s.year==null)return{c:'neu',big:'Noch keine Prognose',sub:'Mindestens zwei Monate ablesen.',v};
-  if(m.typ==='tank'){const o=zOil(m,s);if(!o)return{c:'neu',big:'–',sub:v.t,v};const T=today0();
-    const c=o.empty&&o.empty<new Date(o.aprY,4,1)?'bad':o.apr!=null&&o.apr<300?'warn':'ok';
-    const order=o.empty?new Date(o.empty.getFullYear(),o.empty.getMonth()-1,1):null;
-    return{c,big:o.empty?`Reicht bis ${MON[o.empty.getMonth()]} ${o.empty.getFullYear()}`:'Reicht über 4 Jahre',sub:c==='bad'?`Kommt nicht über den Winter. Bis ${order&&order>T?MONL[order.getMonth()]:'sofort'} nachtanken.`:c==='warn'?`Ende April nur noch etwa ${nf(Math.max(o.apr,0),0)} Liter. Nachtanken einplanen.`:`Kommt sicher über den Winter. Ende April noch etwa ${nf(o.apr,0)} Liter.${order?` Nachtanken bis ${MONL[order.getMonth()]} ${order.getFullYear()}.`:''}`,v}}
+  if(m.typ==='tank'){const o=zOil(m,s);if(!o)return{c:'neu',big:'–',sub:'Mindestens drei Monate ablesen.',v};const T=today0();
+    const order=o.empty?new Date(o.empty.getFullYear(),o.empty.getMonth(),o.empty.getDate()-21):null;const short=o.empty&&o.empty<new Date(o.aprY,4,1);
+    const c=short?(order<=new Date(T.getFullYear(),T.getMonth()+2,1)?'bad':'warn'):o.apr!=null&&o.apr<OILRES+200?'warn':'ok';
+    const ftxt=`Gerechnet mit deinem Verbrauch, typischem Winterverlauf und 20 % Puffer für einen kalten Winter. November bis April brauchst du rund ${nf(o.winter,0)} Liter.`;
+    return{c,big:short?`Reicht nur bis ${fd(o.empty)}`:o.empty?`Reicht bis ${MON[o.empty.getMonth()]} ${o.empty.getFullYear()}`:'Reicht lange',
+      sub:short?`Nicht genug für den Winter. Spätestens bis ${fd(order)} nachtanken, rund 3 Wochen Lieferzeit. ${ftxt}`:c==='warn'?`Knapp: Ende April nur noch etwa ${nf(Math.max(o.apr,0),0)} Liter. Nachtanken bis ${fd(order)} einplanen. ${ftxt}`:`Kommt über den Winter, Ende April noch etwa ${nf(o.apr,0)} Liter. Nachtanken bis ${fd(order)}. ${ftxt}`,v}}
   if(m.typ==='einspeisung')return s.preis?{c:'ok',big:`+ ${fmt(s.year*s.preis)} im Jahr`,sub:`${nf(s.year,0)} kWh eingespeist.`,v}:{c:'neu',big:`${nf(s.year,0)} kWh im Jahr`,sub:'Vergütung je kWh eintragen, dann siehst du den Ertrag.',v};
-  if(s.cost&&s.ab){const d=s.ab*12-s.cost,neu=Math.ceil(s.cost/12/5)*5;return d>=-60?{c:'ok',big:`${d>=0?'+':'−'} ${fmt(Math.abs(d))} ${d>=0?'Guthaben':'Nachzahlung'}`,sub:`Abschlag ${fmt(s.ab)} passt. Verbrauch ${nf(s.year,0)} ${m.u} im Jahr.`,v}:{c:'bad',big:`− ${fmt(-d)} Nachzahlung`,sub:`Abschlag jetzt auf ${fmt(neu)} erhöhen oder ${fmt(-d)} zurücklegen.`,v}}
+  if(s.cost&&s.ab){const d=s.ab*12-s.cost,neu=Math.ceil(s.cost/12/5)*5;return d>=-60?{c:'ok',big:`${d>=0?'+':'−'} ${fmt(Math.abs(d))} ${d>=0?'Guthaben':'Nachzahlung'}`,sub:`Abschlag ${fmt(s.ab)} passt. Hochrechnung ${nf(s.year,0)} ${m.u} im Jahr${zTrTxt(s)}.`,v}:{c:'bad',big:`− ${fmt(-d)} Nachzahlung`,sub:`Abschlag jetzt auf ${fmt(neu)} erhöhen oder ${fmt(-d)} zurücklegen. Hochrechnung ${nf(s.year,0)} ${m.u}${zTrTxt(s)}.`,v}}
   const B=zBills(m);if(s.cost&&B.length){const pl=nsum(B.map(r=>r.b)),d=pl-s.cost;return d>=-s.cost*0.1?{c:'ok',big:`Plan passt`,sub:`${fmt(s.cost)} erwartet, ${fmt(pl)} eingeplant.`,v}:{c:'warn',big:`${fmt(-d)} zu wenig geplant`,sub:`Erwartet ${fmt(s.cost)}, im Plan nur ${fmt(pl)}. Rechnung anpassen.`,v}}
   return{c:v.c,big:s.cost?`${fmt(s.cost)} im Jahr`:`${nf(s.year,0)} ${m.u} im Jahr`,sub:v.t,v}}
 const zPhoto=r=>!!(r&&r.docs&&r.docs.length);
@@ -833,7 +845,7 @@ const HELP=[
  ['Was rechnet das Cockpit mit den Zählerständen?','Verbrauch pro Monat und Jahr, Hochrechnung auf zwölf Monate und die Kosten. Beim Strom vergleicht es mit dem Abschlag und sagt, ob eine Nachzahlung oder ein Guthaben kommt. Beim Heizöl zeigt es, wie lange der Tank noch reicht.'],
  ['Wie bekomme ich eine Erinnerung zum Ablesen?','Im Reiter Zähler auf „Erinnerung in den Kalender“ tippen und die Datei öffnen. Dann meldet sich dein Kalender jeden Monat am letzten Tag um 18 Uhr. Zusätzlich zeigt die Startseite einen Hinweis, wenn das Ablesen dran ist.'],
  ['Wie trage ich ein, dass ich einen Vertrag gekündigt habe?','Vertrag öffnen und „Als gekündigt markieren“ tippen, das Enddatum eintragen und die Kündigungsbestätigung als Foto oder PDF anhängen. Oder die Bestätigung im Claude-Projekt hochladen und „Bitte als Cockpit-Code“ schreiben. Das Cockpit warnt dann nicht mehr vor der Frist und erinnert dich vor dem Ende an den Anschlussvertrag.'],
- ['Was zeigt „Energie im Blick“?','Für jeden Zähler eine Ampel mit der wichtigsten Zahl. Strom: kommt eine Nachzahlung oder ein Guthaben, und passt der Abschlag. Heizöl: bis wann der Tank reicht, gerechnet mit deinem Verbrauch Monat für Monat, also mit dem Winter. Wasser: reicht die Rechnung im Plan. Rot heißt sofort handeln, gelb bald.'],
+ ['Was zeigt „Energie im Blick“?','Für jeden Zähler eine Ampel mit der wichtigsten Zahl. Strom: kommt eine Nachzahlung oder ein Guthaben, und passt der Abschlag. Heizöl: bis wann der Tank reicht. Gerechnet wird mit deinem gemessenen Verbrauch, verteilt nach dem typischen Winterverlauf in Deutschland (im Januar wird etwa 17 % der Jahreswärme verbraucht, im August fast nichts), plus 20 % Puffer für einen kalten Winter und 300 Liter, die im Tank bleiben sollten. Strom und Wasser: Hochrechnung aus den letzten 12 Monaten, also mit allen Jahreszeiten, angepasst um den Trend der letzten 3 Monate gegenüber dem Vorjahr. Wasser: reicht die Rechnung im Plan. Rot heißt sofort handeln, gelb bald.'],
  ['Wie bekomme ich einen Nachweis für den Anbieter?','Beim Zähler auf „Verlauf“ und dann „Nachweis als PDF“ tippen. Das PDF enthält alle Ablesungen mit Datum und die Fotos. Fehlt bei einer Ablesung das Foto, kannst du es im Verlauf mit dem gelben Kamera-Knopf nachreichen.'],
  ['Wie mache ich ein komplettes Backup auf meinen Rechner?','Einstellungen, Bereich Sicherung, „Komplettes Backup herunterladen“. Es entsteht eine Datei mit allen Daten, Fotos und Dokumenten, verschlüsselt mit deinem Passwort. Leg sie auf deinen Rechner oder einen USB-Stick. Zum Wiederherstellen „Backup einspielen“ wählen und das Passwort eingeben, das beim Erstellen galt. Das Cockpit erinnert dich, wenn das letzte Backup älter als einen Monat ist.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
