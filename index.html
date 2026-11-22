@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Geld-Cockpit">
+<meta name="apple-mobile-web-app-title" content="Cockpit">
 <meta name="theme-color" content="#141414">
-<title>Geld-Cockpit</title>
+<title>Cockpit</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -174,6 +174,20 @@ details p+p{margin-top:8px}
 .mt b{font-size:22px;letter-spacing:-.01em;line-height:1.2}.mt.ok b{color:var(--grn)}.mt.bad b{color:var(--red)}.mt.warn b{color:var(--amb)}
 .mtn{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700;color:var(--mut)}.mts{font-size:14px}
 .mtf{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--grn);margin-top:2px}.mtf.no{color:var(--amb)}.mtf .ico{width:22px;height:22px;background:none;color:inherit}.mtf .ico svg{width:16px;height:16px}
+#v-start h2{font-size:17px;margin:0}.sh{display:flex;justify-content:space-between;align-items:center;margin:20px 0 8px}
+.lnk{font:inherit;font-size:14px;font-weight:700;color:var(--mut);background:none;border:0;cursor:pointer;padding:6px 0}
+#v-start .status{padding:10px 12px;gap:10px;border-radius:14px}#v-start .status .ico{width:38px;height:38px;border-radius:12px}#v-start .status .ico svg{width:22px;height:22px}#v-start .status b{font-size:17px}#v-start .status span:not(.ico){font-size:13px}
+#v-start .kpis{gap:8px;margin-top:8px}#v-start .kpi{padding:9px 12px;border-radius:14px}#v-start .kv{font-size:21px}#v-start .kl{font-size:12px}#v-start .ks{font-size:11.5px}
+#v-start .quick{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}#v-start .quick button{padding:8px 2px;gap:4px;font-size:12px;border-radius:12px}#v-start .quick .ico{width:30px;height:30px;border-radius:10px}#v-start .quick .ico svg{width:18px;height:18px}
+#v-start .al{padding:9px 10px;gap:10px;border-radius:12px}#v-start .al .ico{width:32px;height:32px;border-radius:10px}#v-start .al .ico svg{width:18px;height:18px}#v-start .al .t span{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}#v-start .al b{font-size:15px}
+.hs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,78%);grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;gap:8px;padding-bottom:4px;overscroll-behavior-x:contain;scrollbar-width:none}.hs::-webkit-scrollbar{display:none}.hs>*{scroll-snap-align:start}
+@media(min-width:900px){.hs{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-columns:auto;overflow:visible}}
+#v-start .mt{padding:10px 12px;border-top-width:5px;gap:2px}#v-start .mt b{font-size:18px}#v-start .mts{font-size:12.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#v-start .tile{padding:10px 12px;gap:4px}#v-start .tile .amt{font-size:22px}#v-start .li{padding:9px 12px}#v-start .dbadge{width:40px;height:40px}
+.spar{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;background:var(--grnbg);border:1px solid var(--grn);border-radius:14px;padding:10px 12px;cursor:pointer}
+.spar .ico{width:38px;height:38px}.spar b{font-size:16px;color:var(--grn)}.spar .t{display:grid}.spar .t span{font-size:13px;color:var(--mut)}
+#v-start .donut{grid-template-columns:120px minmax(0,1fr);gap:12px}#v-start .donut .li{padding:7px 10px}#v-start .donut .t span{font-size:12px}#v-start .donut svg{max-width:120px}
+@media(max-width:600px){#v-start .donut{grid-template-columns:110px minmax(0,1fr);justify-items:stretch}}
 button.status{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
 .stack2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media(max-width:760px){.stack2{grid-template-columns:1fr}}
@@ -187,12 +201,12 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795379935';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
+<meta http-equiv="Cache-Control" content="no-cache"><script>(function(){var B='1795380390';try{var q=new URLSearchParams(location.search);fetch('./index.html?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B='(\d+)'/);if(m&&m[1]!==B&&q.get('v')!==m[1]){location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(function(){})}catch(e){}})()</script></head>
 <body class="locked">
 <div id="lock"><div id="lock-box"><p class="mut">Lade ...</p></div></div>
 <div class="wrap">
 <header>
-<div class="brand">Geld-Cockpit<small id="stamp"></small></div>
+<div class="brand">Cockpit<small id="stamp"></small></div>
 <div class="row2" style="gap:8px;flex-wrap:nowrap"><button class="icon" id="open-search" aria-label="Suchen" title="Suchen"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button><a class="icon" href="#hilfe" id="t-hilfe" aria-label="Hilfe" title="Hilfe"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg></a><a class="icon" href="#einstellungen" id="t-einstellungen" aria-label="Einstellungen" title="Einstellungen"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a></div>
 </header>
 <nav aria-label="Bereiche">
@@ -209,17 +223,18 @@ main.wrap{padding-bottom:calc(130px + env(safe-area-inset-bottom))}
 <main class="wrap">
 <section id="v-start">
 <div id="st-status"></div>
+<div id="spar" style="margin-top:8px"></div>
 <div class="kpis" id="kpis"></div>
-<h2 id="mon-h">Energie im Blick</h2>
-<div class="mon" id="mon"></div>
-<div class="quick"><button data-act="go:newct"><span class="ico" data-i="plus"></span><span>Vertrag hinzufügen</span></button><button data-act="go:einlesen"><span class="ico" data-i="bank"></span><span>Auszug einlesen</span></button><button data-act="zl:read"><span class="ico" data-i="cam"></span><span>Zähler ablesen</span></button><button data-act="go:report"><span class="ico" data-i="print"></span><span>Bericht als PDF</span></button></div>
-<h2>Hinweise und Empfehlungen</h2>
+<div class="quick"><button data-act="zl:read"><span class="ico" data-i="cam"></span><span>Ablesen</span></button><button data-act="go:newct"><span class="ico" data-i="plus"></span><span>Vertrag</span></button><button data-act="go:einlesen"><span class="ico" data-i="bank"></span><span>Auszug</span></button><button data-act="go:report"><span class="ico" data-i="print"></span><span>Bericht</span></button></div>
+<div class="sh"><h2>Hinweise</h2></div>
 <div class="alerts" id="alerts"></div>
-<h2>Die nächsten 90 Tage</h2>
+<div class="sh"><h2 id="mon-h">Energie</h2><button class="lnk" data-act="go:zaehler">Zähler ›</button></div>
+<div class="mon hs" id="mon"></div>
+<div class="sh"><h2>Nächste 90 Tage</h2><button class="lnk" data-sub="termine" data-act="sub:termine">Alle ›</button></div>
 <div class="list" id="strip"></div>
-<h2>Deine Töpfe</h2>
-<div class="tiles" id="start-tiles"></div>
-<h2>Wofür deine Verträge kosten</h2>
+<div class="sh"><h2>Töpfe</h2><button class="lnk" data-act="go:toepfe">Alle ›</button></div>
+<div class="tiles hs" id="start-tiles"></div>
+<div class="sh"><h2>Verträge nach Bereich</h2><button class="lnk" data-act="sub:alle">Alle ›</button></div>
 <div id="donut"></div>
 <div id="hero" hidden></div><div id="start-fristen" hidden></div>
 </section>
@@ -422,6 +437,7 @@ function doAct(a){const[k,v]=a.split(/:(.*)/s);
   else if(k==='go')go(v)
   else if(k==='kat'){selKat=v;go('vertraege');showSub('alle');renderContracts()}
   else if(k==='zl'){if(v==='read'){const D=zDue();go('zaehler');if(zAll().length)setTimeout(()=>zRead(zAll().indexOf(D[0]||zAll()[0]),true),80)}else{go('zaehler');setTimeout(()=>zDetail(+v),80)}}
+  else if(k==='sp'){openSpar()}
   else if(k==='al'){alAll=true;renderStart();setTimeout(()=>$('alerts').scrollIntoView({block:'start',behavior:'smooth'}),30)}}
 let alAll=false;
 function renderStart(){
@@ -433,10 +449,10 @@ function renderStart(){
   const rl=sum(pots().filter(p=>p.id!=='proj'),'stand'),nbill=nextBill(),ct=sum(ctCost())/12;
   const k=(lbl,val,s,go,c)=>`<button class="kpi" data-act="${go}"><span class="kl">${lbl}</span><span class="kv" style="${c?'color:var(--'+c+')':''}">${val}</span><span class="ks">${s}</span></button>`;
   $('kpis').innerHTML=k(lab,fmt(frei),sub,'go:konten',frei<0?'red':'')+k('Feste Kosten',fmt(da()+fix()),'pro Monat, alles zusammen','go:toepfe')+k('Rücklagen',fmt(rl),'in deinen Töpfen','go:toepfe')+k('Verträge',fmt(ct),'pro Monat · '+ctCost().length+' Stück','sub:uebersicht');
-  const show=alAll?A:A.filter(x=>x.l!=='ok').slice(0,6);
-  $('alerts').innerHTML=(show.length?show.map(alertRow).join(''):'<p class="mut">Gerade gibt es nichts zu tun.</p>')+(A.length>show.length||alAll?`<button class="btn ghost" id="al-more" style="margin-top:8px">${alAll?'Weniger anzeigen':'Alle '+A.length+' anzeigen'}</button>`:'');
+  const show=alAll?A:A.filter(x=>x.l!=='ok').slice(0,4);
+  $('alerts').innerHTML=(show.length?show.map(alertRow).join(''):'<p class="mut">Gerade gibt es nichts zu tun.</p>')+(A.length>show.length||alAll?`<button class="lnk" id="al-more">${alAll?'Weniger anzeigen':'Alle '+A.length+' Hinweise ›'}</button>`:'');
   if($('al-more'))$('al-more').onclick=()=>{alAll=!alAll;renderStart()};
-  const T=today0(),D=allDates().filter(x=>x.k!=='ende'&&(x.d-T)/864e5<=90).slice(0,6);
+  const T=today0(),D=allDates().filter(x=>x.k!=='ende'&&(x.d-T)/864e5<=90).slice(0,4);
   $('strip').innerHTML=D.length?D.map(x=>{const amt=x.v?x.v.b:+(x.s.match(/[\d.]+/)||[0])[0];return`<button class="li" ${x.i!=null?`data-act="ct:${x.i}"`:`data-act="bill:${x.d.getMonth()+1}"`}><span class="dbadge ${x.k==='kuend'?'bad':''}"><b>${x.d.getDate()}</b>${MON[x.d.getMonth()]}</span><span class="t">${esc(x.t)}<span>${esc(x.s)}</span></span><span class="chev">›</span></button>`}).join(''):'<p class="li mut">In den nächsten 90 Tagen steht nichts an.</p>';
   $('start-tiles').innerHTML=pots().map(p=>{const st=status(p),r=rec(p),pct=p.ziel?Math.min((+p.stand||0)/p.ziel*100,100):(r?Math.min(p.da/r*100,100):100);return`<button class="tile" data-act="pot:${p.id}"><span class="nm"><span class="sw" style="background:${p.f}"></span>${esc(p.n)}</span><span class="amt">${fmt(p.stand)}</span><span class="bar thin"><i class="${st.c==='bad'?'r':st.c==='warn'?'a':''}" style="width:${pct}%"></i></span><span class="chip ${st.c}">${esc(st.t)}</span></button>`}).join('');
   if($('hero'))$('hero').innerHTML='';
@@ -536,7 +552,7 @@ function zEdit(i){const isNew=i==null,m=isNew?{n:'',u:'kWh',typ:'verbrauch',prei
   sheet(isNew?'Zähler hinzufügen':m.n,[{l:'Name',v:m.n},{l:'Art',type:'select',v:m.typ,opts:Object.entries(ZTYP)},{l:'Einheit',v:m.u,hint:'z. B. kWh, m³ oder Liter'},{l:m.typ==='einspeisung'?'Vergütung je Einheit in €':'Preis je Einheit in €',type:'number',v:m.preis,hint:'Strom: steht der Arbeitspreis im Vertrag, nimmt das Cockpit den.'},{l:'Grundpreis € im Monat',type:'number',v:m.gp},{l:'Vertrag (Suchwort)',v:m.ct||'',hint:'z. B. eprimo. Dann vergleicht das Cockpit mit dem Abschlag.'},{l:'Rechnung im Plan (Suchwort)',v:m.rx||'',hint:'z. B. Wasser oder Heizöl. Dann vergleicht das Cockpit mit der Rechnung.'}],
   v=>{Object.assign(m,{n:v[0]||'Zähler',typ:v[1],u:v[2]||'kWh',preis:v[3],gp:v[4],ct:v[5].trim(),rx:v[6].trim()});if(isNew){S.zaehler=S.zaehler||[];S.zaehler.push(m)}},isNew?null:()=>{S.zaehler.splice(i,1)})}
 function zIcs(){const T=new Date(),e=new Date(T.getFullYear(),T.getMonth()+1,0),p=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
-  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Geld-Cockpit//DE','BEGIN:VEVENT',`UID:gc-zaehler@geld-cockpit`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').slice(0,15)}Z`,`DTSTART:${p(e)}T180000`,`DTEND:${p(e)}T181500`,'RRULE:FREQ=MONTHLY;BYMONTHDAY=-1','SUMMARY:Zähler ablesen','DESCRIPTION:Geld-Cockpit öffnen\\, Zähler antippen\\, Foto machen und Stand eintragen.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Zähler ablesen','TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cockpit//DE','BEGIN:VEVENT',`UID:gc-zaehler@geld-cockpit`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').slice(0,15)}Z`,`DTSTART:${p(e)}T180000`,`DTEND:${p(e)}T181500`,'RRULE:FREQ=MONTHLY;BYMONTHDAY=-1','SUMMARY:Zähler ablesen','DESCRIPTION:Cockpit öffnen\\, Zähler antippen\\, Foto machen und Stand eintragen.','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Zähler ablesen','TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='zaehler-erinnerung.ics';document.body.appendChild(a);a.click();a.remove();toast('Öffne die Datei und tipp auf „Hinzufügen“. Dann erinnert dich dein Kalender am Monatsende um 18 Uhr.')}
 function zImport(L){S.zaehler=S.zaehler||[];let n=0;(Array.isArray(L)?L:[L]).forEach(x=>{if(!x||!x.n)return;const name=String(x.n).slice(0,40);let m=S.zaehler.find(z=>z.n.toLowerCase()===name.toLowerCase());
   if(!m){m={n:name,r:[]};S.zaehler.push(m)}m.u=String(x.u||m.u||'kWh').slice(0,8);m.typ=ZTYP[x.typ]?x.typ:(m.typ||'verbrauch');['preis','gp'].forEach(k=>{if(x[k]!=null)m[k]=+x[k]||0});['ct','rx'].forEach(k=>{if(x[k]!=null)m[k]=String(x[k]).slice(0,60)});if(/^#[0-9a-f]{6}$/i.test(x.f||''))m.f=x.f;m.f=m.f||'#5f9a9a';
@@ -574,11 +590,37 @@ async function zProof(i){const m=zAll()[i];if(!m)return;const R=zSorted(m).rever
   $('report').innerHTML=`<div class="rhead"><b>Zählernachweis ${esc(m.n)}</b><span>erstellt am ${fd(new Date())}</span></div><p class="rnote">Ablesungen in ${esc(m.u)} mit Fotos, aufgenommen beim Ablesen. Dateiname und Datum des Fotos sind im verschlüsselten Speicher hinterlegt.</p><table><thead><tr><th>Datum</th><th>Zählerstand</th><th>Verbrauch seit davor</th><th>Foto</th></tr></thead><tbody>${R.map(r=>{const x=I.find(z=>z.b===r);return`<tr><td>${fd(pd(r.d))}</td><td><b>${nf(r.v,3)}</b></td><td>${x?(x.fill?`nachgetankt ${nf(x.fill,0)}`:nf(x.use)):'-'}</td><td>${imgs[r.d]?'ja':'nein'}</td></tr>`}).join('')}</tbody></table>${Object.keys(imgs).map(d=>`<div class="rcard" style="break-inside:avoid"><b>${fd(pd(d))}: ${nf(m.r.find(r=>r.d===d).v,3)} ${esc(m.u)}</b><br><img src="${imgs[d]}" style="max-width:100%;max-height:110mm;margin-top:4px"></div>`).join('')}`;
   setTimeout(()=>window.print(),300)}
 
+/* ---------- Sparen und optimieren ---------- */
+const VERSK=['haus','auto','vors'];
+function spar(){const L=[];const T=today0();
+  ctAll().forEach((v,i)=>{if(v.ein||v.pf)return;const f=frist(v);
+    const of=(v.angebote||[]).filter(o=>o.p>0&&o.p<v.b&&o.n>=o.of).sort((a,b)=>a.p-b.p)[0];
+    if(of&&v.st!=='gekuendigt')L.push({k:'spar',v:v.b-of.p,ic:'trend',t:`${v.n}: Angebot spart ${fmt(v.b-of.p)} im Jahr`,s:`${of.a||'Gemerktes Angebot'} für ${fmt(of.p)} statt ${fmt(v.b)}, alle Punkte erfüllt.${f.d?` Kündigen bis ${fd(f.d)}.`:''}`,a:'ct:'+i});
+    else if((v.st==='pruefen'||v.st==='kuendigen')&&f.d&&f.days<=180)L.push({k:'tun',v:0,ic:'clock',t:`${v.n}: jetzt vergleichen`,s:`Steht auf „${STX[v.st][1]}“. Kündigen geht noch bis ${fd(f.d)}. Im Vertrag ein Angebot eintragen, dann rechnet das Cockpit die Ersparnis aus.`,a:'ct:'+i});
+    if(VERSK.includes(v.k)&&(v.rh==='monat'||v.rh==='quartal')&&v.b>0&&v.st!=='gekuendigt')L.push({k:'spar',v:Math.round(v.b*(v.rh==='monat'?.04:.02)),ic:'wallet',t:`${v.n}: jährlich statt ${RH[v.rh]} zahlen`,s:`Versicherer verlangen für Ratenzahlung oft einen Aufschlag von einigen Prozent. Geschätzt rund ${fmt(v.b*(v.rh==='monat'?.04:.02))} im Jahr. Zahlweise im Kundenportal umstellen.`,a:'ct:'+i});
+    if(v.st==='gekuendigt'&&!v.nf&&v.ende&&pd(v.ende)>=T)L.push({k:'tun',v:0,ic:'stop',t:`${v.n}: Anschluss bis ${fd(pd(v.ende))} klären`,s:v.k==='energie'?'Ohne neuen Vertrag landest du in der teureren Grundversorgung. Im Vertrag Angebote vergleichen.':'Gekündigt. Brauchst du einen Ersatz?',a:'ct:'+i})});
+  const sm=zAll().find(m=>m.typ==='verbrauch'&&zContract(m)&&zContract(m).port==='strom'),pv=zAll().find(m=>m.typ==='einspeisung');
+  zAll().forEach((m,i)=>{const s=zStats(m);if(s.cost&&s.ab){const d=s.ab*12-s.cost;if(d>150)L.push({k:'geld',v:0,g:d,ic:'wallet',t:`${m.n}: Abschlag um ${fmt(Math.floor(d/12/5)*5)} senken`,s:`Du zahlst rund ${fmt(d)} im Jahr mehr als du verbrauchst. Das Geld liegt beim Anbieter statt bei dir. Abschlag im Kundenportal anpassen.`,a:'zl:'+i})}
+    if(m.typ==='tank'){const o=zOil(m,s);if(o&&o.empty)L.push({k:'tipp',v:0,ic:'gauge',t:'Heizöl clever kaufen',s:`Bestell nicht erst, wenn es knapp wird. Ab etwa ${fd(new Date(o.empty.getFullYear(),o.empty.getMonth()-3,1))} die Preise beobachten und bei einem Tief zuschlagen. Sammelbestellungen mit Nachbarn sind oft günstiger.`,a:'zl:'+i})}});
+  if(sm&&pv){const ss=zStats(sm),ps=zStats(pv),ct=zContract(sm);if(ss.year&&ct&&+ct.ap){const gain=ct.ap/100-(+pv.preis||0),kwh=ss.year*.1;
+    L.push({k:'spar',v:Math.round(kwh*gain),ic:'trend',t:`Mehr eigenen Solarstrom nutzen: rund ${fmt(kwh*gain)} im Jahr`,s:`Jede selbst genutzte kWh spart ${nf(gain*100,1)} ct${pv.preis?'':' (Vergütung noch nicht eingetragen, daher grob)'}. Schon 10 % deines Strombezugs in die Mittagssonne verschoben bringt das. Waschmaschine, Spülmaschine und Trockner mittags laufen lassen.`,a:'zl:'+zAll().indexOf(pv)})}}
+  pots().forEach(p=>{if(p.id==='proj'||!billsOf(p.id).length)return;const r=rec(p);if(p.da>r+20&&sim(p).min>=0)L.push({k:'geld',v:0,g:(p.da-r)*12,ic:'wallet',t:`Topf ${p.n}: ${fmt(p.da-r)} im Monat mehr als nötig`,s:`Empfohlen sind ${fmt(r)}. Den Rest kannst du für Notgroschen oder Ziele nutzen. Nur ändern, wenn der Topf auch bei der nächsten großen Rechnung reicht.`,a:'pot:'+p.id})});
+  const ab=ctAll().filter(v=>v.k==='abo'&&!v.ein);if(ab.length>=3)L.push({k:'tipp',v:0,ic:'doc',t:`${ab.length} Abos für ${fmt(sum(ab)/12)} im Monat`,s:'Einmal im Jahr durchgehen: Was nutzt du wirklich? Jedes gekündigte Abo spart jeden Monat.',a:'kat:abo'});
+  const ord={spar:0,tun:1,geld:2,tipp:3};return L.sort((a,b)=>ord[a.k]-ord[b.k]||b.v-a.v)}
+function openSpar(){const L=spar(),tot=nsum(L.map(x=>x.v)),liq=nsum(L.map(x=>x.g||0));const grp={spar:'Hier sparst du Geld',tun:'Jetzt handeln',geld:'Mehr Geld frei im Alltag',tipp:'Tipps vom Experten'};
+  $('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px">Sparen und optimieren</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
+  <div class="row2" style="gap:8px"><span class="chip ok">Bis zu ${fmt(tot)} im Jahr sparen</span>${liq?`<span class="chip neu">${fmt(liq)} im Jahr frei verfügbar</span>`:''}</div>
+  ${Object.keys(grp).map(g=>{const X=L.filter(x=>x.k===g);return X.length?`<div><h3 style="margin:8px 0 6px">${grp[g]}</h3><div class="alerts">${X.map(x=>`<button class="al ${g==='spar'?'ok':g==='tun'?'warn':'info'}" data-act="${esc(x.a)}">${icon(x.ic,g==='spar'?'ok':g==='tun'?'warn':'info')}<span class="t"><b>${esc(x.t)}</b><span>${esc(x.s)}</span></span><span class="chev">›</span></button>`).join('')}</div></div>`:''}).join('')||'<p class="mut">Gerade kein Sparpotenzial gefunden. Trag in deinen Verträgen Angebote ein, dann rechnet das Cockpit nach.</p>'}
+  <p class="small mut">Geschätzte Werte. Prozentangaben zur Ratenzahlung sind typische Größenordnungen, prüf den genauen Aufschlag in deiner Police.</p>`;
+  $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('sheet').querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>closeSheet(),{capture:true}))}
+function renderSpar(){if(!$('spar'))return;const L=spar(),tot=nsum(L.map(x=>x.v)),n=L.filter(x=>x.k!=='tipp').length;
+  $('spar').innerHTML=`<button class="spar" data-act="sp:open">${icon('trend','ok')}<span class="t"><b>${tot?`Bis zu ${fmt(tot)} im Jahr sparen`:'Sparen und optimieren'}</b><span>${n?`${n} ${n===1?'Möglichkeit':'Möglichkeiten'} aus Verträgen, Zählern und Töpfen`:'Alles optimiert. Tipps ansehen'}</span></span><span class="chev">›</span></button>`}
+
 /* Ausgaben-Kuchen */
 function renderDonut(){if(!$('donut'))return;const C=ctCost(),tot=sum(C)/12;const cats=Object.keys(KAT).filter(k=>k!=='ein').map(k=>({k,n:KAT[k][0],f:KAT[k][1],v:sum(C.filter(x=>x.k===k))/12})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
   if(!cats.length){$('donut').innerHTML='';return}const R=54,Cf=2*Math.PI*R;let off=0;
   const segs=cats.map(c=>{const l=c.v/tot*Cf,s=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${c.f}" stroke-width="26" stroke-dasharray="${Math.max(l-1.5,0.5)} ${Cf}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)" data-act="kat:${c.k}" style="cursor:pointer"><title>${esc(c.n)}: ${fmt(c.v)}</title></circle>`;off+=l;return s}).join('');
-  $('donut').innerHTML=`<div class="donut"><svg viewBox="0 0 140 140" role="img" aria-label="Verträge nach Bereich">${segs}<text x="70" y="66" text-anchor="middle" font-size="11" fill="currentColor" opacity=".6">im Monat</text><text x="70" y="84" text-anchor="middle" font-size="19" font-weight="800" fill="currentColor">${fmt(tot)}</text></svg><div class="list">${cats.map(c=>`<button class="li" data-act="kat:${c.k}"><span class="sw" style="background:${c.f}"></span><span class="t">${esc(c.n)}<span>${Math.round(c.v/tot*100)} %</span></span><span class="num">${fmt(c.v)}</span><span class="chev">›</span></button>`).join('')}</div></div>`}
+  $('donut').innerHTML=`<div class="donut"><svg viewBox="0 0 140 140" role="img" aria-label="Verträge nach Bereich">${segs}<text x="70" y="66" text-anchor="middle" font-size="11" fill="currentColor" opacity=".6">im Monat</text><text x="70" y="84" text-anchor="middle" font-size="19" font-weight="800" fill="currentColor">${fmt(tot)}</text></svg><div class="list">${cats.slice(0,5).map(c=>`<button class="li" data-act="kat:${c.k}"><span class="sw" style="background:${c.f}"></span><span class="t">${esc(c.n)}<span>${Math.round(c.v/tot*100)} %</span></span><span class="num">${fmt(c.v)}</span></button>`).join('')}</div></div>`}
 function markCancel(i){const v=ctAll()[i],f=frist(v);sheet('Als gekündigt markieren',[{type:'info',v:'Dann warnt das Cockpit nicht mehr vor der Kündigungsfrist, erinnert dich aber an das Vertragsende. Die Kündigungsbestätigung kannst du danach als Foto oder PDF anhängen.'},{l:'Vertrag endet am',type:'date',v:f.e?iso(new Date(f.e.getTime()-864e5)):(v.ende||'')}],x=>{v.st='gekuendigt';if(x[1])v.ende=x[1];v.nf=false})}
 
 /* ---------- Berichte als PDF ---------- */
@@ -588,11 +630,13 @@ function printReport(type){
   const now=new Date(),C=ctCost(),tot=sum(C),T=today0();
   const h=t=>`<h2>${t}</h2>`,tb=(head,rows)=>`<table><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
   const barr=(v,mx,c)=>`<span class="rbar"><i style="width:${mx?Math.max(v/mx*100,1):0}%;background:${c||'#555'}"></i></span>`;
-  let out=`<div class="rhead"><b>Geld-Cockpit</b><span>${RTYPES.find(x=>x[0]===type)[1]} · erstellt am ${fd(now)}</span></div>`;
+  let out=`<div class="rhead"><b>Cockpit</b><span>${RTYPES.find(x=>x[0]===type)[1]} · erstellt am ${fd(now)}</span></div>`;
   const plan=inc()-da(),leben=plan-fix();
   if(type==='jahr'){
     out+=`<div class="rkpis"><div><span>Einnahmen</span><b>${fmt(inc())}</b><small>pro Monat</small></div><div><span>Daueraufträge</span><b>${fmt(da())}</b><small>pro Monat</small></div><div><span>Abbuchungen</span><b>${fmt(fix())}</b><small>pro Monat</small></div><div><span>Bleibt</span><b>${fmt(leben)}</b><small>pro Monat</small></div></div>`;
     const A=alerts().filter(x=>x.l!=='ok');if(A.length)out+=h('Hinweise und Empfehlungen')+'<ul class="rlist">'+A.map(x=>`<li class="${x.l}"><b>${esc(x.t)}</b> ${esc(x.s)}</li>`).join('')+'</ul>';
+    {const SP=spar();if(SP.length)out+=h(`Sparen und optimieren: bis zu ${fmt(nsum(SP.map(x=>x.v)))} im Jahr`)+'<ul class="rlist">'+SP.map(x=>`<li><b>${esc(x.t)}</b> ${esc(x.s)}</li>`).join('')+'</ul>';}
+    if(zAll().length)out+=h('Zähler und Energie')+tb(['Zähler','Letzter Stand','Hochrechnung Jahr','Kosten','Bewertung'],zAll().map(m=>{const s=zStats(m),hh=zHead(m,s);return[esc(m.n),s.L?`${nf(s.L.v,1)} ${esc(m.u)} (${fd(pd(s.L.d))})`:'-',s.year!=null?`${nf(s.year,0)} ${esc(m.u)}`:'-',s.cost?fmt(s.cost):'-',esc(hh.big)]}));
     out+=h('Töpfe und Rücklagen')+tb(['Topf','Stand','Dauerauftrag','Empfehlung','Status'],pots().map(p=>[esc(p.n),fmt(p.stand),fmt(p.da),billsOf(p.id).length?fmt(rec(p)):'-',esc(status(p).t)]));
     const tots=Array.from({length:12},(_,i)=>sum(S.rechnungen.filter(r=>+r.m===i+1))),mx=Math.max(...tots,1);
     out+=h('Große Rechnungen im Jahr')+tb(['Monat','Rechnungen','Summe',''],tots.map((t,i)=>[MONL[i],esc(S.rechnungen.filter(r=>+r.m===i+1).map(r=>r.n).join(', ')),fmt(t),barr(t,mx)]))+`<p class="rnote">Zusammen ${fmt(sum(S.rechnungen))} im Jahr, also ${fmt(sum(S.rechnungen)/12)} pro Monat.</p>`;
@@ -603,7 +647,7 @@ function printReport(type){
   if(type==='jahr'||type==='fristen'){const lim=new Date(T);lim.setMonth(lim.getMonth()+24);const D=allDates().filter(x=>x.d<=lim);out+=h('Fristen und Termine')+tb(['Datum','Was','Hinweis'],D.map(x=>[fd(x.d),esc(x.t),esc(x.s)]))}
   if(type==='jahr'||type==='versicherungen'){const L=ctAll().filter(v=>v.cov&&v.cov.length);out+=h('Versicherungen und Leistungen')+L.map(v=>`<div class="rcard"><b>${esc(v.n)}</b> · ${esc(v.a||'')} · ${fmt(v.b)} im Jahr<ul>${v.cov.map(c=>`<li><span class="m${c[1]}">${c[1]===1?'✓':c[1]===2?'!':'✗'}</span> ${esc(c[0])}${c[2]?` <small>(${esc(c[2])})</small>`:''}</li>`).join('')}</ul></div>`).join('')}
   if(type==='jahr'&&S.ziele.length)out+=h('Ziele')+tb(['Ziel','Kosten','Wunschtermin'],S.ziele.map(g=>[esc(g.n),g.b?fmt(g.b):'-',g.wunsch||'-']));
-  out+=`<p class="rnote">Erstellt mit dem Geld-Cockpit. Alle Angaben ohne Gewähr.</p>`;
+  out+=`<p class="rnote">Erstellt mit dem Cockpit. Alle Angaben ohne Gewähr.</p>`;
   $('report').innerHTML=out;setTimeout(()=>window.print(),100)}
 
 /* ---------- Töpfe ---------- */
@@ -674,7 +718,7 @@ function openContract(i){
   ${must.length||isStrom?`<div style="display:grid;gap:10px"><h3>Besseres Angebot prüfen</h3><p class="small mut">Hol dir ein Angebot, zum Beispiel über die Links unten. Hake ab, was es auch bietet. Billiger ist es nur, wenn alles drin ist.</p>
    ${must.map((m,j)=>`<label class="row2" style="gap:10px;color:var(--ink);font-size:15px;flex-wrap:nowrap"><input type="checkbox" data-must="${j}" style="width:22px;height:22px;min-height:0;flex:none">${esc(m)}</label>`).join('')}
    <label>Anbieter des Angebots<input id="of-a" placeholder="z. B. HUK24"></label>
-   ${isStrom?`<div class="row2" style="flex-wrap:nowrap"><label style="flex:1">Arbeitspreis ct/kWh<input id="of-ap" type="number" inputmode="decimal" step="any"></label><label style="flex:1">Grundpreis €/Monat<input id="of-gp" type="number" inputmode="decimal" step="any"></label></div><label>Dein Verbrauch kWh im Jahr<input id="of-kwh" type="number" inputmode="decimal" value="${+v.kwh||4000}"></label>`:`<label>Preis im Jahr in €<input id="of-p" type="number" inputmode="decimal" step="any"></label>`}
+   ${isStrom?`<div class="row2" style="flex-wrap:nowrap"><label style="flex:1">Arbeitspreis ct/kWh<input id="of-ap" type="number" inputmode="decimal" step="any"></label><label style="flex:1">Grundpreis €/Monat<input id="of-gp" type="number" inputmode="decimal" step="any"></label></div><label>Dein Verbrauch kWh im Jahr<input id="of-kwh" type="number" inputmode="decimal" value="${Math.round((()=>{const m=zAll().find(z=>zContract(z)===v);const s=m&&zStats(m);return s&&s.year||+v.kwh||4000})())}"></label>`:`<label>Preis im Jahr in €<input id="of-p" type="number" inputmode="decimal" step="any"></label>`}
    <p id="of-res" class="small" aria-live="polite"></p>
    <div class="row2"><button class="btn pri" id="of-save">Angebot merken</button></div>
    ${offers?`<div><p class="small mut">Gemerkte Angebote</p>${offers}</div>`:''}
@@ -749,7 +793,7 @@ function renderContracts(){
 function ctAdd(){$('sheet').innerHTML=`<div class="row2" style="justify-content:space-between"><h3 id="sheet-title" style="font-size:20px">Neuer Vertrag</h3><button class="icon" id="s-x" aria-label="Schließen">✕</button></div>
   <div class="list"><button class="li" id="ca-self">${icon('plus')}<span class="t"><b>Selbst eintragen</b><span>Name, Kosten und Laufzeit eingeben</span></span><span class="chev">›</span></button>
   <button class="li" id="ca-code">${icon('doc')}<span class="t"><b>Code von Claude einfügen</b><span>Vertrag in Claude auswerten lassen, Code hier einfügen</span></span><span class="chev">›</span></button></div>
-  <details><summary>So geht es mit Claude</summary><p class="small">1. Öffne in Claude das Projekt „Geld-Cockpit“. 2. Lade den Vertrag als PDF oder Foto hoch und schreib „Bitte als Cockpit-Code“. 3. Kopiere den Code und füge ihn hier ein. Das Dokument selbst hängst du danach am Vertrag an, dann liegt es verschlüsselt bei dir.</p></details>`;
+  <details><summary>So geht es mit Claude</summary><p class="small">1. Öffne in Claude das Projekt „Cockpit“. 2. Lade den Vertrag als PDF oder Foto hoch und schreib „Bitte als Cockpit-Code“. 3. Kopiere den Code und füge ihn hier ein. Das Dokument selbst hängst du danach am Vertrag an, dann liegt es verschlüsselt bei dir.</p></details>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;$('ca-self').onclick=()=>editContract(null);
   $('ca-code').onclick=()=>{$('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Code von Claude einfügen</h3><textarea id="cc" rows="7" placeholder='{"n":"Hausrat","a":"…"}' aria-label="Code"></textarea><p class="small" id="cc-msg"></p><div class="row2"><button class="btn pri" id="cc-ok">Übernehmen</button><button class="btn ghost" id="s-x">Abbrechen</button></div>`;$('s-x').onclick=closeSheet;
     $('cc-ok').onclick=()=>{try{let o=JSON.parse($('cc').value.trim().replace(/^```(json)?|```$/g,''));let R=Array.isArray(o)?o:o.vertraege||o.zaehler?(o.vertraege||[]):[o];const ZL=Array.isArray(o)?[]:o.zaehler||[];if(!R.length&&!ZL.length)throw 0;S.vertraege=S.vertraege||[];const msg=[];let last=-1;if(ZL.length){const n=zImport(ZL);msg.push(`${n} Zählerstände übernommen`)}
@@ -800,7 +844,7 @@ function icsExport(){const D=allDates().filter(x=>x.k!=='rech');const p=d=>`${d.
   const esc2=s=>String(s).replace(/[\;,]/g,m=>'\\'+m).replace(/\n/g,'\\n');const stamp=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
   const ev=D.map((x,j)=>{const e=new Date(x.d);e.setDate(e.getDate()+1);const alarms=x.k==='kuend'?['P42D','P7D','P1D']:['P30D'];
     return['BEGIN:VEVENT',`UID:gc-${p(x.d)}-${j}-${x.k}@geld-cockpit`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${p(x.d)}`,`DTEND;VALUE=DATE:${p(e)}`,`SUMMARY:${esc2(x.t)}`,`DESCRIPTION:${esc2(x.s+(x.v&&x.v.tipp?'\n'+x.v.tipp:''))}`].concat(alarms.flatMap(a=>['BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${esc2(x.t)}`,`TRIGGER:-${a}`,'END:VALARM'])).concat(['END:VEVENT']).join('\r\n')});
-  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Geld-Cockpit//DE','CALSCALE:GREGORIAN','X-WR-CALNAME:Geld-Cockpit Fristen'].concat(ev,['END:VCALENDAR']).join('\r\n');
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cockpit//DE','CALSCALE:GREGORIAN','X-WR-CALNAME:Cockpit Fristen'].concat(ev,['END:VCALENDAR']).join('\r\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='geld-cockpit-fristen.ics';a.click();
   toast(`${D.length} Termine exportiert. Datei öffnen, dann landen sie mit Erinnerung in deinem Kalender.`)}
 /* ---------- Ziele ---------- */
@@ -848,6 +892,7 @@ const HELP=[
  ['Was zeigt „Energie im Blick“?','Für jeden Zähler eine Ampel mit der wichtigsten Zahl. Strom: kommt eine Nachzahlung oder ein Guthaben, und passt der Abschlag. Heizöl: bis wann der Tank reicht. Gerechnet wird mit deinem gemessenen Verbrauch, verteilt nach dem typischen Winterverlauf in Deutschland (im Januar wird etwa 17 % der Jahreswärme verbraucht, im August fast nichts), plus 20 % Puffer für einen kalten Winter und 300 Liter, die im Tank bleiben sollten. Strom und Wasser: Hochrechnung aus den letzten 12 Monaten, also mit allen Jahreszeiten, angepasst um den Trend der letzten 3 Monate gegenüber dem Vorjahr. Wasser: reicht die Rechnung im Plan. Rot heißt sofort handeln, gelb bald.'],
  ['Wie bekomme ich einen Nachweis für den Anbieter?','Beim Zähler auf „Verlauf“ und dann „Nachweis als PDF“ tippen. Das PDF enthält alle Ablesungen mit Datum und die Fotos. Fehlt bei einer Ablesung das Foto, kannst du es im Verlauf mit dem gelben Kamera-Knopf nachreichen.'],
  ['Wie mache ich ein komplettes Backup auf meinen Rechner?','Einstellungen, Bereich Sicherung, „Komplettes Backup herunterladen“. Es entsteht eine Datei mit allen Daten, Fotos und Dokumenten, verschlüsselt mit deinem Passwort. Leg sie auf deinen Rechner oder einen USB-Stick. Zum Wiederherstellen „Backup einspielen“ wählen und das Passwort eingeben, das beim Erstellen galt. Das Cockpit erinnert dich, wenn das letzte Backup älter als einen Monat ist.'],
+ ['Was zeigt „Sparen und optimieren“?','Das Cockpit verbindet alle Bereiche und sucht Geld: günstigere Angebote, die du im Vertrag gemerkt hast, Versicherungen mit Ratenaufschlag, zu hohe Abschläge, mehr eigener Solarstrom, Töpfe mit zu viel Rücklage und offene Anschlussverträge. Oben auf der Startseite siehst du die Summe, ein Tipp öffnet die Liste. Jeder Eintrag führt direkt dorthin, wo du etwas ändern kannst.'],
  ['Was bedeuten ✓, ! und ✗?','✓ ist abgedeckt. ! ist eingeschränkt, zum Beispiel nur bis zu einer Grenze. ✗ heißt: fehlt oder da musst du etwas tun.'],
  ['Wie trage ich einen neuen Vertrag ein?','Bei Verträge unten auf „Vertrag hinzufügen“. Wichtig sind Kosten, das Ende des Vertragsjahres und die Kündigungsfrist. Beides steht in der Police oder auf der Beitragsrechnung. Damit das Geld auch eingeplant ist, trag den Betrag zusätzlich bei Rechnungen oder bei den Abbuchungen vom Girokonto ein.'],
  ['Ich habe mein Passwort vergessen. Was nun?','Ohne Passwort lassen sich die Daten nicht entschlüsseln, das ist der Schutz. Bewahre deshalb regelmäßig eine Sicherung auf (Einstellungen, Als Datei speichern) und schreib dir das Passwort an einen sicheren Ort.'],
@@ -1040,7 +1085,7 @@ async function prfKey(out){const base=await crypto.subtle.importKey('raw',out,'H
 async function pkPrf(rawId,salt){const a=await navigator.credentials.get({publicKey:{challenge:rnd(32),rpId:location.hostname,allowCredentials:[{type:'public-key',id:rawId}],userVerification:'required',timeout:60000,extensions:{prf:{eval:{first:salt}}}}});const r=a.getClientExtensionResults();if(!r.prf||!r.prf.results||!r.prf.results.first)throw new Error('noprf');return r.prf.results.first}
 async function pkSetup(pw){
   const salt=rnd(32);
-  const cred=await navigator.credentials.create({publicKey:{challenge:rnd(32),rp:{name:'Geld-Cockpit',id:location.hostname},user:{id:rnd(16),name:'Geld-Cockpit',displayName:'Geld-Cockpit'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',residentKey:'preferred',userVerification:'required'},timeout:60000,extensions:{prf:{eval:{first:salt}}}}});
+  const cred=await navigator.credentials.create({publicKey:{challenge:rnd(32),rp:{name:'Cockpit',id:location.hostname},user:{id:rnd(16),name:'Cockpit',displayName:'Cockpit'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',residentKey:'preferred',userVerification:'required'},timeout:60000,extensions:{prf:{eval:{first:salt}}}}});
   const ext=cred.getClientExtensionResults();if(ext.prf&&ext.prf.enabled===false)throw new Error('noprf');
   let out=ext.prf&&ext.prf.results&&ext.prf.results.first;if(!out)out=await pkPrf(cred.rawId,salt);
   const k=await prfKey(out),iv=rnd(12),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(pw));
@@ -1063,7 +1108,7 @@ async function boot(){
   const env=[local,remote].filter(Boolean).sort((a,b)=>b.ts-a.ts)[0];
   const L=$('lock-box');
   if(env){const face=!!lsGet('gc-pk')&&pkOk();
-    L.innerHTML=`<h1>Geld-Cockpit</h1><p class="mut">Gesperrt.</p>${face?`<button class="btn pri full" id="face-go" style="margin-top:14px">Mit Face ID entsperren</button><p class="small mut" style="margin-top:12px;text-align:center">oder mit Passwort</p>`:''}<form id="lk" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>Passwort<input id="pw" type="password" autocomplete="current-password" required></label><button class="btn ${face?'ghost':'pri'} full" id="pw-ok">Entsperren</button><p class="small" id="pw-msg" aria-live="polite"></p></form>`;
+    L.innerHTML=`<h1>Cockpit</h1><p class="mut">Gesperrt.</p>${face?`<button class="btn pri full" id="face-go" style="margin-top:14px">Mit Face ID entsperren</button><p class="small mut" style="margin-top:12px;text-align:center">oder mit Passwort</p>`:''}<form id="lk" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>Passwort<input id="pw" type="password" autocomplete="current-password" required></label><button class="btn ${face?'ghost':'pri'} full" id="pw-ok">Entsperren</button><p class="small" id="pw-msg" aria-live="polite"></p></form>`;
     const unlock=async pw=>{$('pw-ok').disabled=true;$('pw-msg').textContent='Entschlüssele ...';
       try{SALT=unb64(env.salt);KEY=await deriveKey(pw,SALT);S=await dec(env);
         const tk=JSON.parse(lsGet('gc-tok')||'null');if(tk){try{TOKEN=(await dec(tk)).t}catch(x){}}
@@ -1074,8 +1119,8 @@ async function boot(){
     else $('pw').focus();
     $('lk').onsubmit=e=>{e.preventDefault();unlock($('pw').value)}}
 
-  else{L.innerHTML=`<h1>Geld-Cockpit einrichten</h1><p class="pan small" style="margin:12px 0">Schon auf einem anderen Gerät eingerichtet? Dann dort in den Einstellungen auf „Jetzt abgleichen“ tippen und diese Seite neu laden. Hier musst du nichts tun.</p><p class="mut">Nur beim allerersten Mal: Startdatei auswählen und ein Passwort festlegen.</p>
-    <form id="su" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Geld-Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>1. Startdatei (cockpit-start.json)<input id="su-f" type="file" accept=".json,application/json" required></label>
+  else{L.innerHTML=`<h1>Cockpit einrichten</h1><p class="pan small" style="margin:12px 0">Schon auf einem anderen Gerät eingerichtet? Dann dort in den Einstellungen auf „Jetzt abgleichen“ tippen und diese Seite neu laden. Hier musst du nichts tun.</p><p class="mut">Nur beim allerersten Mal: Startdatei auswählen und ein Passwort festlegen.</p>
+    <form id="su" class="pan" style="display:grid;gap:12px;margin-top:14px"><input type="text" name="username" autocomplete="username" value="Cockpit" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"><label>1. Startdatei (cockpit-start.json)<input id="su-f" type="file" accept=".json,application/json" required></label>
     <label>2. Passwort (mindestens 10 Zeichen)<input id="su-p1" type="password" autocomplete="new-password" minlength="10" required></label><label>Passwort noch einmal<input id="su-p2" type="password" autocomplete="new-password" required></label>
     <p class="small mut">Schreib dir das Passwort auf und leg es sicher ab. Ohne Passwort kommt niemand an die Daten, auch du nicht.</p><button class="btn pri full" id="su-ok">Einrichten</button><p class="small" id="su-msg" aria-live="polite"></p></form>`;
     $('su').onsubmit=async e=>{e.preventDefault();const m=$('su-msg');
@@ -1112,7 +1157,7 @@ async function fullBackup(){const D=allDocs(),docs={};let miss=0;toast(`Backup w
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/octet-stream'}));a.download='geld-cockpit-backup-'+new Date().toISOString().slice(0,10)+'.gcb';document.body.appendChild(a);a.click();a.remove();
   try{localStorage.setItem('gc-bk',String(Date.now()))}catch(e){}
   toast(`Backup gespeichert: Daten und ${Object.keys(docs).length} Fotos und Dokumente, alles verschlüsselt.${miss?` ${miss} Dateien fehlten.`:''} Leg die Datei auf deinen Rechner oder einen USB-Stick.`);renderAll()}
-function fullRestore(file){const rd=new FileReader();rd.onload=()=>{let o;try{o=JSON.parse(rd.result);if(o.type!=='gc-komplett'||!o.env)throw 0}catch(e){toast('Das ist keine Backup-Datei vom Geld-Cockpit.');return}
+function fullRestore(file){const rd=new FileReader();rd.onload=()=>{let o;try{o=JSON.parse(rd.result);if(o.type!=='gc-komplett'||!o.env)throw 0}catch(e){toast('Das ist keine Backup-Datei vom Cockpit.');return}
   $('sheet').innerHTML=`<h3 id="sheet-title" style="font-size:20px">Backup einspielen</h3><p class="small mut">Backup vom ${fd(new Date(o.erstellt))}. Gib das Passwort ein, das beim Erstellen galt. Deine jetzigen Daten werden ersetzt.</p><label>Passwort<input id="rb-pw" type="password" autocomplete="current-password"></label><p id="rb-msg" class="small" aria-live="polite"></p><div class="row2"><button class="btn pri" id="rb-ok">Einspielen</button><button class="btn ghost" id="s-x">Abbrechen</button></div>`;
   $('sheet-bg').classList.add('on');$('s-x').onclick=closeSheet;
   $('rb-ok').onclick=async()=>{$('rb-msg').textContent='Entschlüssele ...';let S2;try{const k=await deriveKey($('rb-pw').value,unb64(o.env.salt));S2=await dec(o.env,k)}catch(e){$('rb-msg').textContent='Passwort passt nicht zu diesem Backup.';return}
@@ -1122,7 +1167,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('#fullbk');if(b){
 document.addEventListener('change',e=>{if(e.target.id==='fullrs'&&e.target.files[0]){fullRestore(e.target.files[0]);e.target.value=''}});
 
 /* ---------- Navigation ---------- */
-function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();renderZaehler();renderDonut();renderMon();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
+function renderAll(){document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=icon(e.dataset.i).replace(/^<span class="ico ">|<\/span>$/g,'')});renderStart();renderPots();renderBills();renderContracts();renderGoals();renderMehr();renderZaehler();renderDonut();renderMon();renderSpar();$('stamp').textContent=S.girokonto.datum?`Kontostände vom ${S.girokonto.datum}`:'Beispielwerte, bis du Auszüge einliest'}
 function go(id,anchor){const ids=['start','konten','toepfe','rechnungen','vertraege','zaehler','ziele','einstellungen','hilfe'];if(!ids.includes(id))id='start';ids.forEach(x=>{$('v-'+x).classList.toggle('on',x===id);$('t-'+x).setAttribute('aria-current',x===id?'page':'false')});if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(anchor){const el=$(anchor);if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 document.addEventListener('click',e=>{const b=e.target.closest('button,a,circle[data-act]');if(!b)return;const d=b.dataset;
